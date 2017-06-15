@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 20px;">
+
+            <ul class="collapsible popout" data-collapsible="accordion">
+                <li>
+                    <div class="collapsible-header active"><i class="material-icons">settings</i>General</div>
+                    <div class="collapsible-body" style="padding: 10px;">
+                        <div class="row">
+                            <table class="highlight">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{user.firstName}} {{user.lastName}}</td>
+                                    <td>Edit</td>
+                                </tr>
+                                <tr>
+                                    <td>Username</td>
+                                    <td>{{user.firstName}} {{user.lastName}}</td>
+                                    <td>Edit</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">verified_user</i>Change Password</div>
+                    <div class="collapsible-body">
+
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">do_not_disturb_on</i>Block User</div>
+                    <div class="collapsible-body">
+
+                        <div class="row">
+                            <div class="col offset-m3 m6">
+                                <div class="input-field">
+                                    <input id="email" type="email">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <div class="col m2"><br/>
+                                <input type="submit" class="btn waves-effect waves-light" value="Block">
+                            </div>
+                        </div>
+                        <div class="card-panel">
+                            <strong class="grey-text" style="font-size: 20px;">Blocked User</strong>
+                            <hr/>
+                            <div class="row nomargin">
+                                <span class="col offset-m4">
+                                <table>
+                                    <tr>
+                                        <td>{{user.firstName}} {{user.lastName}}</td>
+                                        <td><a href="">Unblock</a></td>
+                                    </tr>
+                                </table> 
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,107 @@
+<div class="row" ng-init="manageBlogCtrl.getBlog();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/manageblogs" class="breadcrumb">Blogs</a>
+                        <a href="#!/admin/editblog" class="breadcrumb">Edit Blog</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Edit Blog</strong>
+            <hr/>
+            <div class="row">
+                <div class="col offset-m3 m6">
+                    <div class="card-panel">
+                        <form name="editForm" ng-submit="manageBlogCtrl.editBlog()" novalidate>
+
+                            <!--Id field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="hidden" name="blogId" id="blogId" ng-model="manageBlogCtrl.blog.blogId" placeholder="Blog ID" required="required">
+                            </div>
+                            <!--Id field ends here-->
+
+                            <!--title field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="manageBlogCtrl.blog.title" placeholder="Title" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.title.$dirty">
+                                    <span ng-show="editForm.title.$dirty && editForm.title.$error.required">Please, Provide Title</span>
+                                    <span ng-show="editForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.title.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--title field ends here-->
+
+                            <!--description field starts here-->
+                            <div class="input-field nomargin">
+
+                                <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20" maxlength="4000"
+                                    ng-maxlength="4000" placeholder="Description" data-length="4000" ng-model="manageBlogCtrl.blog.description"
+                                    placeholder="description" required="required"></textarea>
+                                <div class="invalid-data center-align" ng-show="editForm.description.$dirty">
+                                    <span ng-show="editForm.description.$dirty && editForm.description.$error.required">Please, Provide description</span>
+                                    <span ng-show="editForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                                </div>
+                            </div>
+                            <!--description field ends here-->
+
+                            <!--Report field starts here-->
+                            <div class="input-field dropdown ">
+
+                                <select name="report" id="report" ng-model="manageBlogCtrl.blog.report" ng-required="true">
+                                    
+                                    <option value = "" disabled selected>Choose report</option>
+                                    <option value = "YES">Yes</option>
+                                    <option value = "NO">No</option>
+
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.report.$dirty">
+                                    <span ng-show="editForm.report.$invalid && editForm.report.touched">Please, Select Report</span>
+                                </div>
+
+                            </div>
+                            <!--Report field ends here-->
+
+                            <!--Status field starts here-->
+                            <div class="input-field dropdown ">
+
+                                <select name="status" id="status" ng-model="manageBlogCtrl.blog.status" ng-required="true">
+                                    
+                                    <option value = "" disabled selected>Choose status</option>
+                                    <option value = "PENDING">Pending</option>
+                                    <option value = "APPROVED">Approved</option>
+                                    <option value="DISABLED">Disabled</option>
+                                    <option value="REJECTED">Rejected</option>
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.status.$dirty">
+                                    <span ng-show="editForm.status.$invalid && editForm.status.touched">Please, Select Status</span>
+                                </div>
+
+                            </div>
+                            <!--Status field ends here-->
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="row" ng-init="manageUserCtrl.fetchAllUsers();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/manageuser" class="breadcrumb">User</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <div class="row nomargin">
+                <div class="col m2 nopadding nomargin">
+                    <strong style="font-size:20px;" class="grey-text">Manage User</strong>
+                </div>
+                <div class="col m4">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="searchKeyword" name="searchKeyword" id="searchKeyword" ng-model=""
+                            required="required">
+                        <label for="searchKeyword">Search For User</label>
+                    </div>
+                </div>
+
+                <div class="col m3">
+                    <select ng-model="sortBy">
+                        <option value="" disabled selected> Choose Sort By Option</option>
+                        <option value="userName">Sort By Username</option>
+                        <option value="email">Sort By Email</option>
+                        <option value="status">Sort By Status</option>
+                    </select>
+                    <label>Materialize Select</label>
+                </div>
+
+                <div class="col m2 offset-m1">
+                    <a href="" ng-click="manageUserCtrl.validateAllUsers()" class="btn light-blue waves-effect waves-light">Approve All</a>
+                </div>
+
+            </div>
+            <hr/>
+
+            <table class="highlight bordered">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Username</td>
+                        <td>Email</td>
+                        <td>Role</td>
+                        <td>Status</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in filteredUsers | filter:searchKeyword | orderBy:sortBy">
+                        <td>{{user.firstName}} {{user.lastName}}</td>
+                        <td>{{user.userName}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.role}}</td>
+                        <td>{{user.status}}</td>
+                        <td ng-if=" user.status == 'APPROVED' ">
+                            <a href="#!/admin/edituser/{{user.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
+                        </td>
+
+                        <td ng-if=" user.status == 'PENDING' ">
+                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#!" ng-click="manageUserCtrl.validateUser(user.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                        </td>
+
+                        <td ng-if=" user.status == 'DISABLED' ">
+                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        
+                    </tr>
+
+                </tbody>
+
+            </table>
+            <ul uib-pagination total-items="manageUserCtrl.users.length" ng-model="currentPage" max-size="maxSize" class="pagination"
+                boundary-links="true"></ul>
+        </div>
+
+
+    </div>
+</div>

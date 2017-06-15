@@ -1,0 +1,69 @@
+<!--Container Starts From Here-->
+<div class="container-fluid">
+    <!--Row Starts From Here-->
+    <div class="row">
+        <div class="col offset-m2 offset-l4 s12 m8 l4">
+            <div class="z-depth-3">
+                <!--Card Starts From Here-->
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="center-align">
+                            <img src="/assets/images/icon_graduate.png" class="circle responsive-img" style="width:50%; height: 50%" alt="No Image Available">
+                        </div>
+                        <span class="center card-title">Enter Forum Category Details</span>
+
+                        <!--Registration Form Starts From Here-->
+
+                        <form name="addForumCategoryForm" ng-submit="forumCategoryCtrl.createForumCategory()" novalidate>
+
+                            <!--Title Field Starts From  Here-->
+
+                            <div class="input-field">
+                                <input type="text" name="name" id="name" ng-model="forumCategoryCtrl.forumCategory.name" ng-minlength="3" ng-maxlength="50" data-length="50"
+                                    
+                                    required="required">
+                                <label for="name">name</label>
+                                <div class="invalid-data center-align" ng-show="addForumCategoryForm.name.$dirty">
+                                    <span ng-show="addForumCategoryForm.name.$dirty && addForumCategoryForm.name.$error.required">Please, Provide Forum CategorynName</span>
+                                    <span ng-show="addForumCategoryForm.name.$error.minlength">name Must Contain Atleast 3 Charachters</span>
+                                    <span ng-show="addForumCategoryForm.name.$error.maxlength">name Cannot Contain More Than 10 Charachters</span>
+                                </div>
+                            </div>
+
+                            <!--Name Field Ends Here-->
+
+                            <div class="input-field">
+                                <textarea id="textarea" name="description" class="materialize-textarea" ng-model="forumCategoryCtrl.forumCategory.description" ng-minlength="10"
+                                    ng-maxlength="500" data-length="500" required="required"></textarea>
+                                <label for="description">Description</label>
+                                <div class="invalid-data center-align" ng-show="addForumCategoryForm.description.$dirty">
+                                    <span ng-show="forumCategoryCtrl.forumCategory.description.$dirty && forumCategoryCtrl.forumCategory.description.$error.required">Please, Provide Category Description</span>
+                                    <span ng-show="addForumCategoryForm.description.$error.minlength">Description Must Contain Atleast 10 Charachters</span>
+                                    <span ng-show="addForumCategoryForm.description.$error.maxlength">Description Cannot Contain More Than 500 Charachters</span>
+                                </div>
+                            </div>
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" value="Add Category">
+                                </div>
+                            </div>
+                        </form>
+
+                        <!--Registration Form Ends Here-->
+
+                        <br>
+                        <div class="row">
+                            <div class="left-align link col m5"><a href="#!/user/forum">Back To Forum</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!--Card Ends Here-->
+            </div>
+        </div>
+    </div>
+    <!--Row Ends Here-->
+</div>
+<!--Container Ends Here-->
+
+</div>

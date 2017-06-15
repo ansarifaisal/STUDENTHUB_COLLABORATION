@@ -1,0 +1,90 @@
+<div class="row" ng-init="manageEventCtrl.fetchAllEvents();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/manageevents" class="breadcrumb">Events</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <div class="row nomargin">
+                <div class="col m2 nopadding nomargin">
+                    <strong style="font-size:20px;" class="grey-text">Manage Events</strong>
+                </div>
+                <div class="col m4">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="searchKeyword" name="searchKeyword" id="searchKeyword" ng-model=""
+                            required="required">
+                        <label for="searchKeyword">Search For Events, Status</label>
+                    </div>
+                </div>
+
+                <div class="col m3">
+                    <select ng-model="sortBy">
+                        <option value="" disabled selected> Choose Sort By Option</option>
+                        <option value="userName">Sort By User</option>
+                        <option value="postDate">Sort By Date</option>
+                        <option value="status">Sort By Status</option>
+                    </select>
+                    <label>Materialize Select</label>
+                </div>
+
+                <div class="col m2 offset-m1">
+                    <a href="" ng-click="manageEventCtrl.validateAllEvents()" class="btn light-blue waves-effect waves-light">Approve All</a>
+                </div>
+
+            </div>
+            <hr/>
+
+            <table class="highlight bordered">
+                <thead>
+                    <tr>
+                        <td>Title</td>
+                        <td>Posted By</td>
+                        <td>Posted Date</td>
+                        <td>Start Date</td>
+                        <td>Event Status</td>
+                        <td>Report</td>
+                        <td>Status</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="event in manageEventCtrl.events | filter:searchKeyword | orderBy:sortBy">
+
+                        <td>{{event.eventTitle}}</td>
+                        <td>{{event.userName}}</td>
+                        <td>{{event.postDate}}</td>
+                        <td>{{event.startDate}}</td>
+                        <td>{{event.eventStatus}}</td>
+                        <td>{{event.reported}}</td>
+                        <td>{{event.status}}</td>
+                        <td ng-if=" event.status == 'APPROVED' ">
+                            <a href="#!/admin/editevent/{{event.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
+                        </td>
+
+                        <td ng-if=" event.status == 'PENDING' ">
+                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#!" ng-click="manageEventCtrl.validateEvent(event.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                        </td>
+
+                        <td ng-if=" event.status == 'DISABLED' || event.status == 'CLOSED' || event.status == 'REJECTED'">
+                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <ul uib-pagination total-items="manageUserCtrl.users.length" ng-model="currentPage" max-size="maxSize" class="pagination"
+                boundary-links="true"></ul>
+        </div>
+
+    </div>
+</div>

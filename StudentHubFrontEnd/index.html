@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewpoint" content="width=device-width, initial-scale=1">
+    <title>StudentHub | Collaboration</title>
+    <!--Loading All Script-->
+    <!--Loading JQuery-->
+    <script type="text/javascript" src="/assets/js/jquery.js"></script>
+
+    <!--Loading BootStrap-->
+    <!--<link rel="stylesheet" href="/assets/css/bootstrap.css">-->
+    <!--<script src="/assets/js/bootstrap.js"></script>-->
+
+    <!--Loading Angular Scripts-->
+    <script type="text/javascript" src="/assets/js/angular.js"></script>
+    <script type="text/javascript" src="/assets/js/angular-cookies.js"></script>
+    <script type="text/javascript" src="/assets/js/angular-route.js"></script>
+    <script type="text/javascript" src="/app/app.module.js"></script>
+    <script type="text/javascript" src="/app/app.routes.js"></script>
+    <script type="text/javascript" src="/assets/js/ui-bootstrap-tpls.js"></script>
+    
+
+    <!--Loading Materialize-->
+    <link rel="stylesheet" href="/assets/css/icon.css">
+    <link rel="stylesheet" href="/assets/css/materialize.css">
+    <script type="text/javascript" src="/assets/js/materialize.js"></script>
+
+
+    <!--Loading Authentication Module-->
+
+    <script src="app/components/authentication/authenticationFactory.js"></script>
+    <script src="app/components/authentication/authenticationController.js"></script>
+
+    <!--Loading page Module-->
+
+    <script src="app/components/page/pageController.js"></script>
+
+    <!--Loading Admin Module-->
+    <script src="app/components/admin/adminFactory.js"></script>
+    <script src="app/components/admin/adminController.js"></script>
+
+    <!--Loading ForumCategory Module-->
+
+    <script src="app/components/admin/forumCategoryFactory.js"></script>
+    <script src="app/components/admin/forumCategoryController.js"></script>
+
+    <!--Loading Forum Module-->
+
+    <script src="app/components/forum/forumFactory.js"></script>
+    <script src="app/components/forum/forumController.js"></script>
+
+    <!--Loading Blogs Module-->
+
+    <script src="app/components/blog/blogFactory.js"></script>
+    <script src="app/components/blog/blogController.js"></script>
+
+    <!--Loading Events Module-->
+
+    <script src="app/components/event/eventFactory.js"></script>
+    <script src="app/components/event/eventController.js"></script>
+
+    <!--Loading Events Module-->
+
+    <script src="app/components/job/jobFactory.js"></script>
+    <script src="app/components/job/jobController.js"></script>
+
+    <!--Loading User Module-->
+
+    <script src="app/components/user/userFactory.js"></script>
+    <script src="app/components/user/userController.js"></script>
+
+</head>
+
+<body ng-cloak="ng-cloak">
+
+    <div ng-if="authenticated">
+        <!--load navbar content dyanamically-->
+        <div ng-include="'/app/shared/navbar.html'"></div>
+
+    </div>
+
+    <!--content of the page will load here-->
+
+    <div class="container-fluid" id="main">
+        <div class="row">
+
+            <div ng-view></div>
+
+        </div>
+    </div>
+
+    <div ng-if="authenticated">
+        <div class="main-content">
+            <!--Load Footer Content Content dynamically -->
+            <div ng-include="'/app/shared/footer.html'"></div>
+        </div>
+    </div>
+
+    <!--Loading My Resources-->
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script type="text/javascript" src="/assets/js/myScript.js"></script>
+
+
+</body>
+
+</html>

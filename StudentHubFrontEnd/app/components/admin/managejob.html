@@ -1,0 +1,92 @@
+<div class="row" ng-init="manageJobCtrl.fetchAllJobs();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/managejobs" class="breadcrumb">Jobs</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <div class="row nomargin">
+                <div class="col m2 nopadding nomargin">
+                    <strong style="font-size:20px;" class="grey-text">Manage Jobs</strong>
+                </div>
+                <div class="col m4">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="searchKeyword" name="searchKeyword" id="searchKeyword" ng-model=""
+                            required="required">
+                        <label for="searchKeyword">Search For Job, Status</label>
+                    </div>
+                </div>
+
+                <div class="col m3">
+                    <select ng-model="sortBy">
+                        <option value="" disabled selected> Choose Sort By Option</option>
+                        <option value="userName">Sort By User</option>
+                        <option value="postDate">Sort By Date</option>
+                        <option value="status">Sort By Status</option>
+                    </select>
+                    <label>Materialize Select</label>
+                </div>
+
+                <div class="col m2 offset-m1">
+                    <a href="" ng-click="manageJobCtrl.validateAllJobs()" class="btn light-blue waves-effect waves-light">Approve All</a>
+                </div>
+
+            </div>
+            <hr/>
+
+            <table class="highlight bordered">
+                <thead>
+                    <tr>
+                        <td>Title</td>
+                        <td>Company</td>
+                        <td>Posted By</td>
+                        <td>Experience</td>
+                        <td>Salary</td>
+                        <td>Location</td>
+                        <td>Report</td>
+                        <td>Status</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="job in manageJobCtrl.jobs | filter:searchKeyword | orderBy:sortBy">
+
+                        <td>{{job.title}}</td>
+                        <td>{{job.company}}</td>
+                        <td>{{job.userName}}</td>
+                        <td>{{job.experience}}</td>
+                        <td>{{job.salary}}</td>
+                        <td>{{job.location}}</td>
+                        <td>{{job.report}}</td>
+                        <td>{{job.status}}</td>
+                        <td ng-if=" job.status == 'APPROVED' ">
+                            <a href="#!/admin/editjob/{{job.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="manageJobCtrl.validateJob(job.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
+                        </td>
+
+                        <td ng-if=" job.status == 'PENDING' ">
+                            <a href="" ng-click="manageJobCtrl.validateJob(job.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#!" ng-click="manageJobCtrl.validateJob(job.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                        </td>
+
+                        <td ng-if=" job.status == 'DISABLED' || job.status == 'CLOSED' || job.status == 'REJECTED'">
+                            <a href="" ng-click="manageJobCtrl.validateJob(job.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <ul uib-pagination total-items="manageUserCtrl.users.length" ng-model="currentPage" max-size="maxSize" class="pagination"
+                boundary-links="true"></ul>
+        </div>
+
+    </div>
+</div>

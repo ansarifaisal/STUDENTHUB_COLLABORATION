@@ -1,0 +1,52 @@
+<!--Container Starts From Here-->
+<div class="container">
+    <!--Row Starts From Here-->
+    <div class="row">
+        <div class="col offset-m3 offset-l3 s12 m6 l6" style="margin-top: 5%">
+            <div class="z-depth-3">
+                <!--Card Starts From Here-->
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="center-align">
+                            <img src="/assets/images/icon_graduate.png" class="circle responsive-img" style="width:50%; height: 50%" alt="No Image Available">
+                        </div>
+                      
+                        <span class="center card-title small">Enter Login Details</span>
+                        <form name="loginForm" ng-submit="authCtrl.doLogin()" novalidate>
+                            <div class="input-field">
+                                <!--<i class="material-icons prefix">perm_identity</i>-->
+                                <input type="text" id="userName" name="userName" class="validate" ng-model="authCtrl.credentials.userName" ng-minlength="3"
+                                    ng-maxlength="40" required="required">
+                                <label for="userName">Username</label>
+                                <div class="invalid-data center-align" ng-show="loginForm.userName.$dirty">
+                                    <span ng-show="loginForm.userName.$error.required && !register.userName.$pristine" class="help-block">Please, Provide Username</span>
+                                    <span ng-show="loginForm.userName.$error.minlength" class="help-block">Username Must Contain Atleast 3 Charachters</span>
+                                    <span ng-show="loginForm.userName.$error.maxlength" class="help-block">Username Cannot Contain More Than 10 Charachters</span>
+                                </div>
+                            </div>
+                            <div class="input-field">
+                                <!--<i class="material-icons prefix">lock_outline</i>-->
+                                <input type="password" name="password" id="password" ng-model="authCtrl.credentials.password" required="required">
+                                <label for="password">Password</label>
+                                <div class="invalid-data center-align" ng-show="loginForm.password.$dirty">
+                                    <span ng-show="loginForm.password.$invalid && !loginForm.password.$pristine">Please, Provide Password</span>
+                                </div>
+                            </div>
+                            <div class="input-field">
+                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="loginForm.$invalid" value="Sign in">
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="left-align link col m5"><a href="#!/register">Register Now!</a></div>
+                                <div class="right-align link"><a href="#!/register">Forget Password?</a></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--Card Ends Here-->
+            </div>
+        </div>
+    </div>
+    <!--Row Ends Here-->
+</div>
+<!--Container Ends Here-->

@@ -1,0 +1,17 @@
+{
+  "name": "StudentHub",
+  "homepage": "https://github.com/ansarifaisal/STUDENTHUB_COLLABORATION",
+  "authors": [
+    "Ansari Faisal <ansarifaisal480@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

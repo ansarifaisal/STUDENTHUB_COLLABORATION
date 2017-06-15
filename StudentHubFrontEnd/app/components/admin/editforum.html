@@ -1,0 +1,108 @@
+<div class="row" ng-init="manageForumCtrl.getForum();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/manageforums" class="breadcrumb">Forums</a>
+                        <a href="#!/admin/editforum" class="breadcrumb">Edit Forum</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Edit Forum</strong>
+            <hr/>
+            <div class="row">
+                <div class="col offset-m3 m6">
+                    <div class="card-panel">
+                        <form name="editForm" ng-submit="manageForumCtrl.editForum()" novalidate>
+
+                            <!--Id field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="hidden" name="forumId" id="forumId" ng-model="manageForumCtrl.forum.id" placeholder="Forum ID" required="required">
+                            </div>
+                            <!--Id field ends here-->
+
+                            <!--forumName field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="forumName" id="forumName" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="manageForumCtrl.forum.forumName" placeholder="Forum Name" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.forumName.$dirty">
+                                    <span ng-show="editForm.forumName.$dirty && editForm.forumName.$error.required">Please, Provide Forum Name</span>
+                                    <span ng-show="editForm.forumName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.forumName.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.forumName.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--title field ends here-->
+
+                            <!--forumDescription field starts here-->
+                            <div class="input-field nomargin">
+
+                                <textarea id="forumDescription" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                    ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Forum Description" data-length="500"
+                                    ng-model="manageForumCtrl.forum.forumDescription" placeholder="forumDescription" required="required"></textarea>
+                                <div class="invalid-data center-align" ng-show="editForm.forumDescription.$dirty">
+                                    <span ng-show="editForm.forumDescription.$dirty && editForm.forumDescription.$error.required">Please, Provide forumDescription</span>
+                                    <span ng-show="editForm.forumDescription.$error.minlength">This field must contain atleast 20 charachters</span>
+                                    <span ng-show="editForm.forumDescription.$error.maxlength">This field can contain maximum 500 charachters</span>
+                                    <span ng-show="editForm.forumDescription.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                                </div>
+
+                            </div>
+                            <!--description field ends here-->
+
+                            <!--Report field starts here-->
+                            <div class="input-field dropdown ">
+
+                                <select name="report" id="report" ng-model="manageForumCtrl.forum.report" ng-required="true">
+                                    
+                                    <option value = "" disabled selected>Choose report</option>
+                                    <option value = "YES">Yes</option>
+                                    <option value = "NO">No</option>
+
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.report.$dirty">
+                                    <span ng-show="editForm.report.$invalid && editForm.report.touched">Please, Select Report</span>
+                                </div>
+
+                            </div>
+                            <!--Report field ends here-->
+
+                            <!--Status field starts here-->
+                            <div class="input-field dropdown ">
+
+                                <select name="status" id="status" ng-model="manageForumCtrl.forum.status" ng-required="true">
+                                    
+                                    <option value = "" disabled selected>Choose status</option>
+                                    <option value = "PENDING">Pending</option>
+                                    <option value = "APPROVED">Approved</option>
+                                    <option value = "CLOSED">Closed</option>
+                                    <option value = "REJECTED">Rejected</option>
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.status.$dirty">
+                                    <span ng-show="editForm.status.$invalid && editForm.status.touched">Please, Select Status</span>
+                                </div>
+
+                            </div>
+                            <!--Status field ends here-->
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

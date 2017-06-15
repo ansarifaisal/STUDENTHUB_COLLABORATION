@@ -1,0 +1,220 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+
+  footer.page-footer{
+    background-color: #0277bd;
+  }
+#slide-out-fixed{
+    margin-top: 65px;
+}
+
+.addjust-content{
+    padding-left:300px;
+}
+
+.add-padding-left{
+    padding-left:5%;
+}
+
+.add-padding-right{
+    padding-left:5%;
+}
+
+nav{
+    /*light-blue darken-3*/
+    background-color: #0277bd ;
+}
+
+#logo-conf{
+    padding:0px 25px 0px 25px ;
+}
+
+.invalid-data{
+    color:#F44336;
+    margin-top:-15px;
+    font-size:0.9em;
+}
+
+
+/*invalid color*/
+.input-field input[type=text].invalid,
+.input-field input[type=email].invalid,
+.input-field input[type=password].invalid,
+.input-field textarea.invalid,
+textarea.valid,
+.materialize-textarea.invalid{
+     border-bottom: 1px solid #F44336;
+     box-shadow: 0 1px 0 0 #F44336;
+}
+
+/*Valid color for the specified field type*/
+.input-field input[type=text].valid,
+.input-field input[type=email].valid,
+.input-field input[type=password].valid,
+.input-field textarea.valid,
+textarea.valid,
+.materialize-textarea.valid{
+    border-bottom: 1px solid #4CAF50;
+    box-shadow: 0 1px 0 0 #4CAF50;
+}
+
+/*dirty | invalid input color*/
+input.ng-dirty.ng-invalid, .confirmPassword, textarea, .materialize-textarea{
+     border-bottom: 1px solid #F44336;
+     box-shadow: 0 1px 0 0 #F44336;
+}
+
+/*valid input color*/
+input.ng-dirty.ng-valid, .confirmPassword, textarea, .materialize-textarea{
+    border-bottom: 1px solid #4CAF50;
+    box-shadow: 0 1px 0 0 #4CAF50;
+}
+
+/*button primary*/
+.primary{
+    color : #0277bd;
+}
+
+/*Link style*/
+.link > a{
+    text-decoration: none;
+    color:black;
+}
+
+/*margin bottom to the dropdown element*/
+.dropdown {
+    margin-bottom: 50px;
+}
+
+/*to occupy 100% width*/
+.full-width{
+    width:100%;
+}
+
+.search{
+    display: block;
+}
+
+.search:focus {
+  background-color: #fff;
+  border: 0;
+  box-shadow: none;
+  color: #444;
+}
+
+/*#notification-dropdown-menu {
+    width:400px;
+}
+
+#message-dropdown-menu{
+    width:400px;
+}*/
+
+.nopadding{
+    padding: 0px;
+}
+
+.panel-heading{
+    font-size: 150%;
+}
+
+
+.top-bottom-padding{
+    padding : 10px 10px 10px 10px;
+}
+
+.info{
+    font-size:14px;
+}
+
+.info a:hover{
+    text-decoration: underline;
+}
+
+.tabs .tab a {
+    color:#000000;
+}
+
+
+.tabs .tab a:hover {
+    color:#039be5;
+}
+
+.tabs .indicator {
+        background-color: #039be5;
+}
+
+.tabs .tab a:hover, .tabs .tab a.active{
+    color: #039be5;
+}
+
+.nomargin{
+    margin:0px;
+}
+
+.icon-style{
+    width: 100%;
+    height: 100%; 
+    font-size:250%;
+    color: grey;
+}
+
+.table-of-contents a.active{
+    border-left : 3px solid #0277bd;
+}
+
+.table-of-contents a:hover{
+    border-left : 1px solid #0277bd;
+}
+
+.forum-title a{
+    font-size: 80%;
+    font-weight: bold;
+}
+
+.comments{
+    font-size: 20px;
+}
+
+
+.navbar-color {
+    background-color: #fff;
+}
+
+.breadcrumb:last-child {
+    color: #000;
+}
+
+.breadcrumb:before {
+    color:#CCC;
+}
+
+.breadcrumb {
+    color:#CCC;
+}
+
+.truncate {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pagination li.active {
+  background-color: #039be5;
+}
+
+
+#toast-container {
+    top: 10%;
+    right: 7%;
+    max-width: 86%;
+  }

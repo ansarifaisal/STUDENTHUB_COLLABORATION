@@ -1,0 +1,23 @@
+{
+  "name": "StudentHubFrontEnd",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-cookies": "^1.6.2",
+    "angular": "^1.6.2",
+    "angular-route": "^1.6.2",
+    "popover": "*",
+    "tooltip": "*",
+    "bootstrap": "^3.3.7",
+    "materialize": "^0.98.0"
+  }
+}

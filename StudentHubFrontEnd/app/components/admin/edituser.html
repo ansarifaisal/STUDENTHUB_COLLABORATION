@@ -1,0 +1,134 @@
+<div class="row" ng-init="manageUserCtrl.getUser();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!" class="breadcrumb">Manage</a>
+                        <a href="#!/admin/manageuser" class="breadcrumb">User</a>
+                        <a href="#!/admin/edituser" class="breadcrumb">Edit User</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Edit User</strong>
+            <hr/>
+            <div class="row">
+                <div class="col offset-m3 m6">
+                    <!--Edit form starts here-->
+                    <div class="card-panel">
+                        <form name="editForm" ng-submit="manageUserCtrl.editUser()" novalidate>
+
+                            <!--Id field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="hidden" name="userId" id="userId" ng-model="manageUserCtrl.user.id" placeholder="User ID" required="required">
+                            </div>
+                            <!--Id field ends here-->
+
+                            <!--firstName field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="firstName" id="firstName" ng-pattern="/^[a-zA-Z]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                    data-length="20" ng-model="manageUserCtrl.user.firstName" placeholder="First Name" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.firstName.$dirty">
+                                    <span ng-show="editForm.firstName.$dirty && editForm.firstName.$error.required">Please, Provide First Name</span>
+                                    <span ng-show="editForm.firstName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.firstName.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                    <span ng-show="editForm.firstName.$error.pattern">This field can contain only charachters</span>
+                                </div>
+                            </div>
+                            <!--firstName field ends here-->
+
+                            <!--lastName field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="lastName" id="lastName" ng-pattern="/^[a-zA-Z]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                    data-length="20" ng-model="manageUserCtrl.user.lastName" placeholder="Last Name" required="required">
+
+                                <div class="invalid-data center-align" ng-show="editForm.lastName.$dirty">
+                                    <span ng-show="editForm.lastName.$dirty && editForm.lastName.$error.required">Please, Provide Last Name</span>
+                                    <span ng-show="editForm.lastName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.lastName.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                    <span ng-show="editForm.lastName.$error.pattern">This field can contain only charachters</span>
+                                </div>
+
+                            </div>
+                            <!--lastName field ends here-->
+
+                            <!--userName field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="userName" id="userName" ng-pattern="/^[a-zA-Z0-9]+$/" ng-minlength="2" maxlength="40" ng-maxlength="20"
+                                    data-length="40" ng-model="manageUserCtrl.user.userName" placeholder="Username" required="required">
+
+                                <div class="invalid-data center-align" ng-show="editForm.userName.$dirty">
+                                    <span ng-show="editForm.userName.$dirty && editForm.userName.$error.required">Please, Provide Username</span>
+                                    <span ng-show="editForm.userName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.userName.$error.maxlength">This field can contain maximum 40 charachters</span>
+                                    <span ng-show="editForm.userName.$error.pattern">This field cannot contain any special charachters</span>
+                                </div>
+
+                            </div>
+                            <!--userName field ends here-->
+
+                            <!--email field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="email" name="email" id="email" ng-minlength="2" maxlength="40" ng-maxlength="40" data-length="40" ng-model="manageUserCtrl.user.email"
+                                    placeholder="Email" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.email.$dirty">
+                                    <span ng-show="editForm.email.$dirty && editForm.email.$error.required">Please, Provide Email</span>
+                                    <span ng-show="editForm.email.$invalid && !editForm.email.$error.required">Enter a valid email.</span>
+                                    <span ng-show="editForm.email.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.email.$error.maxlength">This field can contain maximum 40 charachters</span>
+                                </div>
+
+                            </div>
+                            <!--email field ends here-->
+
+                            <!--Role field starts here-->
+                            <div class="input-field dropdown nomargin">
+
+                                <select name="role" id="role" ng-model="manageUserCtrl.user.role" ng-required="true">
+                                    <option value = "" disabled selected>Choose Role</option>
+                                    <option value = "USER">User</option>
+                                    <option value = "ADMIN">Admin</option>
+                                    <option value = "Super_Admin">Super Admin</option>
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.role.$dirty">
+                                    <span ng-show="editForm.role.$invalid && editForm.role.touched">Please, Select Role</span>
+                                </div>
+
+                            </div>
+                            <!--Role field ends here-->
+
+                            <!--Role field starts here-->
+                            <div class="input-field dropdown nomargin">
+                                <select name="status" id="status" ng-model="manageUserCtrl.user.status" ng-required="true">
+                                    <option value = "" disabled selected>Choose Status</option>
+                                    <option value = "PENDING">Pending</option>
+                                    <option value = "APPROVED">Approved</option>
+                                    <option value = "DISABLED">Disabled</option>
+                                    <option value = "REJECTED">Rejected</option>
+                                </select>
+
+                                <div class="invalid-data center-align" ng-show="editForm.status.$dirty">
+                                    <span ng-show="editForm.status.$invalid && editForm.status.touched">Please, Select Status</span>
+                                </div>
+
+                            </div>
+                            <!--status field ends here-->
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

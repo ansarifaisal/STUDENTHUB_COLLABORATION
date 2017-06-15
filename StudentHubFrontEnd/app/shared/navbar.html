@@ -1,0 +1,149 @@
+<!--Navbar Starts Here-->
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <div class="row">
+                <div class="col m1 l1 s1">
+
+                    <a data-href="#" href="javascript:void(0)" class="hide-on-med-and-down tooltipped left-bar" data-position="bottom" data-delay="50"
+                        data-tooltip="Toggle Side Bar" data-activates="slide-out"><i class="material-icons">menu</i></a>
+
+                </div>
+                <a href="#!/user/home" class="brand-logo">Student-Hub</a>
+
+                <ul class="right hide-on-med-and-down">
+
+                    <li>
+                        <a href="javascript:void(0)" class="tooltipped" data-position="bottom" data-href="#" data-delay="50" data-tooltip="Search"><sup><i class="material-icons">search</i></sup></a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)" class="dropdown-button" data-activates="manage-list" data-position="bottom" data-href="#" data-delay="50"
+                            data-tooltip="Manage"><sup><i class="material-icons">settings</i></sup></a>
+                        <ul id='manage-list' class='dropdown-content'>
+                            <li><a href="#!/admin/manageuser">Users</a></li>
+                            <li><a href="#!/admin/manageblogs">Blogs</a></li>
+                            <li><a href="#!/admin/manageforums">Forums</a></li>
+                            <li><a href="#!/admin/managejobs">Jobs</a></li>
+                            <li><a href="#!/admin/manageevents">Events</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)" class="dropdown-button" data-activates="notification-list" data-position="bottom" data-href="#"
+                            data-delay="50" data-tooltip="Notification"><span class="material-icons">notifications</span><sup><span class="new badge red">4</span></sup></a>
+
+                        <ul id='notification-list' class='dropdown-content'>
+                            <li><a href="#!">Users <span class="new badge red">4</span> </a></li>
+                            <li><a href="#!">Blogs</a></li>
+                            <li><a href="#!">Forums</a></li>
+                            <li><a href="#!">Jobs</a></li>
+                            <li><a href="#!">Events</a></li>
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)" class="dropdown-button" data-activates="messages-list" data-position="bottom" data-href="#"
+                            data-delay="50" data-tooltip="Message"><span class="material-icons">mail</span><sup><span class="new badge red">4</span></sup></a>
+
+                        <ul id='messages-list' class='dropdown-content'>
+                            <li><a href="#!/user/inbox" style="font-size: 15px;">View All Message</a></li>
+
+                            <ul class="collection" style="margin-top:0px;">
+                                <li class="collection-item avatar">
+                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
+                                </li>
+
+                                <li class="collection-item avatar">
+                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
+                                </li>
+
+                                <li class="collection-item avatar">
+                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
+                                </li>
+                            </ul>
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0)" class="dropdown-button" data-activates="account" data-href="#"><span style="font-size:30px;" class="material-icons">account_circle</span></a>
+
+                        <ul id='account' class='dropdown-content'>
+                            <li><a href="#!/user/profile">Profile</a></li>
+                            <li><a href="#!/user/account">My Account</a></li>
+                            <li><a href="#!" ng-click="logout()">Logout</a></li>
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a data-href="#" href="javascript:void(0)" class="tooltipped right-bar" data-position="bottom" data-delay="50" data-tooltip="Messages"
+                            data-activates="right-slide-out"><span class="material-icons">people</span></a>
+                    </li>
+
+
+
+                </ul>
+                <a data-href="#" href="javascript:void(0)" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+            </div>
+    </nav>
+    </div>
+
+
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img src="/assets/images/profile_userView.jpg" alt="No Profile View Available">
+                </div>
+                <div class="row">
+                    <center><img class="circle" src="/assets/images/profile.png"></center>
+                    <ul id="profile-dropdown" class="dropdown-content">
+                        <li><a href="">Profile</a></li>
+                        <li><a href=""> Settings</a></li>
+                        <li><a href="">Logout</a></li>
+                    </ul>
+                    <center>
+                        <a class="black-text profile-dropdown dropdown-button waves-effect waves-white tooltipped" data-position="bottom" data-delay="50"
+                            data-tooltip="Options" href="javascript:void(0)" data-href="#" data-activates="profile-dropdown"><strong>Khozema Nullwala</strong></a>
+                    </center>
+                </div>
+            </div>
+        </li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">notifications</i>Notification</a></li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">mail</i>Messages</a></li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">forum</i>Forum</a></li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">people</i>Blogs</a></li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">event</i>Event</a></li>
+        <li><a href="javascript:void(0)" class="waves-effect waves-default"><i class="material-icons prefix">business_center</i>Jobs</a></li>
+    </ul>
+
+
+    <ul id="right-slide-out" class="side-nav">
+        <li>&nbsp;&nbsp;&nbsp;Online (10)</li>
+        <ul class="collection" style="margin-top:0px;">
+            <li class="collection-item avatar">
+                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                <span class="title">Title</span>
+                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
+            </li>
+
+            <li class="collection-item avatar">
+                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                <span class="title">Title</span>
+                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
+            </li>
+
+            <li class="collection-item avatar">
+                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
+                <span class="title">Title</span>
+                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
+            </li>
+        </ul>
+
+    </ul>

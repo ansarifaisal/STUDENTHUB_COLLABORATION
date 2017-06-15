@@ -1,0 +1,135 @@
+<!--Container Starts From Here-->
+<div class="container">
+    <!--Row Starts From Here-->
+    <div class="row">
+        <div class="col offset-l3 s12 m6 l6">
+            <div class="z-depth-3">
+                <!--Card Starts From Here-->
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="center-align">
+                            <img src="/assets/images/icon_graduate.png" class="circle responsive-img" style="width:50%; height: 50%" alt="No Image Available">
+                        </div>
+                        <span class="center card-title">Enter Registration Details</span>
+
+                        <!--Registration Form Starts From Here-->
+
+                        <form name="registerForm" ng-submit="authCtrl.doRegisteration()" novalidate>
+
+                            <!--First Name Starts From  Here-->
+
+                            <div class="input-field">
+                                <input type="text" name="firstName" id="firstName" ng-model="authCtrl.user.firstName" required="required">
+                                <label for="firstName">First Name</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.firstName.$dirty">
+                                    <span ng-show="registerForm.firstName.$dirty && registerForm.firstName.$error.required">Please, Provide First Name</span>
+                                </div>
+                            </div>
+
+                            <!--First Name Ends Here-->
+
+
+                            <!--Last Name Field Starts From Here-->
+                            <div class="input-field">
+                                <input type="text" name="lastName" id="lastName" ng-model="authCtrl.user.lastName" required="required">
+                                <label for="lastName">Last Name</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.lastName.$dirty">
+                                    <span ng-show="registerForm.lastName.$invalid && !registerForm.lastName.$pristine">Please, Provide Last Name</span>
+                                </div>
+                            </div>
+                            <!--Last Name Field Ends Here-->
+
+                            <!--User Name Field Starts From  Here-->
+                            <div class="input-field">
+                                <input type="text" id="userName" name="userName" class="validate" ng-model="authCtrl.user.userName" ng-blur = "authCtrl.checkUserName()" ng-minlength="3" ng-maxlength="40"
+                                    required>
+                                    <label for="userName">Username</label>
+                                    <div class="invalid-data center-align" ng-show="registerForm.userName.$dirty">
+                                        <span ng-show="registerForm.userName.$error.required">Please, Provide Username</span>
+                                        <span ng-show="registerForm.userName.$error.minlength">Username Must Contain Atleast 3 Charachters</span>
+                                        <span ng-show="registerForm.userName.$error.maxlength">Username Cannot Contain More Than 10 Charachters</span>
+                                        <span ng-show="authCtrl.userNameExist">Please Choose The Different Username</span>
+                                    </div>
+                            </div>
+                            <!--User Name Field Ends Here-->
+
+                            <!--Password Field Starts From Here-->
+                            <div class="input-field">
+                                <input type="password" name="password" id="password" ng-model="authCtrl.user.password" ng-minlength="5" class="validate"
+                                    required="required">
+                                    <label for="password">Password</label>
+                                    <div class="invalid-data center-align" ng-show="registerForm.password.$dirty">
+                                        <span ng-show="registerForm.password.$error.minlength">Password Must Contain Atleast 5 Charachters</span>
+                                        <span ng-show="registerForm.password.$invalid && registerForm.password.$error.required">Please, Provide Password</span>
+                                    </div>
+                            </div>
+                            <!--Password Field Ends Here-->
+
+                            <!--Confirm Password Field Starts From Here-->
+                            <div class="input-field">
+                                <input type="password" name="confirmPassword" id="confirmPassword" ng-model="authCtrl.user.confirmPassword" required="required">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.confirmPassword.$dirty">
+                                    <span ng-show="registerForm.confirmPassword.$invalid && !registerForm.confirmPassword.$pristine">Please, Provide Password Same As Above</span>
+                                    <span ng-show="(!registerForm.confirmPassword.$invalid) && (authCtrl.user.password !== authCtrl.user.confirmPassword)">Password Doesn't Match</span>
+                                </div>
+                            </div>
+                            <!--Confirm Password Field Ends Here-->
+
+                            <!--Gender Field Starts From Here-->
+                            <div class="input-field dropdown">
+                                <select name="gender" ng-model="authCtrl.user.gender" ng-required="true">
+                                <option value = "" disabled selected>Choose Your Gender</option>
+                                <option value = "MALE">Male</option>
+                                <option value = "FEMALE">Female</option>
+                            </select>
+                                <label for="gender">Gender</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.gender.$dirty">
+                                    <span ng-show="registerForm.gender.$invalid && registerForm.gender.touched">Please, Select Gender</span>
+                                </div>
+                            </div>
+                            <!--Gender Field Ends Here-->
+
+                            <!--Email Field Starts From Here-->
+                            <div class="input-field">
+                                <input type="email" name="email" id="email" ng-model="authCtrl.user.email" required="required">
+                                <label for="email">Email</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.email.$dirty">
+                                    <span ng-show="registerForm.email.$invalid">Please, Provide Valid Email</span>
+                                </div>
+                            </div>
+                            <!--Email Field Ends Here-->
+
+                            <!--Dob Field Starts From Here-->
+                            <div class="input-field">
+                                <input type="text" name="dob" id="dob" class="datepicker" ng-model="authCtrl.user.dob" required="required">
+                                <label for="dob">Birth Date</label>
+                                <div class="invalid-data center-align" ng-show="registerForm.dob.$dirty">
+                                    <span ng-show="registerForm.dob.$invalid">Please, Provide Valid Birth Date</span>
+                                </div>
+                            </div>
+
+                            <p style="color:red; font-size:12px;" ng-hide="registerForm.$invalid">You will be able to login once admin approved your account this usually take 24 hours.</p>
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="registerForm.$invalid" value="Sign Up">
+                                </div>
+                            </div>
+                        </form>
+                        <!--Registration Form Ends Here-->
+
+                        <br>
+                        <div class="row">
+                            <div class="left-align link col m5"><a href="#!/login">Login Now!</a></div>
+                            <div class="right-align link"><a href="#!/register">Forget Password?</a></div>
+                        </div>
+                    </div>
+                </div>
+                <!--Card Ends Here-->
+            </div>
+        </div>
+    </div>
+    <!--Row Ends Here-->
+</div>
+<!--Container Ends Here-->
