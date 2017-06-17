@@ -14,7 +14,8 @@ AdminModule.controller('ManageUserController', [
     '$log',
     'orderByFilter',
     '$route',
-    function (ManageUserFactory, $scope, $location, $timeout, $routeParams, $log, orderBy, $route) {
+    '$filter',
+    function (ManageUserFactory, $scope, $location, $timeout, $routeParams, $log, orderBy, $route, $filter) {
 
         var me = this;
 
@@ -34,23 +35,92 @@ AdminModule.controller('ManageUserController', [
         me.fetchAllUsers = function () {
             ManageUserFactory.fetchAllUsers().then(function (users) {
 
-                //watch to sort the users
-                $scope.$watch(function () {
-                    propertyName = $scope.sortBy;
-                    me.users = orderBy(users, propertyName);
-                });
+                var sortingOrder = 'id'; //default sort
 
-                $scope.filteredUsers = [];
-                $scope.currentPage = 1;
-                $scope.numPerPage = 10;
-                $scope.maxSize = 5;
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = users;
 
-                //watch for pagination
-                $scope.$watch(function () {
-                    var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-                        , end = begin + $scope.numPerPage;
-                    $scope.filteredUsers = me.users.slice(begin, end);
-                });
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['userName'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
 
             },
                 //error Callback function
@@ -133,7 +203,8 @@ AdminModule.controller('ManageBlogController', [
     '$log',
     'orderByFilter',
     '$route',
-    function (ManageBlogFactory, $location, $scope, $timeout, $routeParams, $log, orderBy, $route) {
+    '$filter',
+    function (ManageBlogFactory, $location, $scope, $timeout, $routeParams, $log, orderBy, $route, $filter) {
 
         var me = this;
 
@@ -152,7 +223,94 @@ AdminModule.controller('ManageBlogController', [
         //function to fetch all the blogs from the database
         me.fetchAllBlogs = function () {
             ManageBlogFactory.fetchAllBlogs().then(function (blogs) {
-                me.blogs = blogs;
+                
+                var sortingOrder = 'blogId'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = blogs;
+
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['title'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
             },
                 function (errorResponse) {
                     Materialize.toast('Error While Fetching Blogs From The Database', 6000);
@@ -226,7 +384,8 @@ AdminModule.controller('ManageForumController', [
     '$route',
     'orderByFilter',
     '$timeout',
-    function (ManageForumFactory, $location, $scope, $routeParams, $route, orderBy, $timeout) {
+    '$filter',
+    function (ManageForumFactory, $location, $scope, $routeParams, $route, orderBy, $timeout, $filter) {
 
         var me = this;
 
@@ -245,7 +404,94 @@ AdminModule.controller('ManageForumController', [
         //function to fetch all the forum
         me.fetchAllForums = function () {
             ManageForumFactory.fetchAllForums().then(function (forums) {
-                me.forums = forums;
+
+                var sortingOrder = 'id'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = forums;
+
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['forumName'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
             },
                 function (errorResponse) {
                     Metrialize.toast('<strong>Error Fetching Forums</strong>', 6000);
@@ -318,7 +564,8 @@ AdminModule.controller('ManageJobController', [
     '$route',
     'orderByFilter',
     '$timeout',
-    function (ManageJobFactory, $location, $scope, $routeParams, $route, orderBy, $timeout) {
+    '$filter',
+    function (ManageJobFactory, $location, $scope, $routeParams, $route, orderBy, $timeout, $filter) {
 
         var me = this;
 
@@ -337,7 +584,94 @@ AdminModule.controller('ManageJobController', [
         //function to fetch all the jobs
         me.fetchAllJobs = function () {
             ManageJobFactory.fetchAllJobs().then(function (jobs) {
-                me.jobs = jobs;
+              
+                var sortingOrder = 'id'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = jobs;
+
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['title'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+                
             },
                 function (errorResponse) {
                     Metrialize.toast('<strong>Error Fetching Jobs</strong>', 6000);
@@ -409,7 +743,8 @@ AdminModule.controller('ManageEventController', [
     '$route',
     'orderByFilter',
     '$timeout',
-    function (ManageEventFactory, $location, $scope, $routeParams, $route, orderBy, $timeout) {
+    '$filter',
+    function (ManageEventFactory, $location, $scope, $routeParams, $route, orderBy, $timeout, $filter) {
 
         var me = this;
 
@@ -428,7 +763,94 @@ AdminModule.controller('ManageEventController', [
         //function to fetch all the events
         me.fetchAllEvents = function () {
             ManageEventFactory.fetchAllEvents().then(function (events) {
-                me.events = events;
+
+                 var sortingOrder = 'id'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = events;
+
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['eventTitle'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
             },
                 function (errorResponse) {
                     Metrialize.toast('<strong>Error Fetching Events</strong>', 6000);
@@ -478,6 +900,188 @@ AdminModule.controller('ManageEventController', [
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error While Approving The Event</strong>', 6000);
+                }
+            );
+        }
+
+    }
+]);
+
+
+
+/*
+<=================================================================>
+|----------------------Manage Topics Controller--------------------|
+<=================================================================>
+*/
+
+AdminModule.controller('ManageTopicController', [
+    'ManageTopicFactory',
+    '$location',
+    '$scope',
+    '$routeParams',
+    '$route',
+    'orderByFilter',
+    '$timeout',
+    '$filter',
+    function (ManageTopicFactory, $location, $scope, $routeParams, $route, orderBy, $timeout, $filter) {
+
+        var me = this;
+
+        //array to store all the topics
+        me.topics = [];
+
+        //object to store
+        me.topic = {};
+
+        //load jquery
+        $timeout(function () {
+            //this method is declared in the myScript file to this is use to instantiate the methods
+            settings();
+        }, 100);
+
+        //function to fetch all the topics
+        me.fetchAllTopics = function () {
+            ManageTopicFactory.fetchAllTopics().then(function (topics) {
+                me.topics = topics;
+
+                var sortingOrder = 'id'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = false;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = topics;
+
+                var searchMatch = function (haystack, needle) {
+                    console.log(haystack);
+                    if (!needle) {
+                        
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['title'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
+
+            },
+                function (errorResponse) {
+                    Metrialize.toast('<strong>Error Fetching Topics</strong>', 6000);
+                }
+            );
+        }
+
+        //function to fetch single topic
+        me.getTopic = function () {
+            var topicId = $routeParams.id;
+            ManageTopicFactory.getTopic(topicId).then(function (topic) {
+                me.topic = topic;
+            },
+                function (errorResponse) {
+                    Materialize.toast('<strong>Error Fetching Topic</strong>', 6000)
+                }
+            );
+        }
+
+        //function to edit the topic
+        me.editTopic = function () {
+            ManageTopicFactory.editTopic(me.topic).then(function () {
+                $location.path('/admin/managetopics');
+                Materialize.toast('<strong>Topic Update Successfully!</strong>', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('<strong>Error While Editing Topic</strong>', 6000)
+                });
+        }
+
+        //function to validate the Topic
+        me.validateTopic = function (id, action) {
+            ManageTopicFactory.validateTopic(id, action).then(function () {
+                $route.reload();
+                Materialize.toast('<strong>Topic ' + action + ' Successfully!</strong>', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('<strong>Error While ' + action + ' The Topic</strong>', 6000);
+                });
+        }
+
+        //function to validate all the Topic
+        me.validateAllTopics = function () {
+            ManageTopicFactory.validateAllTopics().then(function () {
+                $route.reload();
+                Materialize.toast('<strong>All Topic Approved Successfully!</strong>', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('<strong>Error Topic Approving The Event</strong>', 6000);
                 }
             );
         }

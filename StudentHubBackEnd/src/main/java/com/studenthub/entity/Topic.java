@@ -1,7 +1,6 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Entity(name = "TOPICS")
 @Component
-public class Topic implements Serializable {
+public class Topic extends Domain implements Serializable {
 
 	/**
 	 * 
@@ -45,10 +44,19 @@ public class Topic implements Serializable {
 
 	@Column(name = "TITLE", nullable = false)
 	private String title;
-
+	
+	@Column(name = "IMAGE_URL", nullable = false)
+	private String imageURL;
+	
+	@Column(name = "DESCRIPTION", nullable = false)
+	private String description;
+	
 	@Column(name = "CREATED_DATE", nullable = false)
-	private LocalDateTime createdDate;
+	private String createdDate;
 
+	@Column(name = "REPORT", nullable = false)
+	private String report;
+	
 	@Column(name = "STATUS", nullable = false)
 	private String status;
 
@@ -96,12 +104,36 @@ public class Topic implements Serializable {
 		this.title = title;
 	}
 
-	public LocalDateTime getCreatedDate() {
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public String getReport() {
+		return report;
+	}
+
+	public void setReport(String report) {
+		this.report = report;
 	}
 
 	public String getStatus() {
@@ -112,4 +144,16 @@ public class Topic implements Serializable {
 		this.status = status;
 	}
 
+
+	/*
+	 * Overriding toString Method For Debugging
+	 */
+
+	@Override
+	public String toString() {
+		return "Topic [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forum=" + forum + ", title="
+				+ title + ", imageURL=" + imageURL + ", description=" + description + ", createdDate=" + createdDate
+				+ ", report=" + report + ", status=" + status + "]";
+	}
+	
 }

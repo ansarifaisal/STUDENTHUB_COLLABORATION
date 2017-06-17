@@ -1,4 +1,4 @@
-<div class="row" ng-init="manageBlogCtrl.fetchAllBlogs();">
+<div class="row" ng-init="manageTopicCtrl.fetchAllTopics();">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -6,7 +6,7 @@
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
                         <a href="#!" class="breadcrumb">Manage</a>
-                        <a href="#!/admin/manageblogs" class="breadcrumb">Blogs</a>
+                        <a href="#!/admin/managetopics" class="breadcrumb">Topics</a>
                     </div>
                 </div>
             </nav>
@@ -15,13 +15,12 @@
         <div class="card-panel">
             <div class="row nomargin">
                 <div class="col m2 nopadding nomargin">
-                    <strong style="font-size:20px;" class="grey-text">Manage Blogs</strong>
+                    <strong style="font-size:20px;" class="grey-text">Manage Topics</strong>
                 </div>
-
                 <div class="col m4">
                     <div class="input-field nomargin">
                         <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
-                        <label for="searchKeyword">Search For Blog</label>
+                        <label for="searchKeyword">Search For Topic</label>
                     </div>
                 </div>
 
@@ -33,7 +32,7 @@
                 </div>
 
                 <div class="col m2 offset-m1">
-                    <a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Approve All</a>
+                    <a href="" ng-click="manageTopicCtrl.validateAllTopics()" class="btn light-blue waves-effect waves-light">Approve All</a>
                 </div>
 
             </div>
@@ -42,34 +41,38 @@
             <table class="highlight bordered">
                 <thead>
                     <tr>
-                        <td><a href="" ng-click="sort_by('title')">Title</a></td>
-                        <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
-                        <td><a href="" ng-click="sort_by('postDate')">Posted Date</a></td>
-                        <td><a href="" ng-click="sort_by('report')">Report</a></td>
-                        <td><a href="" ng-click="sort_by('status')">Status</a></td>
+                        <td>Title</td>
+                        <td>Posted By</td>
+                        <td>Posted Date</td>
+                        <td>Forum Name</td>
+                        <td>Report</td>
+                        <td>Status</td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                        <td>{{blog.title}}</td>
-                        <td>{{blog.userName}}</td>
-                        <td>{{blog.postDate}}</td>
-                        <td>{{blog.report}}</td>
-                        <td>{{blog.status}}</td>
-                        <td ng-if=" blog.status == 'APPROVED' ">
-                            <a href="#!/admin/editblog/{{blog.blogId}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="" ng-click="manageBlogCtrl.validateBlog(blog.blogId, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
+                    <tr ng-repeat="topic in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                        <td>{{topic.title}}</td>
+                        <td>{{topic.userName}}</td>
+                        <td>{{topic.createdDate}}</td>
+                        <td>{{topic.forum.forumName}}</td>
+                        <td>{{topic.report}}</td>
+                        <td>{{topic.status}}</td>
+                        <td ng-if=" topic.status == 'OPEN' ">
+                            <a href="#!/admin/edittopic/{{topic.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
                         </td>
 
-                        <td ng-if=" blog.status == 'PENDING' ">
-                            <a href="" ng-click="manageBlogCtrl.validateBlog(blog.blogId, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#!" ng-click="manageBlogCtrl.validateBlog(blog.blogId, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                        <td ng-if=" topic.status == 'PENDING' ">
+                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#!" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
                         </td>
 
-                        <td ng-if=" blog.status == 'DISABLED' ">
-                            <a href="" ng-click="manageBlogCtrl.validateBlog(blog.blogId, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <td ng-if=" topic.status == 'CLOSED' || topic.status == 'REJECTED' ">
+                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
+
+
 
                     </tr>
 

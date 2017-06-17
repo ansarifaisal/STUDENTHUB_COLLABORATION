@@ -19,18 +19,14 @@
                 </div>
                 <div class="col m4">
                     <div class="input-field nomargin">
-                        <input type="text" style="margin-bottom:0px;" ng-model="searchKeyword" name="searchKeyword" id="searchKeyword" ng-model=""
-                            required="required">
-                        <label for="searchKeyword">Search For Blog, Status</label>
+                        <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                        <label for="searchKeyword">Search For Forum</label>
                     </div>
                 </div>
 
                 <div class="col m3">
-                    <select ng-model="sortBy">
-                        <option value="" disabled selected> Choose Sort By Option</option>
-                        <option value="userName">Sort By User</option>
-                        <option value="postDate">Sort By Date</option>
-                        <option value="status">Sort By Status</option>
+                    <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                      
                     </select>
                     <label>Materialize Select</label>
                 </div>
@@ -45,17 +41,17 @@
             <table class="highlight bordered">
                 <thead>
                     <tr>
-                        <td>Title</td>
-                        <td>Posted By</td>
-                        <td>Posted Date</td>
-                        <td>No Of Topic</td>
-                        <td>Report</td>
-                        <td>Status</td>
+                        <td><a href="" ng-click="sort_by('forumName')">Title</a></td>
+                        <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
+                        <td><a href="" ng-click="sort_by('createdDate')">Posted Date</a></td>
+                        <td><a href="" ng-click="sort_by('noOfTopics')">No Of Topic</a></td>
+                        <td><a href="" ng-click="sort_by('report')">Report</a></td>
+                        <td><a href="" ng-click="sort_by('status')">Status</a></td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="forum in manageForumCtrl.forums | filter:searchKeyword | orderBy:sortBy">
+                    <tr ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
                         <td>{{forum.forumName}}</td>
                         <td>{{forum.userName}}</td>
                         <td>{{forum.createdDate}}</td>
@@ -76,15 +72,28 @@
                             <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
 
-                        
+
 
                     </tr>
 
                 </tbody>
 
             </table>
-            <ul uib-pagination total-items="manageUserCtrl.users.length" ng-model="currentPage" max-size="maxSize" class="pagination"
-                boundary-links="true"></ul>
+            <div class="row">
+                <div class="col offset-m5">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: currentPage == 0}">
+                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
     </div>

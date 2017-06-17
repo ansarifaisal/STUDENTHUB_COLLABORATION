@@ -9,6 +9,8 @@ public interface TopicDAO {
 	Topic getTopic(int id);
 
 	List<Topic> list();
+	
+	List<Topic> getAllPendingTopics();
 
 	boolean addTopic(Topic topic);
 

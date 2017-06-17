@@ -1,5 +1,6 @@
 package com.studenthub.testcase;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -37,17 +38,20 @@ public class TopicDAOTestCases {
 		
 	}
 	
-	/*@Test
+	@Test
 	public void addTopicTestCase(){
-		forum = forumDAO.getForum(6);
-		topic.setForum(forum);
-		topic.setTitle("Test");
+		forum = forumDAO.getForum(3);
 		topic.setUserId(1);
 		topic.setUserName("ansarifaisal");
-		topic.setStatus("CLOSE");
-		topic.setCreatedDate(LocalDateTime.now());
+		topic.setForum(forum);
+		topic.setTitle("Test");
+		topic.setImageURL("noPic.jpg");
+		topic.setDescription("This is a test, This is a test");
+		topic.setCreatedDate("26-01-1995");
+		topic.setReport("NO");
+		topic.setStatus("OPEN");
 		topicDAO.addTopic(topic);
-	}*/
+	}
 	
 	/*public void updateTopicTestCase(){
 		topic = topicDAO.getTopic(3);

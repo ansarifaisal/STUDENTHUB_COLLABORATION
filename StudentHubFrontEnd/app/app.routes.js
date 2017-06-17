@@ -447,6 +447,34 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
+//<=====================Manage Forum Module================>
+
+    '/admin/managetopics': {
+        //page path
+        templateUrl: 'app/components/admin/managetopic.html',
+        //controller that will handle this page
+        controller: 'ManageTopicController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'manageTopicCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/edittopic/:id': {
+        //page path
+        templateUrl: 'app/components/admin/edittopic.html',
+        //controller that will handle this page
+        controller: 'ManageTopicController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'manageTopicCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
 
 
 };

@@ -17,20 +17,17 @@
                 <div class="col m2 nopadding nomargin">
                     <strong style="font-size:20px;" class="grey-text">Manage User</strong>
                 </div>
+
                 <div class="col m4">
                     <div class="input-field nomargin">
-                        <input type="text" style="margin-bottom:0px;" ng-model="searchKeyword" name="searchKeyword" id="searchKeyword" ng-model=""
-                            required="required">
+                        <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
                         <label for="searchKeyword">Search For User</label>
                     </div>
                 </div>
 
                 <div class="col m3">
-                    <select ng-model="sortBy">
-                        <option value="" disabled selected> Choose Sort By Option</option>
-                        <option value="userName">Sort By Username</option>
-                        <option value="email">Sort By Email</option>
-                        <option value="status">Sort By Status</option>
+                    <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                      
                     </select>
                     <label>Materialize Select</label>
                 </div>
@@ -45,16 +42,16 @@
             <table class="highlight bordered">
                 <thead>
                     <tr>
-                        <td>Name</td>
-                        <td>Username</td>
-                        <td>Email</td>
-                        <td>Role</td>
-                        <td>Status</td>
+                        <td><a href="" ng-click="sort_by('firstName')">Name</a></td>
+                        <td><a href="" ng-click="sort_by('userName')">Username</a></td>
+                        <td><a href="" ng-click="sort_by('email')">Email</a></td>
+                        <td><a href="" ng-click="sort_by('role')">Role</a></td>
+                        <td><a href="" ng-click="sort_by('status')">Status</a></td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="user in filteredUsers | filter:searchKeyword | orderBy:sortBy">
+                    <tr ng-repeat="user in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
                         <td>{{user.firstName}} {{user.lastName}}</td>
                         <td>{{user.userName}}</td>
                         <td>{{user.email}}</td>
@@ -62,25 +59,39 @@
                         <td>{{user.status}}</td>
                         <td ng-if=" user.status == 'APPROVED' ">
                             <a href="#!/admin/edituser/{{user.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
+                            <a href="" ng-click="manageUserCtrl.validateUser(user.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
                         </td>
 
                         <td ng-if=" user.status == 'PENDING' ">
-                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#!" ng-click="manageUserCtrl.validateUser(user.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
                         </td>
 
                         <td ng-if=" user.status == 'DISABLED' ">
-                            <a href = "" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                         </td>
-                        
+
                     </tr>
 
                 </tbody>
 
             </table>
-            <ul uib-pagination total-items="manageUserCtrl.users.length" ng-model="currentPage" max-size="maxSize" class="pagination"
-                boundary-links="true"></ul>
+            <div class="row">
+                <div class="col offset-m5">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: currentPage == 0}">
+                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                            <a href="javascript:;" ng-bind="n + 1">{{n+1}}</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
 
 

@@ -16,7 +16,7 @@ public class TopicDAOImpl implements TopicDAO {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Override
 	@Transactional
 	public Topic getTopic(int id) {
@@ -65,5 +65,14 @@ public class TopicDAOImpl implements TopicDAO {
 			e.printStackTrace();
 			return false;
 		}
-	}	
+	}
+
+	@Override
+	@Transactional
+	public List<Topic> getAllPendingTopics() {
+		String hql = "FROM TOPICS WHERE STATUS = 'PENDING'";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		return query.list();
+	}
+
 }

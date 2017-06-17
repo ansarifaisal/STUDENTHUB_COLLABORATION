@@ -1,4 +1,4 @@
-var AdminModule = angular.module('AdminModule', ['ui.bootstrap']);
+var AdminModule = angular.module('AdminModule', []);
 
 /*
     <=============================================================>
@@ -424,7 +424,7 @@ AdminModule.factory('ManageEventFactory', [
         function getEvent(id) {
             var deferred = $q.defer();
 
-            $http.get(REST_API_URI + '/event/' + id).then(function (response) {
+            $http.get(REST_API_URI + 'event/' + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
@@ -438,7 +438,7 @@ AdminModule.factory('ManageEventFactory', [
         function fetchAllEvents() {
             var deferred = $q.defer();
 
-            $http.get(REST_API_URI + '/events').then(function (response) {
+            $http.get(REST_API_URI + 'events').then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
@@ -485,6 +485,105 @@ AdminModule.factory('ManageEventFactory', [
             },
                 function (errorResponse) {
                     console.log("Error While Editing The event");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+    }
+]);
+
+
+
+/*
+    <==============================================================>
+    |----------------------Manage Topic Factory--------------------|
+    <==============================================================>
+*/
+
+AdminModule.factory('ManageTopicFactory', [
+    '$http',
+    '$q',
+    function ($http, $q) {
+
+        var REST_API_URI = "http://localhost:9005/webapp/";
+
+        var manageTopicFactory = {
+
+            getTopic: getTopic,
+            fetchAllTopics: fetchAllTopics,
+            validateTopic: validateTopic,
+            validateAllTopics: validateAllTopics,
+            editTopic: editTopic
+
+        }
+
+        return manageTopicFactory;
+
+        function getTopic(id) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'topic/' + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error Fetching Topic From The Database");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        function fetchAllTopics() {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'topics').then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error Fetching Topics From The Database");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        function validateTopic(id, action) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'admin/topic/' + action + '/' + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error While " + action + " The Topic");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        function validateAllTopics() {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'admin/validatealltopics').then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error While Approving The Topics");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        function editTopic(topic) {
+            var deferred = $q.defer();
+
+            $http.post(REST_API_URI + 'topic/createEditTopic', topic).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error While Editing The Topic");
                     deferred.reject(errorResponse);
                 }
             );
