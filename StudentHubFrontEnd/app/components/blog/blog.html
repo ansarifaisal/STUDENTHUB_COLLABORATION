@@ -5,11 +5,11 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
 
-                        <a href="#!" class="breadcrumb">Home</a>
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <a href="#!" class="breadcrumb">Blog</a>
+                        <a href="#!/user/blogs" class="breadcrumb">Blog</a>
 
-                        <a href="#!" class="breadcrumb">Blog Name</a>
+                        <a href="#!/user/blog/view/{{blogCtrl.blog.blogId}}" class="breadcrumb">{{blogCtrl.blog.title}}</a>
 
                     </div>
                 </div>
@@ -24,7 +24,21 @@
                 <div class="card-panel">
                     <i class="material-icons" style="font-size: 14px;">query_builder</i> {{blogCtrl.blog.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">chat_bubble_outline</i> {{blogCtrl.blog.noOfComments}}
-                    <a href="">Comments</a>
+                    Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="material-icons" style="font-size: 16px;">thumb_up</i>{{blogCtrl.blog.noOfLikes}} <a href=""
+                        ng-click="blogCtrl.blogLike();">Likes</a>
+                    <span class="right">
+                                <!-- Dropdown Trigger -->
+                     <a class='dropdown-button' href='#' data-activates='{{blogCtrl.blog.blogId}}'><i class="material-icons">more_vert</i></a>
+                                <!-- Dropdown Structure -->
+                        <ul id='{{blogCtrl.blog.blogId}}' class='dropdown-content'>
+                            <li><a data-target="reportBlogForm">Report</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!/user/blog/edit/{{blogCtrl.blog.blogId}}">Edit</a></li>
+                            <li><a href="#!">Delete</a></li>
+                        </ul>   
+                    </span><br/>
+
                 </div>
                 <div class="card-panel" style="word-spacing: 0.1em; line-height: 2em; font-size:15px;">
                     {{blogCtrl.blog.description}}
@@ -34,33 +48,32 @@
                 <strong style="font-size: 20px;">Leave a Comment</strong>
 
                 <div class="card-panel row">
-                    <form class="col s12">
+                    <form class="col s12" name="commentForm" ng-submit="blogCtrl.createEditBlogComment()" novalidate>
                         <div class="row nomargin">
                             <div class="input-field col s12">
-                                <textarea id="comment" class="materialize-textarea nopadding nomargin" maxlength="120" data-length="120" placeholder="Post Your Comment"
-                                    style="margin-bottom:0px;"></textarea>
+                                <textarea id="comment" ng-model="blogCtrl.createBlogComment.blogComment" class="materialize-textarea nopadding nomargin"
+                                    maxlength="500" data-length="500" placeholder="Post Your Comment" style="margin-bottom:0px;"></textarea>
                             </div>
                         </div>
                         <input type="submit" class="btn waves-effect waves-light" value="Post">
                     </form>
                 </div>
-                <div class="row nomargin nopadding" ng-repeat="blogComment in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-
-                    <div class="row nomargin nopadding">
-                        <div class="col offset-m5">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
+                </div>
+                <div class="row nomargin nopadding" ng-repeat="blogComment in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
                     <div class="card-panel nomargin">
                         <div class="row nopadding nomargin">
                             <div class=" col m0">
@@ -69,19 +82,19 @@
                             <a href="">{{user.firstName}} {{user.lastName}}</a> {{blogComment.blogComment}}
                             <span class="right">
                                 <!-- Dropdown Trigger -->
-                                <a class='dropdown-button' href='#' data-activates='op'><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' data-hover = "true" href='#!' data-activates='{{blogComment.id}}_OP'><i class="material-icons">more_vert</i></a>
 
                                 <!-- Dropdown Structure -->
-                                <ul id='op' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
+                                <ul id='{{blogComment.id}}_OP' class='dropdown-content'>
+                                    <li><a href = "">Report</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
+                                    <li><a href="#!/user/blog/comment/edit/{{blogComment.id}}">Edit</a></li>
                                     <li><a href="#!">Delete</a></li>
                                 </ul>
                                 </span><br/>
                             <span class="grey-text" style="font-size: 12px;">{{blogComment.commentDate}}</span>
                         </div>
-                    </div>
+                    </div><br/>
                 </div>
                 <div class="row">
                     <div class="col offset-m5">
@@ -101,4 +114,73 @@
             </div>
         </div>
     </div>
-</div>
+
+    <div id="reportBlogCommentForm" class="modal">
+        <div class="modal-content">
+            <h5>Create Blog</h5>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <form name="reportForm" ng-submit="blogCtrl.blogReport()" novalidate>
+
+                        <!--details field starts here-->
+                        <div class="input-field nomargin">
+                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
+                                maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
+                                ng-model="blogCtrl.reportBlog.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
+                                <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
+                                <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="reportForm.details.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="reportForm.details.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                            </div>
+
+                        </div>
+                        <!--details field ends here-->
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
+                                    value="Report Blog">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="reportBlogForm" class="modal">
+        <div class="modal-content">
+            <h5>Create Blog</h5>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <form name="reportForm" ng-submit="blogCtrl.blogReport()" novalidate>
+
+                        <!--details field starts here-->
+                        <div class="input-field nomargin">
+                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
+                                maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
+                                ng-model="blogCtrl.reportBlog.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
+                                <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
+                                <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="reportForm.details.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="reportForm.details.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                            </div>
+
+                        </div>
+                        <!--details field ends here-->
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
+                                    value="Report Blog">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>

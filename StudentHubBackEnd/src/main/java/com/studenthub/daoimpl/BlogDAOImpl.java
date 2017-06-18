@@ -83,7 +83,6 @@ public class BlogDAOImpl implements BlogDAO {
 		String hql = "FROM BLOGS WHERE USER_ID = :userID ORDER BY POST_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("userID", userID);
-		System.out.println(userID);
 		return query.list();
 	}
 
@@ -95,5 +94,7 @@ public class BlogDAOImpl implements BlogDAO {
 		query.setMaxResults(5);
 		return query.list();
 	}
-
+	
+	
+	
 }

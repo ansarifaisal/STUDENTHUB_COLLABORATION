@@ -185,6 +185,19 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
 
+    '/user/blog/comment/edit/:id': {
+        //page path
+        templateUrl: 'app/components/blog/editBlogComment.html',
+        //controller that will handle this page
+        controller: 'BlogController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN']
+    },
+
     //<=============Event Routing Module===========>
 
     '/user/event/create': {

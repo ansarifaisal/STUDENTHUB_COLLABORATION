@@ -4,12 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
@@ -51,6 +48,9 @@ public class BlogComment implements Serializable {
 	@Column(name = "NO_OF_LIKES", nullable = false)
 	private int noOfLikes;
 
+	@Column(name = "REPORT", nullable = false)
+	private String report;
+	
 	/*
 	 * Getters and Setters or Accessors and Mutators
 	 */
@@ -109,6 +109,14 @@ public class BlogComment implements Serializable {
 
 	public void setNoOfLikes(int noOfLikes) {
 		this.noOfLikes = noOfLikes;
+	}
+
+	public String getReport() {
+		return report;
+	}
+
+	public void setReport(String report) {
+		this.report = report;
 	}
 
 }

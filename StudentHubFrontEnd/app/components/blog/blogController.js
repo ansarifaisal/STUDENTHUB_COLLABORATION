@@ -6,7 +6,8 @@ BlogModule.controller('BlogController', [
     '$timeout',
     '$routeParams',
     '$filter',
-    function (BlogFactory, $location, $scope, $timeout, $routeParams, $filter) {
+    '$route',
+    function (BlogFactory, $location, $scope, $timeout, $routeParams, $filter, $route) {
 
         var me = this;
 
@@ -32,11 +33,37 @@ BlogModule.controller('BlogController', [
 
         me.createBlogComment = {
             id: null,
+            blog: null,
             userId: null,
             userName: '',
             blogComment: '',
             commentDate: ''
         };
+
+        me.likeBlog = {
+            id: null,
+            blogId: null,
+            blogName: '',
+            userId: '',
+            userName: '',
+            dateTime: ''
+        }
+
+        me.reportBlog = {
+            id: null,
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: ''
+        }
+
+        me.reportBlogComment = {
+            id: null,
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: ''
+        }
 
         //load jquery
         $timeout(function () {
@@ -244,7 +271,6 @@ BlogModule.controller('BlogController', [
             var blogId = $routeParams.id;
             BlogFactory.getBlog(blogId).then(function (blog) {
                 me.blog = blog;
-                console.log(blog);
                 getComments();
             },
                 function (errorResponse) {
@@ -382,6 +408,113 @@ BlogModule.controller('BlogController', [
             );
 
         }
+
+        me.createEditBlogComment = function () {
+            var blogId = $routeParams.id;
+            me.createBlogComment.blog = blogId;
+            me.createBlogComment.userId = user.id;
+            me.createBlogComment.userName = user.userName;
+            var now = new Date();
+            me.createBlogComment.commentDate = dateTimeFormat(now);
+
+            BlogFactory.createEditBlogComment(me.createBlogComment).then(function () {
+                $route.reload();
+                Materialize.toast("Comment Added Sucessfully!", 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast("Error Adding Comment", 6000);
+                }
+            );
+        }
+
+        me.blogLike = function () {
+            var blogId = $routeParams.id;
+            me.likeBlog.blogId = blogId;
+            me.likeBlog.blogName = me.blog.title;
+            console.log(me.likeBlog.blogName);
+            me.likeBlog.userId = user.id;
+            me.likeBlog.userName = user.userName;
+            var now = new Date();
+            me.likeBlog.dateTime = dateTimeFormat(now);
+
+            console.log(me.likeBlog);
+
+            BlogFactory.likeBlog(me.likeBlog).then(function () {
+                $route.reload();
+                Materialize.toast('Liked Blog Successfully!', 6000);
+            },
+                function (erorrResponse) {
+                    Materialize.toast('Error Liking The Blog', 6000);
+                }
+            );
+        }
+
+        me.blogReport = function () {
+            me.reportBlog.typeOfReport = 'BLOG';
+            var now = new Date();
+            me.reportBlog.dateTime = dateTimeFormat(now);
+            me.reportBlog.reportId = me.blog.blogId;
+
+            BlogFactory.blogReport(me.reportBlog).then(function () {
+                $route.reload();
+                Materialize.toast('Blog Reported Sucessfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Reporting Blog', 6000);
+                }
+            );
+        }
+
+        me.handleReport = function () {
+            var handleId = $routeParams.id;
+            BlogFactory.handleReport(handleId).then(function () {
+                $route.reload();
+                Materialize('Report Handled Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Erorr Handling Report', 6000);
+                }
+            );
+        }
+
+
+        me.blogReportComment = function () {
+            me.reportBlogCommenttypeOfReport = 'BLOG COMMENT';
+            var now = new Date();
+            me.reportBlogCommentdateTime = dateTimeFormat(now);
+            me.reportBlogCommentreportId = me.blog.blogId;
+
+            BlogFactory.blogReport(me.reportBlogComment).then(function () {
+                $route.reload();
+                Materialize.toast('Blog Comment Reported Sucessfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Reporting Blog Comment', 6000);
+                }
+            );
+        }
+
+        me.getComment = function () {
+            var commentId = $routeParams.id;
+            BlogFactory.getComment(commentId).then(function (comment) {
+                me.blogComment = comment;
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Comment', 6000);
+                }
+            );
+        }
+
+        me.editComment = function(){
+            BlogFactory.createEditBlogComment(me.blogComment).then(function(){
+                $location.path('/user/blog/view/'+me.blogComment.blog);
+                Materialize.toast('Comment Edited Successfully!', 6000);
+            },
+            function(errorResponse){
+                Materialize.toast('Error Editing Blog', 6000);
+            });
+        }
+
 
     }
 ]);

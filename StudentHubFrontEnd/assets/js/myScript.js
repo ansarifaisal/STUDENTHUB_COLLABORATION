@@ -79,6 +79,8 @@ var settings = function () {
 
         $('.modal').modal();
 
+        $("#commentReport").modal();
+
         $('.access').click(function () {
             var id = $('.access').attr('id');
             console.log(id);

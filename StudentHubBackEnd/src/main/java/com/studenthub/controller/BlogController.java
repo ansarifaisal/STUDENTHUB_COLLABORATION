@@ -13,8 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studenthub.dao.BlogCommentDAO;
 import com.studenthub.dao.BlogDAO;
+import com.studenthub.dao.BlogLikesDAO;
+import com.studenthub.dao.HandledDAO;
+import com.studenthub.dao.ReportDAO;
 import com.studenthub.entity.Blog;
 import com.studenthub.entity.BlogComment;
+import com.studenthub.entity.BlogLikes;
+import com.studenthub.entity.Handled;
+import com.studenthub.entity.Report;
 import com.studenthub.entity.User;
 
 @RestController
@@ -31,6 +37,24 @@ public class BlogController {
 
 	@Autowired
 	BlogCommentDAO blogCommentDAO;
+
+	@Autowired
+	BlogLikes blogLikes;
+
+	@Autowired
+	BlogLikesDAO blogLikesDAO;
+
+	@Autowired
+	Report report;
+
+	@Autowired
+	ReportDAO reportDAO;
+
+	@Autowired
+	Handled handled;
+
+	@Autowired
+	HandledDAO handledDAO;
 
 	// <-----------------Fetch All Blogs--------------------------->
 	@RequestMapping(value = "/blogs", method = RequestMethod.GET)
@@ -135,6 +159,68 @@ public class BlogController {
 		return new ResponseEntity<Blog>(HttpStatus.OK);
 	}
 
+	// <------------------Like Blog------------------------------->
+
+	@RequestMapping(value = "/blog/like", method = RequestMethod.POST)
+	public ResponseEntity<Void> likeBlog(@RequestBody BlogLikes blogLikes) {
+		boolean existingLike = blogLikesDAO.existingLikes(blogLikes.getBlogId(), blogLikes.getUserId());
+		if (existingLike == false) {
+			boolean flag = blogLikesDAO.addBlogLikes(blogLikes);
+			if (flag != false) {
+				List<BlogLikes> likes = blogLikesDAO.list(blogLikes.getBlogId());
+				int countlikes = likes.size() + 1;
+				blog = blogDAO.getBlog(blogLikes.getBlogId());
+				blog.setNoOfLikes(countlikes);
+				blogDAO.updateBlog(blog);
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// <---------------------Report Blog------------------------------->
+
+	@RequestMapping(value = "/blog/report", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportBlog(@RequestBody Report report) {
+		blog = blogDAO.getBlog(report.getReportId());
+		if (blog != null) {
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				blog.setReport("YES");
+				blogDAO.updateBlog(blog);
+				return new ResponseEntity<Report>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <----------------------Handle Report-------------------------->
+
+	@RequestMapping(value = "/admin/blog/handle", method = RequestMethod.POST)
+	public ResponseEntity<Handled> handleReport(@RequestBody Handled handled) {
+		blog = blogDAO.getBlog(handled.getReportId());
+		if (blog != null) {
+			boolean flag = handledDAO.addHandle(handled);
+			if (flag != false) {
+				blog.setReport("NO");
+				blogDAO.updateBlog(blog);
+				report = reportDAO.getReport(handled.getId());
+				reportDAO.deleteReport(report);
+				return new ResponseEntity<Handled>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Handled>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Handled>(HttpStatus.NO_CONTENT);
+		}
+	}
+
 	// <=======================Comment Section Starts================>
 
 	@RequestMapping(value = "/blog/{id}/comments", method = RequestMethod.GET)
@@ -147,4 +233,55 @@ public class BlogController {
 		}
 	}
 
+	// -----------------------createEditComment-----------------------
+
+	@RequestMapping(value = "/blog/createEditComment", method = RequestMethod.POST)
+	public ResponseEntity<BlogComment> createEditComment(@RequestBody BlogComment blogComment) {
+
+		if (blogComment.getId() == 0) {
+			boolean flag = blogCommentDAO.addBlogComment(blogComment);
+			if (flag != false) {
+				blog = blogDAO.getBlog(blogComment.getBlog());
+				int updateCount = blog.getNoOfComments() + 1;
+				blog.setNoOfComments(updateCount);
+				blogDAO.updateBlog(blog);
+			}
+			return new ResponseEntity<BlogComment>(HttpStatus.OK);
+		} else {
+			blogCommentDAO.updateBlogComment(blogComment);
+			return new ResponseEntity<BlogComment>(HttpStatus.OK);
+		}
+	}
+	// <---------------------GET COMMENT--------------->
+
+	@RequestMapping(value = "/blog/comments/edit/{id}", method = RequestMethod.GET)
+	public ResponseEntity<BlogComment> getComment(@PathVariable("id") int id) {
+		blogComment = blogCommentDAO.getBlogComment(id);
+		if (blogComment != null) {
+			return new ResponseEntity<BlogComment>(blogComment, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<BlogComment>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// <------------EDIT COMMENT--------------------->
+
+	// <------------------REPORT COMMENT--------------->
+
+	@RequestMapping(value = "/blog/report/comment", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportComment(@RequestBody Report report) {
+		blogComment = blogCommentDAO.getBlogComment(report.getReportId());
+		if (blogComment != null) {
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				blogComment.setReport("YES");
+				blogCommentDAO.updateBlogComment(blogComment);
+				return new ResponseEntity<Report>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
 }
