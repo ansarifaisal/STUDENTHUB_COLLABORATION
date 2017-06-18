@@ -1,4 +1,4 @@
-<div class="col m10 offset-l1 l10 s12">
+<div class="col m10 offset-l1 l10 s12" ng-init="homePageCtrl.fetchContent()">
     <!--Search Field Starts From Here-->
 
     <div class="row">
@@ -25,530 +25,149 @@
                 <li class="tab col s3"><a href="#events">Latest Events</a></li>
             </ul>
         </div>
-        
+
         <div id="topics" class="col s12">
-
-            <div class="card-panel">
-                <h4 class="header">Latest Topics</h4>
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am a very simple card. </p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                                 <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">group</i>Group: Test
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">person</i>Admin: <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
+            <div class="row" ng-repeat="topic in homePageCtrl.content.latestTopics">
+                <div class="card-panel">
+                    <h4 class="header">Latest Topics</h4>
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;">{{topic.title}} </p>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td>On <span>{{topic.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            1
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">group</i>Group: {{topic.forum.forumName}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">person</i>Admin: <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                    </tr>
+                                </table>
+                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
+                            </div>
                         </div>
-                    </div>
-                </div><br>
-
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                        </div>
-                    </div>
-                </div><br>
-                <div class="right-align"><a href="">View All Topics <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                    </div><br>
+                    <div class="right-align"><a href="">View All Topics <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                </div>
             </div>
         </div>
 
 
         <!--Blogs Section Starts From Here-->
         <div id="blogs" class="col s12">
-
-            <div class="card-panel">
-                <h4 class="header">Latest Blogs</h4>
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
+            <div class="row" ng-repeat="blog in homePageCtrl.content.latestBlogs">
+                <div class="card-panel">
+                    <h4 class="header">Latest Blogs</h4>
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;"><a href="" class="black-text">{{blog.title}}</a></p>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td>On: <span>{{blog.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{blog.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    <div class="right-align"><a href="#!/user/blogs">View All Blogs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
                 </div>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="right-align"><a href="">View All Blogs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
             </div>
         </div>
+
         <!--Blogs Section Ends Here-->
 
         <!--Jobs Section Starts Here-->
         <div id="jobs" class="col s12">
-
-            <div class="card-panel">
-                <h4 class="header">Latest Jobs</h4>
-                <div class="card horizontal">
-                    <!--<div class="card-image">
+            <div class="row" ng-repeat="job in homePageCtrl.content.latestJobs">
+                <div class="card-panel">
+                    <h4 class="header">Latest Jobs</h4>
+                    <div class="card horizontal">
+                        <!--<div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                     </div>-->
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; 3,75,000-7,50,000 P.A.
-                                    </td>
-                                    <td>Key Skills: Java, Hibernate, Spring</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;">{{job.title}}</p>
+                                <p style="color: grey; font-size: 14px;">{{job.company}}</p>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td> <span>On: {{job.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                            yrs
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#8377; {{job.salary}} P.A.
+                                        </td>
+                                        <td>Key Skills: {{job.keySkills}}</td>
+                                    </tr>
+                                </table>
+                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                            </div>
                         </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; 3,75,000-7,50,000 P.A.
-                                    </td>
-                                    <td>Key Skills: Java, Hibernate, Spring</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; 3,75,000-7,50,000 P.A.
-                                    </td>
-                                    <td>Key Skills: Java, Hibernate, Spring</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; 3,75,000-7,50,000 P.A.
-                                    </td>
-                                    <td>Key Skills: Java, Hibernate, Spring</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; 3,75,000-7,50,000 P.A.
-                                    </td>
-                                    <td>Key Skills: Java, Hibernate, Spring</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                        </div>
-                    </div>
+                    </div><br>
+                    <div class="right-align"><a href="">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
                 </div>
-                <div class="right-align"><a href="">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
-            </div><br>
+            </div>
         </div>
 
-        <!--Jobs Section Ends Here-->
+
+        <!--Events Section Ends Here-->
         <div id="events" class="col s12">
-
-            <div class="card-panel">
-                <h4 class="header">Latest Events</h4>
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: 1
-                                    </td>
-                                    <td>Status: Comming Soon</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+            <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
+                <div class="card-panel">
+                    <h4 class="header">Latest Events</h4>
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: 1
-                                    </td>
-                                    <td>Status: Comming Soon</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;">{{event.eventTitle}}</p>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td> <span>On: {{event.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Joined: {{event.noOfApplied}}
+                                        </td>
+                                        <td>Status: {{event.eventStatus}}</td>
+                                    </tr>
+                                </table>
+                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                            </div>
                         </div>
-                    </div>
-                </div><br>
-
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: 1
-                                    </td>
-                                    <td>Status: Comming Soon</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: 1
-                                    </td>
-                                    <td>Status: Comming Soon</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
-                        </div>
-                    </div>
-                </div><br>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: 1
-                                    </td>
-                                    <td>Status: Comming Soon</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
-                        </div>
-                    </div>
-                </div><br>
-                <div class="right-align"><a href="">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                    </div><br>
+                    <div class="right-align"><a href="">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                </div>
             </div>
         </div>
     </div>
+</div>

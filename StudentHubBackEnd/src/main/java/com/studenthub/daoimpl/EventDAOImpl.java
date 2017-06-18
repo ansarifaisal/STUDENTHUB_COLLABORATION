@@ -75,4 +75,21 @@ public class EventDAOImpl implements EventDAO {
 		return query.list();
 	}
 
+	@Override
+	@Transactional
+	public List<Event> getCreatedEvents(int userID) {
+		String hql = "FROM EVENTS WHERE USER_ID = "+userID+" ORDER BY POST_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public List<Event> getLatestEvents() {
+		String hql = "FROM EVENTS WHERE STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setMaxResults(5);
+		return query.list();
+	}
+
 }

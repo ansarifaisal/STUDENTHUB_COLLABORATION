@@ -1,0 +1,76 @@
+<div class="row" ng-init="blogCtrl.getBlog();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
+                        <a href="" class="breadcrumb">Edit Blog</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Edit Blog</strong>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <div class="card-panel">
+                        <form name="editForm" ng-submit="blogCtrl.editBlog()" novalidate>
+                            <!--Id field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="hidden" name="blogId" id="blogId" ng-model="blogCtrl.blog.blogId" placeholder="Blog ID" required="required">
+                            </div>
+                            <!--Id field ends here-->
+
+                            <!--title field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="blogCtrl.blog.title" placeholder="Title" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.title.$dirty">
+                                    <span ng-show="editForm.title.$dirty && editForm.title.$error.required">Please, Provide Title</span>
+                                    <span ng-show="editForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.title.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--title field ends here-->
+
+                            <!--description field starts here-->
+                            <div class="input-field nomargin">
+
+                                <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                    ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Description" data-length="4000"
+                                    ng-model="blogCtrl.blog.description" placeholder="description" required="required"></textarea>
+                                <div class="invalid-data center-align" ng-show="editForm.description.$dirty">
+                                    <span ng-show="editForm.description.$dirty && editForm.description.$error.required">Please, Provide description</span>
+                                    <span ng-show="editForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                                </div>
+                            </div>
+                            <!--description field ends here-->
+
+                            <div class="file-field input-field">
+                                <div class="btn light-blue waves-effect waves-light">
+                                    <span>File</span>
+                                    <input type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

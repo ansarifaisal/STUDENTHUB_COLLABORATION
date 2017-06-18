@@ -6,9 +6,9 @@ window.routes = {
         //page path
         templateUrl: 'app/components/page/home.html',
         //controller that will handle this page
-        controller: 'AuthenticationController',
+        controller: 'HomePageController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
-        controllerAs: 'authCtrl',
+        controllerAs: 'homePageCtrl',
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
@@ -148,9 +148,9 @@ window.routes = {
 
     //<=============Blog Routing Module===========>
 
-    '/user/blog/create': {
+    '/user/blog/edit/:id': {
         //page path
-        templateUrl: 'app/components/blog/createBlog.html',
+        templateUrl: 'app/components/blog/editBlog.html',
         //controller that will handle this page
         controller: 'BlogController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
@@ -172,7 +172,7 @@ window.routes = {
         //roles is use to define which user can access this page
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
-    '/user/blog/view': {
+    '/user/blog/view/:id': {
         //page path
         templateUrl: 'app/components/blog/blog.html',
         //controller that will handle this page

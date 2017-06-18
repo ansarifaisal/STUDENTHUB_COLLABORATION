@@ -9,8 +9,12 @@ public interface EventDAO {
 	Event getEvent(int id);
 
 	List<Event> list();
-	
+
 	List<Event> listAllPendingEvents();
+
+	List<Event> getCreatedEvents(int userID);
+
+	List<Event> getLatestEvents();
 
 	boolean addEvent(Event event);
 

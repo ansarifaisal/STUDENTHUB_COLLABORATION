@@ -117,7 +117,7 @@ function dateTimeFormat(dateTime) {
 
     var meridiem = hour >= 12 ? " PM " : " AM ";
 
-    var formattedDateTime = tempDateTime.getDate() + ' ' + months[tempDateTime.getMonth()] + ' ' + tempDateTime.getFullYear() + ' ' + ((hour + 11) % 12 + 1) + ":" + tempDateTime.getMinutes() + meridiem;
+    var formattedDateTime = months[tempDateTime.getMonth()] + ' ' + tempDateTime.getDate() + ', ' + tempDateTime.getFullYear() + ' ' + ((hour + 11) % 12 + 1) + ":" + tempDateTime.getMinutes() + meridiem;
 
     return formattedDateTime;
 

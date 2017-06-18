@@ -1,7 +1,6 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,9 +33,8 @@ public class BlogComment implements Serializable {
 	@Column(name = "BLOG_COMMENT_ID", nullable = false)
 	private int id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "BLOG_ID", nullable = false)
-	private Blog blog;
+	@Column(name = "BLOG_ID", nullable = false)
+	private int blog;
 
 	@Column(name = "USER_ID", nullable = false)
 	private int userId;
@@ -48,7 +46,7 @@ public class BlogComment implements Serializable {
 	private String blogComment;
 
 	@Column(name = "COMMENT_DATE", nullable = false)
-	private LocalDateTime commentDate;
+	private String commentDate;
 
 	@Column(name = "NO_OF_LIKES", nullable = false)
 	private int noOfLikes;
@@ -65,11 +63,11 @@ public class BlogComment implements Serializable {
 		this.id = id;
 	}
 
-	public Blog getBlog() {
+	public int getBlog() {
 		return blog;
 	}
 
-	public void setBlog(Blog blog) {
+	public void setBlog(int blog) {
 		this.blog = blog;
 	}
 
@@ -97,11 +95,11 @@ public class BlogComment implements Serializable {
 		this.blogComment = blogComment;
 	}
 
-	public LocalDateTime getCommentDate() {
+	public String getCommentDate() {
 		return commentDate;
 	}
 
-	public void setCommentDate(LocalDateTime commentDate) {
+	public void setCommentDate(String commentDate) {
 		this.commentDate = commentDate;
 	}
 

@@ -11,6 +11,10 @@ public interface ForumDAO {
 	List<Forum> list();
 	
 	List<Forum> getAllPendingForums();
+	
+	List<Forum> getCreatedForums(int userID);
+	
+	List<Forum> getLatestForums();
 
 	boolean addForum(Forum forum);
 

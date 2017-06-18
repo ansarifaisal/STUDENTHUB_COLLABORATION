@@ -1,157 +1,209 @@
-<div class="row">
+<div class="row" ng-init="blogCtrl.fetchAllBlogs();">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!" class="breadcrumb">Home</a>
-
-                        <span class="right"><button class="btn waves-effect waves-light">+ Create Blogs</button></span>
-
+                        <span class="right"><button data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Blogs</button></span>
                         <a href="#!" class="breadcrumb">Blogs</a>
                     </div>
                 </div>
             </nav>
         </div>
 
+
         <div class="card-panel">
-
-
-            <div class="center">
-                <ul class="pagination nomargin">
-                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                    <li class="active"><a href="#!">1</a></li>
-                    <li class="waves-effect"><a href="#!">2</a></li>
-                    <li class="waves-effect"><a href="#!">3</a></li>
-                    <li class="waves-effect"><a href="#!">4</a></li>
-                    <li class="waves-effect"><a href="#!">5</a></li>
-                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                </ul>
-            </div>
-            
-            <div class="card horizontal">
-                <div class="card-image">
-                    <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                </div>
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                </td>
-                                <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                            </tr>
-                        </table>
-                    </div>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab col s3"><a class="active" href="#blogs">Blogs</a></li>
+                        <li class="tab col s3"><a href="#myBlogs">My Blogs</a></li>
+                    </ul>
                 </div>
             </div>
 
-
-             <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
+            <div id="blogs">
+                <div class="row">
+                    <div class="col m4">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
-                </div>
 
-                 <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                    <div class="col m3">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                        <label>Materialize Select</label>
                     </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
+                </div>
+                <div class="row">
+                    <div class="card horizontal" ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/blog/view/{{blog.blogId}}">{{blog.title}}</a></p>
+                                <span class="right">
+                                <!-- Dropdown Trigger -->
+                                <a class='dropdown-button' href='#!' data-activates='{{blog.blogId}}'><i class="material-icons">more_vert</i></a>
+
+                                <!-- Dropdown Structure -->
+                                <ul id='{{blog.blogId}}' class='dropdown-content'>
+                                    <li><a href="#!">Report</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/blog/edit/{{blog.blogId}}" data-target="editForm">Edit</a></li>
+                                    <li><a href="#!">Delete</a></li>
+                                </ul>
+                                </span>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td>On: <span>{{blog.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{blog.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                 <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
-                 <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            <div class="center">
-                <ul class="pagination nomargin">
-                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                    <li class="active"><a href="#!">1</a></li>
-                    <li class="waves-effect"><a href="#!">2</a></li>
-                    <li class="waves-effect"><a href="#!">3</a></li>
-                    <li class="waves-effect"><a href="#!">4</a></li>
-                    <li class="waves-effect"><a href="#!">5</a></li>
-                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                </ul>
             </div>
 
+            <div id="myBlogs">
+                <div class="row">
+                    <div class="col m4">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Blog</label>
+                        </div>
+                    </div>
+
+                    <div class="col m3">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                      
+                    </select>
+                        <label>Materialize Select</label>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="myBlog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/blog/view/{{myBlog.blogId}}">{{myBlog.title}}</a></p>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td>On: <span>{{myBlog.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{myBlog.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{myBlog.noOfLikes}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="creationForm" class="modal">
+    <div class="modal-content">
+        <h5>Create Blog</h5>
+        <hr/>
+        <div class="row">
+            <div class="col m6 offset-m3">
+                <form name="createForm" ng-submit="blogCtrl.createEditBlog()" novalidate>
+
+                    <!--title field starts here-->
+                    <div class="input-field nomargin">
+                        <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                            data-length="50" ng-model="blogCtrl.createBlog.title" placeholder="Title" required="required">
+                        <div class="invalid-data center-align" ng-show="createForm.title.$dirty">
+                            <span ng-show="createForm.title.$dirty && createForm.title.$error.required">Please, Provide Title</span>
+                            <span ng-show="createForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                            <span ng-show="createForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                            <span ng-show="createForm.title.$error.pattern">This field cannot contain special charachters</span>
+                        </div>
+                    </div>
+                    <!--title field ends here-->
+
+                    <!--description field starts here-->
+                    <div class="input-field nomargin">
+
+                        <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                            ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Description" data-length="4000"
+                            ng-model="blogCtrl.createBlog.description" placeholder="description" required="required"></textarea>
+                        <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
+                            <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide description</span>
+                            <span ng-show="createForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
+                            <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
+                            <span ng-show="createForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                        </div>
+                    </div>
+                    <!--description field ends here-->
+
+                    <div class="file-field input-field">
+                        <div class="btn light-blue waves-effect waves-light">
+                            <span>File</span>
+                            <input type="file">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+
+                    <div class="input-field">
+                        <div class="hoverable">
+                            <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="createForm.$invalid" value="Create Blog">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
 </div>

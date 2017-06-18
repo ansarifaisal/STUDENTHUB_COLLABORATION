@@ -77,4 +77,23 @@ public class BlogDAOImpl implements BlogDAO {
 		return query.list();
 	}
 
+	@Override
+	@Transactional
+	public List<Blog> getCreatedBlogs(int userID) {
+		String hql = "FROM BLOGS WHERE USER_ID = :userID ORDER BY POST_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userID", userID);
+		System.out.println(userID);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public List<Blog> getLatestBlogs() {
+		String hql = "FROM BLOGS WHERE STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setMaxResults(5);
+		return query.list();
+	}
+
 }

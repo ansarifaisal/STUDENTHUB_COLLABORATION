@@ -9,7 +9,11 @@ public interface JobDAO {
 	Job getJob(int id);
 
 	List<Job> list();
-	
+
+	List<Job> getCreatedJobs(int userID);
+
+	List<Job> getLatestJobs();
+
 	List<Job> listAllPendingJobs();
 
 	boolean addJob(Job job);
@@ -17,5 +21,5 @@ public interface JobDAO {
 	boolean updateJob(Job job);
 
 	boolean deleteJob(Job job);
-	
+
 }

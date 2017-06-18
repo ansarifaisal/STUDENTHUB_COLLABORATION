@@ -10,12 +10,18 @@ public interface BlogDAO {
 	
 	List<Blog> list();
 	
+	List<Blog> getAllPendingBlogs();
+	
+	List<Blog> getCreatedBlogs(int userID);
+	
+	List<Blog> getLatestBlogs();
+	
 	boolean addBlog(Blog blog);
 	
 	boolean updateBlog(Blog blog);
 	
 	boolean deleteBlog(Blog blog);
 	
-	List<Blog> getAllPendingBlogs();
+	
 		
 }

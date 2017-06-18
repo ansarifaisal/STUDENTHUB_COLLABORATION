@@ -11,8 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studenthub.dao.BlogDAO;
+import com.studenthub.dao.EventDAO;
+import com.studenthub.dao.ForumDAO;
+import com.studenthub.dao.JobDAO;
+import com.studenthub.dao.TopicDAO;
 import com.studenthub.dao.UserDAO;
+import com.studenthub.entity.Blog;
+import com.studenthub.entity.Event;
+import com.studenthub.entity.Forum;
+import com.studenthub.entity.Job;
+import com.studenthub.entity.ProfileModel;
+import com.studenthub.entity.Topic;
 import com.studenthub.entity.User;
+import com.studenthub.entity.UserModel;
 import com.studenthub.service.EmailService;
 
 @RestController
@@ -26,6 +38,36 @@ public class UserController {
 
 	@Autowired
 	User user;
+	
+	@Autowired
+	Forum forum;
+	
+	@Autowired
+	ForumDAO forumDAO;
+	
+	@Autowired
+	Topic topic;
+	
+	@Autowired
+	TopicDAO topicDAO;
+	
+	@Autowired
+	Event event;
+	
+	@Autowired
+	EventDAO eventDAO;
+	
+	@Autowired
+	Job job;
+	
+	@Autowired
+	JobDAO jobDAO;
+	
+	@Autowired
+	Blog blog;
+	
+	@Autowired
+	BlogDAO blogDAO;
 
 	@RequestMapping(value = { "/register" }, method = RequestMethod.POST)
 	public ResponseEntity<Void> registerUser(@RequestBody User user) {
@@ -150,6 +192,47 @@ public class UserController {
 			userDAO.update(pendingUser);
 		}
 		return new ResponseEntity<User>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/content", method = RequestMethod.GET)
+	public ResponseEntity<UserModel> fetchContents(){
+		
+		UserModel userModel = new UserModel();
+		
+		
+		List<Topic> latestTopics = topicDAO.getLatestTopics();
+		userModel.setlatestTopics(latestTopics);
+		
+		List<Blog> latestBlogs = blogDAO.getLatestBlogs();
+		userModel.setlatestBlogs(latestBlogs);
+		
+		List<Job> latestJobs = jobDAO.getLatestJobs();
+		userModel.setlatestJobs(latestJobs);
+		
+		List<Event> latestEvents = eventDAO.getLatestEvents();
+		userModel.setlatestEvents(latestEvents);
+		
+		List<Forum> latestForums = forumDAO.getLatestForums();
+		userModel.setlatestForums(latestForums);
+		
+		return new ResponseEntity<UserModel>(userModel, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/user/profile/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ProfileModel> profileContents(@PathVariable("id") int id){
+		
+		ProfileModel profileModel = new ProfileModel();
+		
+		user = userDAO.get(id);
+		
+		List<Forum> createdForums = profileModel.getCreatedForums();
+		profileModel.setCreatedForums(createdForums);
+		
+		List<Event> appliedEvents = profileModel.getCreatedEvents();
+		profileModel.setCreatedEvents(appliedEvents);
+		
+		return new ResponseEntity<ProfileModel>(profileModel, HttpStatus.OK);
+		
 	}
 
 }

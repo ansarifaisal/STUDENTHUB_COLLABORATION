@@ -7,7 +7,7 @@ import com.studenthub.entity.BlogComment;
 public interface BlogCommentDAO {
 	BlogComment getBlogComment(int id);
 	
-	List<BlogComment> list();
+	List<BlogComment> list(int id);
 	
 	boolean addBlogComment(BlogComment blogComment);
 	

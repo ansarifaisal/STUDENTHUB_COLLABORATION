@@ -63,8 +63,6 @@ public class Blog extends Domain implements Serializable {
 	@Column(name = "IMAGE_URL", nullable = false)
 	private String imageUrl;
 
-	@OneToMany(mappedBy = "blog", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<BlogComment> blogComment;
 
 	/*
 	 * Getters and Setters OR Accessors and Mutators
@@ -158,14 +156,6 @@ public class Blog extends Domain implements Serializable {
 		this.imageUrl = imageUrl;
 	}
 
-	public List<BlogComment> getBlogComment() {
-		return blogComment;
-	}
-
-	public void setBlogComment(List<BlogComment> blogComment) {
-		this.blogComment = blogComment;
-	}
-
 	/*
 	 * Overriding toString Method For Debugging
 	 */
@@ -175,7 +165,7 @@ public class Blog extends Domain implements Serializable {
 		return "Blog [blogId=" + blogId + ", title=" + title + ", userId=" + userId + ", userName=" + userName
 				+ ", description=" + description + ", postDate=" + postDate + ", noOfComments=" + noOfComments
 				+ ", noOfLikes=" + noOfLikes + ", status=" + status + ", report=" + report + ", imageUrl=" + imageUrl
-				+ ", blogComment=" + blogComment + "]";
+				+ "]";
 	}
 
 }

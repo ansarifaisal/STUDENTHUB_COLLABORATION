@@ -41,17 +41,17 @@ public class BlogCommentDAOTestCases {
 		blogCommentDAO = (BlogCommentDAO) context.getBean("blogCommentDAO");
 	}
 	
-	/*@Test
+	@Test
 	public void addBlogCommentTestCase(){
-		blog = blogDAO.getBlog(8);
-		blogComment.setBlog(blog);
-		blogComment.setUserId(1);
+		
+		blogComment.setBlog(1);
+		blogComment.setUserId(2);
 		blogComment.setUserName("ansarifaisal");
-		blogComment.setCommentDate(LocalDateTime.now());
 		blogComment.setBlogComment("This is a test, this is a test");
-		//blogComment.setNoOfLikes(3);
+		blogComment.setCommentDate("26-01-1995");
+		blogComment.setNoOfLikes(3);
 		Assert.assertEquals(true, blogCommentDAO.addBlogComment(blogComment));
-	}*/
+	}
 	
 	/*@Test
 	public void getBlogCommentTestCase(){
@@ -67,9 +67,9 @@ public class BlogCommentDAOTestCases {
 		
 	}*/
 	
-	@Test
-	public void deleteBlogCommentTestCase(){
-		blogComment = blogCommentDAO.getBlogComment(17);
-		Assert.assertEquals(true, blogCommentDAO.deleteBlogComment(blogComment));
-	}
+//	@Test
+//	public void deleteBlogCommentTestCase(){
+//		blogComment = blogCommentDAO.getBlogComment(17);
+//		Assert.assertEquals(true, blogCommentDAO.deleteBlogComment(blogComment));
+//	}
 }
