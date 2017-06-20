@@ -144,7 +144,6 @@ AdminModule.factory('ManageBlogFactory', [
 
         function editBlog(blog) {
             var deferred = $q.defer();
-            console.log(blog);
             $http.post(REST_API_URI + 'blog/createEditBlog', blog).then(function (response) {
                 deferred.resolve(response.data);
             },

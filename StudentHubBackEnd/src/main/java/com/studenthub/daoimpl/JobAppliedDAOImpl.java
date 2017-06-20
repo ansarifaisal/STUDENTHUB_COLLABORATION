@@ -12,19 +12,20 @@ import com.studenthub.dao.JobAppliedDAO;
 import com.studenthub.entity.JobApplied;
 
 @Repository("jobAppliedDAO")
-public class JobAppliedDAOImpl implements JobAppliedDAO{
+public class JobAppliedDAOImpl implements JobAppliedDAO {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Override
 	@Transactional
-	public List<JobApplied> list() {
-	
-		String hql = "FROM FRIENDS";
+	public List<JobApplied> list(int id) {
+
+		String hql = "FROM JOB_APPLIED WHERE USER_ID = :userId ORDER BY APPLIED_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userId", id);
 		return query.list();
-		
+
 	}
 
 	@Override

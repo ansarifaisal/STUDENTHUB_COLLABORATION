@@ -160,6 +160,7 @@ window.routes = {
         //roles is use to define which user can access this page
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
+
     '/user/blogs': {
         //page path
         templateUrl: 'app/components/blog/blogList.html',
@@ -172,6 +173,7 @@ window.routes = {
         //roles is use to define which user can access this page
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
+
     '/user/blog/view/:id': {
         //page path
         templateUrl: 'app/components/blog/blog.html',
@@ -198,6 +200,31 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
 
+    '/user/blog/comment/report/:id': {
+        //page path
+        templateUrl: 'app/components/blog/reportBlogComment.html',
+        //controller that will handle this page
+        controller: 'BlogController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN']
+    },
+
+    '/user/blog/report/:id': {
+        //page path
+        templateUrl: 'app/components/blog/blogReport.html',
+        //controller that will handle this page
+        controller: 'BlogController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN']
+    },
     //<=============Event Routing Module===========>
 
     '/user/event/create': {
@@ -241,9 +268,35 @@ window.routes = {
 
     //<=============Job Routing Module===========>
 
-    '/user/job/create': {
+    '/user/job/appliedjobs': {
         //page path
-        templateUrl: 'app/components/job/createJob.html',
+        templateUrl: 'app/components/job/appliedJobList.html',
+        //controller that will handle this page
+        controller: 'JobController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN']
+    },
+
+    '/user/job/createdJobs': {
+        //page path
+        templateUrl: 'app/components/job/createJobList.html',
+        //controller that will handle this page
+        controller: 'JobController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN']
+    },
+
+    '/user/job/editjob': {
+        //page path
+        templateUrl: 'app/components/job/editJob.html',
         //controller that will handle this page
         controller: 'JobController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
@@ -267,7 +320,9 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN']
     },
 
-    '/user/job/view': {
+
+
+    '/user/job/view/:id': {
         //page path
         templateUrl: 'app/components/job/job.html',
         //controller that will handle this page
@@ -404,7 +459,7 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
-     //<=====================Manage Forum Module================>
+    //<=====================Manage Forum Module================>
 
     '/admin/managejobs': {
         //page path
@@ -432,7 +487,7 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
- //<=====================Manage Forum Module================>
+    //<=====================Manage Forum Module================>
 
     '/admin/manageevents': {
         //page path
@@ -460,7 +515,7 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
-//<=====================Manage Forum Module================>
+    //<=====================Manage Forum Module================>
 
     '/admin/managetopics': {
         //page path
@@ -488,6 +543,62 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
+
+    //<=====================Blog Report Module================>
+
+    '/admin/report/blogs': {
+        //page path
+        templateUrl: 'app/components/report/blogReport.html',
+        //controller that will handle this page
+        controller: 'BlogReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/blogs': {
+        //page path
+        templateUrl: 'app/components/report/handledBlogReport.html',
+        //controller that will handle this page
+        controller: 'BlogReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    //<=====================Blog Report Module================>
+
+    '/admin/report/blogcomments': {
+        //page path
+        templateUrl: 'app/components/report/blogCommentReport.html',
+        //controller that will handle this page
+        controller: 'BlogCommentReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'blogCommentReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/blogComments': {
+        //page path
+        templateUrl: 'app/components/report/handledBlogCommentReport.html',
+        //controller that will handle this page
+        controller: 'BlogCommentReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'BlogCommentReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
 
 
 };

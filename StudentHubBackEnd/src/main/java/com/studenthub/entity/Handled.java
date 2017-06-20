@@ -41,9 +41,18 @@ public class Handled implements Serializable {
 
 	@Column(name = "USER_ID", nullable = false)
 	private int userId;
-
+	
+	@Column(name = "USER_NAME", nullable = false)
+	private String userName;
+	
+	@Column(name = "TITLE", nullable = false)
+	private String title;
+	
 	@Column(name = "HANDLED_BY", nullable = false)
 	private String handledBy;
+	
+	@Column(name = "HANDLED_BY_USERID", nullable = false)
+	private int handledByUserId;
 
 	@Column(name = "REPORTED_ID", nullable = false)
 	private int reportId;
@@ -52,7 +61,7 @@ public class Handled implements Serializable {
 	private int commentId;
 
 	@Column(name = "STATUS", nullable = false)
-	private String Status;
+	private String status;
 
 	/* Accessors and Mutators */
 
@@ -96,6 +105,30 @@ public class Handled implements Serializable {
 		this.userId = userId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public int getHandledByUserId() {
+		return handledByUserId;
+	}
+
+	public void setHandledByUserId(int handledByUserId) {
+		this.handledByUserId = handledByUserId;
+	}
+
 	public String getHandledBy() {
 		return handledBy;
 	}
@@ -121,21 +154,25 @@ public class Handled implements Serializable {
 	}
 
 	public String getStatus() {
-		return Status;
+		return status;
 	}
 
 	public void setStatus(String status) {
-		Status = status;
+		this.status = status;
 	}
 
 	/*
 	 * Overriding toString Method
 	 */
 
+
 	@Override
 	public String toString() {
-		return "Handle [id=" + id + ", typeOfReport=" + typeOfReport + ", dateTime=" + dateTime + ", details=" + details
-				+ ", userId=" + userId + ", handledBy=" + handledBy + ", Status=" + Status + "]";
+		return "Handled [id=" + id + ", typeOfReport=" + typeOfReport + ", dateTime=" + dateTime + ", details="
+				+ details + ", userId=" + userId + ", userName=" + userName + ", title=" + title + ", handledBy="
+				+ handledBy + ", handledByUserId=" + handledByUserId + ", reportId=" + reportId + ", commentId="
+				+ commentId + ", Status=" + status + "]";
 	}
+
 
 }

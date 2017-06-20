@@ -62,15 +62,15 @@ public class Job implements Serializable {
 
 	@Column(name = "LOCATION", nullable = false)
 	private String location;
+	
+	@Column(name = "NO_OF_APPLIED", nullable = false)
+	private int noOfApplied;
 
 	@Column(name = "REPORT", nullable = false)
 	private String report;
 
 	@Column(name = "STATUS", nullable = false)
 	private String status;
-
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job", fetch = FetchType.LAZY)
-//	private List<JobApplied> jobApplied;
 
 	/*
 	 * Getters and Setters
@@ -164,6 +164,14 @@ public class Job implements Serializable {
 		this.keySkills = keySkills;
 	}
 
+	public int getNoOfApplied() {
+		return noOfApplied;
+	}
+
+	public void setNoOfApplied(int noOfApplied) {
+		this.noOfApplied = noOfApplied;
+	}
+
 	public String getLocation() {
 		return location;
 	}
@@ -188,22 +196,15 @@ public class Job implements Serializable {
 		this.status = status;
 	}
 
-//	public List<JobApplied> getJobApplied() {
-//		return jobApplied;
-//	}
-//
-//	public void setJobApplied(List<JobApplied> jobApplied) {
-//		this.jobApplied = jobApplied;
-//	}
-
-	// Overriding toString Method for Debugging
-//	@Override
-//	public String toString() {
-//		return "Job [id=" + id + ", title=" + title + ", company=" + company + ", experience=" + experience
-//				+ ", description=" + description + ", userId=" + userId + ", userName=" + userName + ", qualification="
-//				+ qualification + ", postDate=" + postDate + ", salary=" + salary + ", keySkills=" + keySkills
-//				+ ", location=" + location + ", report=" + report + ", status=" + status + ", jobApplied=" + jobApplied
-//				+ "]";
-//	}
+	/*
+	 * Overriding toString Method for Debugging
+	 */
+	@Override
+	public String toString() {
+		return "Job [id=" + id + ", title=" + title + ", company=" + company + ", experience=" + experience
+				+ ", description=" + description + ", userId=" + userId + ", userName=" + userName + ", qualification="
+				+ qualification + ", postDate=" + postDate + ", salary=" + salary + ", keySkills=" + keySkills
+				+ ", location=" + location + ", report=" + report + ", status=" + status + "]";
+	}
 
 }

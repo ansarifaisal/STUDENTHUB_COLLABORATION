@@ -16,11 +16,11 @@ public class ReportDAOImpl implements ReportDAO {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Override
 	@Transactional
 	public List<Report> list() {
-		String hql = "FROM REPORT";
+		String hql = "FROM REPORTS";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
@@ -65,6 +65,24 @@ public class ReportDAOImpl implements ReportDAO {
 	@Transactional
 	public Report getReport(int id) {
 		return (Report) sessionFactory.getCurrentSession().get(Report.class, id);
+	}
+
+	@Override
+	@Transactional
+	public List<Report> getByCategory(String category) {
+		String hql = "FROM REPORTS WHERE TYPE_OF_REPORT = :category ORDER BY ID DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("category", category);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public List<Report> getUnreadReportsByCat(String category) {
+		String hql = "FROM REPORTS WHERE TYPE_OF_REPORT = :category AND STATUS = 'UNREAD' ORDER BY ID DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("category", category);
+		return query.list();
 	}
 
 }

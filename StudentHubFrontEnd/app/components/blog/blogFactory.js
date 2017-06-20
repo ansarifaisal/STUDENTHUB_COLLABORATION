@@ -10,16 +10,16 @@ BlogModule.factory('BlogFactory', [
         var blogFactory = {
             fetchAllBlogs: fetchAllBlogs,
             createEditBlog: createEditBlog,
+            deleteBlog: deleteBlog,
             getBlog: getBlog,
             getMyBlogs: getMyBlogs,
             likeBlog: likeBlog,
             blogReport: blogReport,
-            handleReport: handleReport,
             getComments: getComments,
             getComment: getComment,
             createEditBlogComment: createEditBlogComment,
             blogReportComment: blogReportComment,
-            performBlogCommentAction: performBlogCommentAction
+            deleteBlogComment: deleteBlogComment
         };
 
         return blogFactory;
@@ -43,6 +43,20 @@ BlogModule.factory('BlogFactory', [
         function createEditBlog(blog) {
             var deferred = $q.defer();
             $http.post(REST_API_URI + "blog/createEditBlog", blog).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error While Creating Or Editing The Blog");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        //delete/disable blog
+        function deleteBlog(action, id) {
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + "admin/blog/" + action + "/" + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
@@ -89,20 +103,6 @@ BlogModule.factory('BlogFactory', [
             },
                 function (errorResponse) {
                     console.log("Error Reporting Blog");
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
-        }
-
-        //function to handle report
-        function handleReport(id) {
-            var deferred = $q.defer();
-            $http.get(REST_API_URI + "/admin/blog/handle/" + id).then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log("Error Handling Blog");
                     deferred.reject(errorResponse);
                 }
             );
@@ -166,13 +166,13 @@ BlogModule.factory('BlogFactory', [
         }
 
         //Perform Action report and like
-        function performBlogCommentAction(blogId, action, id) {
+        function deleteBlogComment(id) {
             var deferred = $q.defer();
-            $http.get(REST_API_URI + "blog/" + blogId + "/comment/" + action + "/" + id).then(function (response) {
+            $http.get(REST_API_URI + "blog/comment/delete/" + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
-                    console.log("Error Performing Action");
+                    console.log("Error Deleting Comment");
                     deferred.reject(errorResponse);
                 }
             );

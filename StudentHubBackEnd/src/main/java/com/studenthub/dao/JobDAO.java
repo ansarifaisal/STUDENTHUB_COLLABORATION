@@ -15,6 +15,8 @@ public interface JobDAO {
 	List<Job> getLatestJobs();
 
 	List<Job> listAllPendingJobs();
+	
+	List<Job> createdJobList(int userID);
 
 	boolean addJob(Job job);
 

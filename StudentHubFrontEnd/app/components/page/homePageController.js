@@ -1,10 +1,12 @@
 
 HomePageModule.controller('HomePageController', [
     'HomePageFactory',
+    'BlogFactory',
     '$scope',
     '$location',
     '$timeout',
-    function (HomePageFactory, $scope, $location, $timeout) {
+    '$route',
+    function (HomePageFactory, BlogFactory, $scope, $location, $timeout, $route) {
 
         var me = this;
 
@@ -22,6 +24,17 @@ HomePageModule.controller('HomePageController', [
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Content From The Database', 6000);
+                }
+            );
+        }
+        //function to delete blog
+        me.deleteBlog = function (action, id) {
+            BlogFactory.deleteBlog(action, id).then(function () {
+                $route.reload();
+                Materialize.toast('Blog Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Blogs', 6000);
                 }
             );
         }

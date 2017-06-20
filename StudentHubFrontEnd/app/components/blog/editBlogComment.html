@@ -16,37 +16,34 @@
             </nav>
         </div>
         <div class="card-panel">
+            <h5>Edit Blog Comment</h5>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <form name="editForm" ng-submit="blogCtrl.editComment()" novalidate>
 
-            <div class="modal-content">
-                <h5>Create Blog</h5>
-                <hr/>
-                <div class="row">
-                    <div class="col m6 offset-m3">
-                        <form name="editForm" ng-submit="blogCtrl.editComment()" novalidate>
-
-                            <!--comment field starts here-->
-                            <div class="input-field nomargin">
-                                <textarea id="blogComment" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
-                                    maxlength="1000" ng-maxlength="1000" placeholder="Provide comment" data-length="1000"
-                                    ng-model="blogCtrl.blogComment.blogComment" placeholder="Provide comment Of Your Report" required="required"></textarea>
-                                <div class="invalid-data center-align" ng-show="editForm.blogComment.$dirty">
-                                    <span ng-show="editForm.blogComment.$dirty && editForm.blogComment.$error.required">Please, Provide blog Comment</span>
-                                    <span ng-show="editForm.blogComment.$error.minlength">This field must contain atleast 2 charachters</span>
-                                    <span ng-show="editForm.blogComment.$error.maxlength">This field can contain maximum 50 charachters</span>
-                                    <span ng-show="editForm.blogComment.$error.pattern">This field can contain '-,_;' these special charachters</span>
-                                </div>
-
+                        <!--comment field starts here-->
+                        <div class="input-field nomargin">
+                            <textarea id="blogComment" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                ng-minlength="20" maxlength="1000" ng-maxlength="1000" placeholder="Provide comment" data-length="1000"
+                                ng-model="blogCtrl.blogComment.blogComment" placeholder="Provide comment Of Your Report" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="editForm.blogComment.$dirty">
+                                <span ng-show="editForm.blogComment.$dirty && editForm.blogComment.$error.required">Please, Provide blog Comment</span>
+                                <span ng-show="editForm.blogComment.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="editForm.blogComment.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="editForm.blogComment.$error.pattern">This field can contain '-,_;' these special charachters</span>
                             </div>
-                            <!--comment field ends here-->
 
-                            <div class="input-field">
-                                <div class="hoverable">
-                                    <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="editForm.$invalid"
-                                        value="Report Blog">
-                                </div>
+                        </div>
+                        <!--comment field ends here-->
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="editForm.$invalid"
+                                    value="Report Blog">
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

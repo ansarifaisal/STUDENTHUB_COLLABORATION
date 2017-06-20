@@ -1,7 +1,6 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,35 +15,42 @@ import org.springframework.stereotype.Component;
 
 @Entity(name = "JOB_APPLIED")
 @Component
-public class JobApplied implements Serializable{
+public class JobApplied implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * Declaring Private Field
+	 */
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	@SequenceGenerator(name = "generator", sequenceName = "JOB_APPLIED_SEQ", allocationSize = 1)
 	@Column(name = "APPLIED_ID", nullable = false)
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "JOB_ID", nullable = false)
 	private Job job;
-	
+
 	@Column(name = "USER_ID", nullable = false)
 	private int userId;
-	
+
 	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
-	
+
 	@Column(name = "APPLIED_DATE", nullable = false)
-	private LocalDateTime appliedDate;
-	
+	private String appliedDate;
+
 	@Column(name = "STATUS", nullable = false)
 	private String status;
 
+	/*
+	 * Accessors and Mutators
+	 */
 	public int getId() {
 		return id;
 	}
@@ -77,11 +83,11 @@ public class JobApplied implements Serializable{
 		this.userName = userName;
 	}
 
-	public LocalDateTime getAppliedDate() {
+	public String getAppliedDate() {
 		return appliedDate;
 	}
 
-	public void setAppliedDate(LocalDateTime appliedDate) {
+	public void setAppliedDate(String appliedDate) {
 		this.appliedDate = appliedDate;
 	}
 
@@ -92,7 +98,15 @@ public class JobApplied implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
-	
+
+	/*
+	 * Overriding toString Method for Debugging
+	 */
+
+	@Override
+	public String toString() {
+		return "JobApplied [id=" + id + ", job=" + job + ", userId=" + userId + ", userName=" + userName
+				+ ", appliedDate=" + appliedDate + ", status=" + status + "]";
+	}
+
 }

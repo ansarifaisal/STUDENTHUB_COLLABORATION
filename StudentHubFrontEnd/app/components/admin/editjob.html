@@ -23,14 +23,14 @@
 
                             <!--Id field starts here-->
                             <div class="input-field nomargin">
-                                <input type="text" name="id" id="id" ng-model="manageJobCtrl.job.id" placeholder="Job ID" required="required">
+                                <input type="hidden" name="id" id="id" ng-model="manageJobCtrl.job.id" placeholder="Job ID" required="required">
                             </div>
                             <!--Id field ends here-->
 
                             <!--title field starts here-->
                             <div class="input-field nomargin">
                                 <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                                    data-length="50" ng-model="manageJobCtrl.job.title" placeholder="Forum Name" required="required">
+                                    data-length="50" ng-model="manageJobCtrl.job.title" placeholder="Job Name" required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.title.$dirty">
                                     <span ng-show="editForm.title.$dirty && editForm.title.$error.required">Please, Provide Title</span>
                                     <span ng-show="editForm.title.$error.minlength">This field must contain atleast 2 charachters</span>

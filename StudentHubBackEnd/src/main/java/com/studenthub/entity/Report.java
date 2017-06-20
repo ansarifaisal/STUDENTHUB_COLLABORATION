@@ -30,6 +30,15 @@ public class Report implements Serializable {
 	@Column(name = "ID", nullable = false)
 	private int id;
 
+	@Column(name = "USERNAME", nullable = false)
+	private String userName;
+
+	@Column(name = "USER_ID", nullable = false)
+	private String userId;
+
+	@Column(name = "TITLE", nullable = false)
+	private String title;
+
 	@Column(name = "TYPE_OF_REPORT", nullable = false)
 	private String typeOfReport;
 
@@ -45,6 +54,9 @@ public class Report implements Serializable {
 	@Column(name = "COMMENT_ID")
 	private int commentId;
 
+	@Column(name = "STATUS", nullable = false)
+	private String status;
+
 	/*
 	 * Accessors and Mutators
 	 */
@@ -55,6 +67,30 @@ public class Report implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getTypeOfReport() {
@@ -97,6 +133,13 @@ public class Report implements Serializable {
 		this.commentId = commentId;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	/*
 	 * Overriding toString Method for Debugging
@@ -104,8 +147,9 @@ public class Report implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Report [id=" + id + ", typeOfReport=" + typeOfReport + ", dateTime=" + dateTime + ", details=" + details
-				+ "]";
+		return "Report [id=" + id + ", userName=" + userName + ", userId=" + userId + ", title=" + title
+				+ ", typeOfReport=" + typeOfReport + ", dateTime=" + dateTime + ", details=" + details + ", reportId="
+				+ reportId + ", commentId=" + commentId + ", status=" + status + "]";
 	}
 
 }

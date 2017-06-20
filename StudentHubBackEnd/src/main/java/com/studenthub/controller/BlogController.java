@@ -21,7 +21,6 @@ import com.studenthub.entity.BlogComment;
 import com.studenthub.entity.BlogLikes;
 import com.studenthub.entity.Handled;
 import com.studenthub.entity.Report;
-import com.studenthub.entity.User;
 
 @RestController
 public class BlogController {
@@ -115,15 +114,27 @@ public class BlogController {
 		}
 	}
 
-	// <------------------------Report Blog----------------------------->
-	// @RequestMapping(value = "/blog/report/{id}")
-	// public ResponseEntity<Blog> reportBlog(@PathVariable("id") int id) {
-	//
+	// <------------------------Delete/Disable For User
+	// Blog----------------------------->
+	// @RequestMapping(value = "/blog/disable/{id}")
+	// public ResponseEntity<Blog> disableBlog(@PathVariable("id") int id) {
+	// blog = blogDAO.getBlog(id);
+	// if (blog != null) {
+	// blog.setStatus("DISABLED");
+	// boolean flag = blogDAO.updateBlog(blog);
+	// if (flag != false) {
+	// return new ResponseEntity<Blog>(HttpStatus.OK);
+	// } else {
+	// return new ResponseEntity<Blog>(HttpStatus.NO_CONTENT);
+	// }
+	// } else {
+	// return new ResponseEntity<Blog>(HttpStatus.NOT_FOUND);
+	// }
 	// }
 
 	// <------------------Perform Action------------------------------->
 	@RequestMapping(value = "/admin/blog/{action}/{id}", method = RequestMethod.GET)
-	public ResponseEntity<User> validateUser(@PathVariable("action") String action, @PathVariable("id") int id) {
+	public ResponseEntity<Blog> validateUser(@PathVariable("action") String action, @PathVariable("id") int id) {
 		blog = blogDAO.getBlog(id);
 		if (blog != null) {
 			switch (action) {
@@ -139,12 +150,12 @@ public class BlogController {
 			}
 			boolean flag = blogDAO.updateBlog(blog);
 			if (flag != false) {
-				return new ResponseEntity<User>(HttpStatus.OK);
+				return new ResponseEntity<Blog>(HttpStatus.OK);
 			} else {
-				return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Blog>(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Blog>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -164,13 +175,12 @@ public class BlogController {
 	@RequestMapping(value = "/blog/like", method = RequestMethod.POST)
 	public ResponseEntity<Void> likeBlog(@RequestBody BlogLikes blogLikes) {
 		boolean existingLike = blogLikesDAO.existingLikes(blogLikes.getBlogId(), blogLikes.getUserId());
-		if (existingLike == false) {
+		if (existingLike != false) {
 			boolean flag = blogLikesDAO.addBlogLikes(blogLikes);
 			if (flag != false) {
 				List<BlogLikes> likes = blogLikesDAO.list(blogLikes.getBlogId());
-				int countlikes = likes.size() + 1;
 				blog = blogDAO.getBlog(blogLikes.getBlogId());
-				blog.setNoOfLikes(countlikes);
+				blog.setNoOfLikes(likes.size());
 				blogDAO.updateBlog(blog);
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
@@ -187,6 +197,7 @@ public class BlogController {
 	public ResponseEntity<Report> reportBlog(@RequestBody Report report) {
 		blog = blogDAO.getBlog(report.getReportId());
 		if (blog != null) {
+			report.setStatus("UNREAD");
 			boolean flag = reportDAO.addReport(report);
 			if (flag != false) {
 				blog.setReport("YES");
@@ -264,14 +275,16 @@ public class BlogController {
 		}
 	}
 
-	// <------------EDIT COMMENT--------------------->
-
 	// <------------------REPORT COMMENT--------------->
 
 	@RequestMapping(value = "/blog/report/comment", method = RequestMethod.POST)
 	public ResponseEntity<Report> reportComment(@RequestBody Report report) {
+		System.out.println(report);
 		blogComment = blogCommentDAO.getBlogComment(report.getReportId());
 		if (blogComment != null) {
+			report.setCommentId(blogComment.getId());
+			report.setReportId(blogComment.getBlog());
+			report.setStatus("UNREAD");
 			boolean flag = reportDAO.addReport(report);
 			if (flag != false) {
 				blogComment.setReport("YES");
@@ -282,6 +295,26 @@ public class BlogController {
 			}
 		} else {
 			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!----------Delete Blog Comment---------------->
+	@RequestMapping(value = "/blog/comment/delete/{id}", method = RequestMethod.GET)
+	public ResponseEntity<BlogComment> deleteBlogComment(@PathVariable("id") int id) {
+		blogComment = blogCommentDAO.getBlogComment(id);
+		if (blogComment != null) {
+			boolean flag = blogCommentDAO.deleteBlogComment(blogComment);
+			if (flag != false) {
+				blog = blogDAO.getBlog(blogComment.getBlog());
+				List<BlogComment> list = blogCommentDAO.list(blogComment.getBlog());
+				blog.setNoOfComments(list.size());
+				blogDAO.updateBlog(blog);
+				return new ResponseEntity<BlogComment>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<BlogComment>(HttpStatus.NOT_EXTENDED);
+			}
+		} else {
+			return new ResponseEntity<BlogComment>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

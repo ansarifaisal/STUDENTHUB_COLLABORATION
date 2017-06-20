@@ -4,16 +4,16 @@
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <div class="col s12">
-                        <a href="#!" class="breadcrumb">Home</a>
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
                         <span class="right"><button data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Blogs</button></span>
-                        <a href="#!" class="breadcrumb">Blogs</a>
+                        <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
                     </div>
                 </div>
             </nav>
         </div>
 
 
-        <div class="card-panel">
+        <div class="card-panel nopadding">
             <div class="row">
                 <div class="col s12">
                     <ul class="tabs tabs-fixed-width">
@@ -22,42 +22,53 @@
                     </ul>
                 </div>
             </div>
+        </div>
+        <div class="card-panel">
 
             <div id="blogs">
                 <div class="row">
-                    <div class="col m4">
+                    <div class="col m6">
                         <div class="input-field nomargin">
                             <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
                             <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
 
-                    <div class="col m3">
+                    <div class="col m6">
                         <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
                     </select>
                         <label>Materialize Select</label>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="card horizontal" ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                <div class="row nomargin" ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                    <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
                         <div class="card-image">
                             <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
                         <div class="card-stacked">
                             <div class="card-content">
-                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/blog/view/{{blog.blogId}}">{{blog.title}}</a></p>
-                                <span class="right">
-                                <!-- Dropdown Trigger -->
-                                <a class='dropdown-button' href='#!' data-activates='{{blog.blogId}}'><i class="material-icons">more_vert</i></a>
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
+                                    </div>
 
-                                <!-- Dropdown Structure -->
-                                <ul id='{{blog.blogId}}' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!/user/blog/edit/{{blog.blogId}}" data-target="editForm">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                                </span>
+                                    <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
+                                <span class="right">
+                                            <!-- Dropdown Trigger -->
+                                <a class='dropdown-button' href='#' data-activates='OP_{{blog.blogId}}'><i class="material-icons">more_vert</i></a>
+                                            <!-- Dropdown Structure -->
+                                    <ul id='OP_{{blog.blogId}}' class='dropdown-content'>
+                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                        
+                                        <span ng-if="blog.userId == user.id">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/blog/edit/{{blog.blogId}}">Edit</a></li>
+                                        <li><a href="" ng-click="blogCtrl.deleteBlog('Disabled', blog.blogId)">Delete</a></li>
+                                        </span>
+                                    </ul>
+                                    </span>
+                                    </span>
+                                </div>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
                                         <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
@@ -69,10 +80,19 @@
                                         </td>
                                         <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
                                     </tr>
+                                    <span ng-hide="blog.userId == user.id">
+                                        <tr>
+                                            <td>Status: {{blog.status}}
+                                            </td>
+                                            <td>Report: {{blog.report}}</td>
+                                        </tr>
+                                    </span>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row nomargin">
                     <div class="col offset-m5">
                         <ul class="pagination">
                             <li ng-class="{disabled: currentPage == 0}">
@@ -91,28 +111,49 @@
 
             <div id="myBlogs">
                 <div class="row">
-                    <div class="col m4">
+                    <div class="col m6">
                         <div class="input-field nomargin">
                             <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
                             <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
 
-                    <div class="col m3">
+                    <div class="col m6">
                         <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
                       
                     </select>
                         <label>Materialize Select</label>
                     </div>
                 </div>
-                <div class="row" ng-repeat="myBlog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                <div class="row nomargin" ng-repeat="myBlog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
                     <div class="card horizontal">
                         <div class="card-image">
                             <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
                         <div class="card-stacked">
                             <div class="card-content">
-                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/blog/view/{{myBlog.blogId}}">{{myBlog.title}}</a></p>
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/blog/view/{{myBlog.blogId}}" class="black-text">{{myBlog.title}}</a></p>
+                                    </div>
+
+                                    <span ng-hide="myBlog.status != 'APPROVED' || myBlog.report != 'NO'">
+                                <span class="right">
+                                            <!-- Dropdown Trigger -->
+                                <a class='dropdown-button' href='#' data-activates='{{myBlog.blogId}}'><i class="material-icons">more_vert</i></a>
+                                            <!-- Dropdown Structure -->
+                                    <ul id='{{myBlog.blogId}}' class='dropdown-content'>
+                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                        
+                                        <span ng-if="myBlog.userId == user.id">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/blog/edit/{{myBlog.blogId}}">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                        </span>
+                                    </ul>
+                                    </span>
+                                    </span>
+                                </div>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
                                         <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
@@ -124,6 +165,13 @@
                                         </td>
                                         <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{myBlog.noOfLikes}}</td>
                                     </tr>
+                                    <span ng-hide="myBlog.userId == user.id">
+                                        <tr>
+                                            <td>Status: {{myBlog.status}}
+                                            </td>
+                                            <td>Report: {{myBlog.report}}</td>
+                                        </tr>
+                                    </span>
                                 </table>
                             </div>
                         </div>

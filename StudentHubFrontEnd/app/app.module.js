@@ -8,6 +8,7 @@ var myApp = angular.module('myApp', [
     'BlogModule',
     'EventModule',
     'JobModule',
-    'AdminModule'
+    'AdminModule',
+    'ReportModule'
 
 ]);

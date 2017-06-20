@@ -6,7 +6,7 @@ import com.studenthub.entity.JobApplied;
 
 public interface JobAppliedDAO {
 	
-	List<JobApplied> list();
+	List<JobApplied> list(int id);
 	
 	JobApplied getJobApplied(int id);
 	

@@ -237,7 +237,6 @@ AdminModule.controller('ManageBlogController', [
                 $scope.items = blogs;
 
                 var searchMatch = function (haystack, needle) {
-                    console.log(haystack);
                     if (!needle) {
                         
                         return true;
@@ -598,7 +597,6 @@ AdminModule.controller('ManageJobController', [
                 $scope.items = jobs;
 
                 var searchMatch = function (haystack, needle) {
-                    console.log(haystack);
                     if (!needle) {
                         
                         return true;

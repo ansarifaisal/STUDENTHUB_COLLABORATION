@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-init="jobCtrl.getJob()">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -17,7 +17,6 @@
         </div>
 
         <div class="card-panel">
-
             <div class="card horizontal">
                 <div class="card-stacked">
                     <div class="card-content">
@@ -34,8 +33,8 @@
                             </ul>
 
                             </span>
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
+                            <p style="font-size: 18px;">{{jobCtrl.job.title}}</p>
+                            <p style="color: grey; font-size: 14px;">{{jobCtrl.job.company}}</p>
                         </div>
                         <table class="bordered" style="font-size: 12px; color:grey;">
                             <tr>
@@ -43,41 +42,32 @@
                                 <td> <span>On: April 4th, 2017</span></td>
                             </tr>
                             <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
+                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{jobCtrl.job.experience}}
+                                    yrs
                                 </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
+                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{jobCtrl.job.location}}</td>
                             </tr>
                             <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
+                                <td>&#8377; {{jobCtrl.job.salary}} P.A.
                                 </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
+                                <td>Key Skills: {{jobCtrl.job.keySkills}}</td>
                             </tr>
                         </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                     </div>
                 </div>
             </div><br/>
 
             <div class="card-panel">
                 <strong style="font-size: 20px;" class="grey-text">Description</strong>
-                <hr/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it
-                to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
-                including versions of Lorem Ipsum.
+                <hr/>{{jobCtrl.job.description}}
             </div>
 
             <div class="card-panel">
                 <strong style="font-size: 20px;" class="grey-text">Key Skills</strong>
-                <hr/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it
-                to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
-                including versions of Lorem Ipsum.
+                <hr/> {{jobCtrl.job.keySkills}}
             </div>
-
+            <!--
             <div class="card-panel">
                 <strong style="font-size: 20px;" class="grey-text">Desired Candidate Profile</strong>
                 <hr/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
@@ -117,10 +107,10 @@
                         <td>http://www.iil01.com</td>
                     </tr>
                 </table>
-            </div>
+            </div>-->
 
             <div class="card-panel">
-                <a class="waves-effect waves-light btn">Apply</a>
+                <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" class="waves-effect waves-light btn">Apply</a>
             </div>
 
         </div>

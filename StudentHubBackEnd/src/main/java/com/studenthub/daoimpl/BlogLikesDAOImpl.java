@@ -57,9 +57,9 @@ public class BlogLikesDAOImpl implements BlogLikesDAO {
 		query.setParameter("userId", userId);
 		System.out.println(query.list().isEmpty());
 		if(query.list().isEmpty()){
-			return false;
-		}else{
 			return true;
+		}else{
+			return false;
 		}
 	}
 

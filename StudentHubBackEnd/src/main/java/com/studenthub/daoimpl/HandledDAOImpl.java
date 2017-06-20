@@ -16,7 +16,7 @@ public class HandledDAOImpl implements HandledDAO {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Override
 	@Transactional
 	public List<Handled> list() {
@@ -65,6 +65,15 @@ public class HandledDAOImpl implements HandledDAO {
 	@Transactional
 	public Handled getHandle(int id) {
 		return (Handled) sessionFactory.getCurrentSession().get(Handled.class, id);
+	}
+
+	@Override
+	@Transactional
+	public List<Handled> getByCategory(String category) {
+		String hql = "FROM HANDLED WHERE TYPE_OF_REPORT = :category ORDER BY ID DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("category", category);
+		return query.list();
 	}
 
 }

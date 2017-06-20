@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studenthub.dao.JobAppliedDAO;
 import com.studenthub.dao.JobDAO;
 import com.studenthub.entity.Job;
+import com.studenthub.entity.JobApplied;
 
 @RestController
 public class JobController {
@@ -23,6 +25,13 @@ public class JobController {
 	@Autowired
 	JobDAO jobDAO;
 
+	@Autowired
+	JobApplied jobApplied;
+
+	@Autowired
+	JobAppliedDAO jobAppliedDAO;
+
+	// <!---------------Get all jobs--------------------------!>
 	@RequestMapping(value = "/jobs", method = RequestMethod.GET)
 	public ResponseEntity<List<Job>> fetchAllJobs() {
 		List<Job> jobs = jobDAO.list();
@@ -33,6 +42,7 @@ public class JobController {
 		}
 	}
 
+	// <!--------------------------Get Job-------------------------!>
 	@RequestMapping(value = "/job/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Job> getJob(@PathVariable("id") int id) {
 		job = jobDAO.getJob(id);
@@ -43,6 +53,7 @@ public class JobController {
 		}
 	}
 
+	// <!-----------------------Perform Action--------------------------!>
 	@RequestMapping(value = "/admin/job/{action}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Job> validateJob(@PathVariable("action") String action, @PathVariable("id") int id) {
 		job = jobDAO.getJob(id);
@@ -69,6 +80,7 @@ public class JobController {
 		}
 	}
 
+	// <!---------------------------Validate All Jobs-------------------------!>
 	@RequestMapping(value = "/admin/validatealljobs", method = RequestMethod.GET)
 	public ResponseEntity<List<Job>> validateAllJobs() {
 		List<Job> pendingJobs = jobDAO.listAllPendingJobs();
@@ -83,11 +95,10 @@ public class JobController {
 		}
 	}
 
+	// <!---------------------Create Edit Job------------------------!>
 	@RequestMapping(value = "/job/createEditJob", method = RequestMethod.POST)
 	public ResponseEntity<Job> createEditJob(@RequestBody Job job) {
 		if (job.getId() == 0) {
-			job.setStatus("PENDING");
-			job.setReport("NO");
 			jobDAO.addJob(job);
 			return new ResponseEntity<Job>(HttpStatus.OK);
 		} else {
@@ -95,5 +106,72 @@ public class JobController {
 			return new ResponseEntity<Job>(HttpStatus.OK);
 		}
 	}
+
+	// <!-----------------Get Applied Job------------------------->
+
+	@RequestMapping(value = "job/{id}/appliedJobs", method = RequestMethod.GET)
+	public ResponseEntity<List<JobApplied>> getAppliedJob(@PathVariable("id") int id) {
+		List<JobApplied> appliedJobs = jobAppliedDAO.list(id);
+		if (appliedJobs.isEmpty()) {
+			return new ResponseEntity<List<JobApplied>>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<JobApplied>>(appliedJobs, HttpStatus.OK);
+
+		}
+	}
+
+	// <!------------------Apply Job------------------------------>
+
+	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
+	public ResponseEntity<JobApplied> applyJob(@RequestBody JobApplied jobApplied) {
+		boolean flag = jobAppliedDAO.addJobApplied(jobApplied);
+		if (flag != false) {
+			List<JobApplied> list = jobAppliedDAO.list(jobApplied.getJob().getId());
+			jobApplied.getJob().setNoOfApplied(list.size());
+			jobDAO.updateJob(jobApplied.getJob());
+			return new ResponseEntity<JobApplied>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<JobApplied>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!----------------Delete Applied Job------------------------->
+
+	@RequestMapping(value = "/job/delAppliedJob/{id}", method = RequestMethod.GET)
+	public ResponseEntity<JobApplied> delApplyJob(@PathVariable("id") int id) {
+		jobApplied = jobAppliedDAO.getJobApplied(id);
+		job = jobApplied.getJob();
+		if (jobApplied != null) {
+			boolean flag = jobAppliedDAO.deleteJobApplied(jobApplied);
+			if (flag != false) {
+				int noOfApplied = jobAppliedDAO.list(job.getId()).size();
+				job.setNoOfApplied(noOfApplied);
+				jobDAO.updateJob(job);
+				return new ResponseEntity<JobApplied>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<JobApplied>(HttpStatus.NOT_FOUND);
+			}
+		} else {
+			return new ResponseEntity<JobApplied>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// <!----------------------Created Job List---------------------------!>
+
+	@RequestMapping(value = "/job/jobCreatedList/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<Job>> createdJobList(@PathVariable("id") int id) {
+
+		List<Job> jobs = jobDAO.getCreatedJobs(id);
+		if (jobs.isEmpty()) {
+			return new ResponseEntity<List<Job>>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<Job>>(jobs, HttpStatus.OK);
+		}
+
+	}
+
+	// <!---------------------Disable Job--------------------->
+	
+	
 
 }

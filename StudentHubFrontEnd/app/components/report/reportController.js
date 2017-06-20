@@ -1,6 +1,5 @@
-
-BlogModule.controller('BlogController', [
-    'BlogFactory',
+ReportModule.controller('BlogReportController', [
+    'BlogReportFactory',
     '$location',
     '$scope',
     '$timeout',
@@ -8,68 +7,29 @@ BlogModule.controller('BlogController', [
     '$filter',
     '$route',
     '$rootScope',
-    function (BlogFactory, $location, $scope, $timeout, $routeParams, $filter, $route, $rootScope) {
+    function (BlogReportFactory, $location, $scope, $timeout, $routeParams, $filter, $route, $rootScope) {
 
         var me = this;
 
-        me.blogs = [];
+        me.blogReports = [];
 
-        me.myBlogs = [];
+        me.blogReport = {};
 
-        me.blogComments = [];
+        me.handled = [];
 
-        me.blog = {}
-
-        me.blogComment = {}
-
-        me.createBlog = {
-            blogId: null,
-            title: '',
-            userId: null,
-            userName: '',
-            description: '',
-            postDate: '',
-            imageUrl: ''
-        };
-
-        me.createBlogComment = {
+        me.handle = {
             id: null,
-            blog: null,
-            userId: null,
-            userName: '',
-            blogComment: '',
-            commentDate: ''
-        };
-
-        me.likeBlog = {
-            id: null,
-            blogId: null,
-            blogName: '',
-            userId: '',
-            userName: '',
-            dateTime: ''
-        }
-
-        me.reportBlog = {
-            id: null,
-            userName: '',
-            userId: '',
-            title: '',
             typeOfReport: '',
             dateTime: '',
             details: '',
-            reportId: null
-        }
-
-        me.reportBlogComment = {
-            id: null,
+            userId: null,
             userName: '',
-            userId: '',
             title: '',
-            typeOfReport: '',
-            dateTime: '',
-            details: '',
-            reportId: null
+            handledBy: '',
+            handledByUserId: null,
+            reportId: null,
+            commentId: null,
+            status: ''
         }
 
         //load jquery
@@ -78,11 +38,12 @@ BlogModule.controller('BlogController', [
             settings();
         }, 100);
 
+        //function to fetch blog reports
+        me.fetchBlogReports = function () {
+            var categoryName = "BLOG";
+            BlogReportFactory.fetchReportsByCategory(categoryName).then(function (blogs) {
 
-        me.fetchAllBlogs = function () {
-            BlogFactory.fetchAllBlogs().then(function (blogs) {
-
-                var sortingOrder = 'postedDate'; //default sort
+                var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -168,20 +129,65 @@ BlogModule.controller('BlogController', [
                     $scope.sortingOrder = newSortingOrder;
                 };
 
-                getMyBlogs();
             },
                 function (errorResponse) {
-                    Materialize.toast('<strong>Error Fetching The Blogs</strong>', 6000);
+                    Materialize.toast("Error Fetching Data", 6000);
                 }
             );
         }
 
+        //function to handle the report
+        me.handleReport = function (id) {
+            BlogReportFactory.getReport(id).then(function (report) {
+                me.blogReport = report;
 
-        function getMyBlogs() {
-            var userID = user.id;
-            BlogFactory.getMyBlogs(userID).then(function (myBlogs) {
+                me.handle.typeOfReport = me.blogReport.typeOfReport;
+                var now = new Date();
+                me.handle.dateTime = dateTimeFormat(now);
+                me.handle.details = me.blogReport.details;
+                me.handle.userId = me.blogReport.userId;
+                me.handle.userName = me.blogReport.userName;
+                me.handle.title = me.blogReport.title;
+                me.handle.handledBy = user.userName;
+                me.handle.handledByUserId = user.id;
+                me.handle.reportId = me.blogReport.reportId;
+                me.handle.commentId = me.blogReport.commentId;
+                me.handle.status = 'HANDLED';
 
-                var sortingOrder = 'postedDate'; //default sort
+                reportHandle(me.handle, me.blogReport.id);
+
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Handling Report', 6000);
+                }
+            );
+        }
+
+        //function to handle the report
+        function reportHandle(handle, blogReportId) {
+            BlogReportFactory.handleReport(handle).then(function () {
+                deleteReport(blogReportId);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Handling Report', 6000);
+                }
+            );
+        }
+        //function to delete the report
+        function deleteReport(id) {
+            BlogReportFactory.deleteReport(id).then(function () {
+                $route.reload();
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Report', 6000);
+                }
+            );
+        }
+
+        me.fetchHandledBlogs = function () {
+            var categoryName = "BLOG";
+            BlogReportFactory.fetchHandleReports(categoryName).then(function (handled) {
+                var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -191,7 +197,7 @@ BlogModule.controller('BlogController', [
                 $scope.itemsPerPage = 10;
                 $scope.pagedItems = [];
                 $scope.currentPage = 0;
-                $scope.items = myBlogs;
+                $scope.items = handled;
 
                 var searchMatch = function (haystack, needle) {
                     if (!needle) {
@@ -269,29 +275,55 @@ BlogModule.controller('BlogController', [
 
             },
                 function (errorResponse) {
-                    Materialize.toast('<strong>Error Fetching Your Blogs</strong>', 6000)
+                    Materialize.toast('Error Handling Report', 6000);
                 }
             );
         }
 
-        me.getBlog = function () {
-            var blogId = $routeParams.id;
-            BlogFactory.getBlog(blogId).then(function (blog) {
-                me.blog = blog;
-                getComments();
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Fetching Blog', 6000);
-                }
-            );
+    }
+]);
+
+
+ReportModule.controller('BlogCommentReportController', [
+    'BlogCommentReportFactory',
+    '$location',
+    '$scope',
+    '$timeout',
+    '$routeParams',
+    '$filter',
+    '$route',
+    '$rootScope',
+    function (BlogCommentReportFactory, $location, $scope, $timeout, $routeParams, $filter, $route, $rootScope) {
+
+        var me = this;
+
+        me.blogCommentReport = {};
+
+        me.handle = {
+            id: null,
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            userId: null,
+            userName: '',
+            title: '',
+            handledBy: '',
+            handledByUserId: null,
+            reportId: null,
+            commentId: null,
+            status: ''
         }
 
+        //load jquery
+        $timeout(function () {
+            //this method is declared in the myScript file to this is use to instantiate the methods
+            settings();
+        }, 100);
 
-        function getComments() {
-            var blogId = $routeParams.id;
-            BlogFactory.getComments(blogId).then(function (blogComments) {
-
-                var sortingOrder = 'commentDate'; //default sort
+        me.fetchBlogCommentReports = function () {
+            var categoryName = "BLOG COMMENT"
+            BlogCommentReportFactory.fetchReportsByCategory(categoryName).then(function (blogComments) {
+                var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -376,190 +408,155 @@ BlogModule.controller('BlogController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Comment Reports', 6000);
+                });
+        }
+
+        //function to handle the report
+        me.handleReport = function (id) {
+            BlogCommentReportFactory.getReport(id).then(function (report) {
+                me.blogCommentReport = report;
+
+                me.handle.typeOfReport = me.blogCommentReport.typeOfReport;
+                var now = new Date();
+                me.handle.dateTime = dateTimeFormat(now);
+                me.handle.details = me.blogCommentReport.details;
+                me.handle.userId = me.blogCommentReport.userId;
+                me.handle.userName = me.blogCommentReport.userName;
+                me.handle.title = me.blogCommentReport.title;
+                me.handle.commentId = me.blogCommentReport.commentId;
+                me.handle.handledBy = user.userName;
+                me.handle.handledByUserId = user.id;
+                me.handle.reportId = me.blogCommentReport.reportId;
+                me.handle.commentId = me.blogCommentReport.commentId;
+                me.handle.status = 'HANDLED';
+
+                reportHandle(me.handle, me.blogCommentReport.id);
 
             },
                 function (errorResponse) {
-                    Materialize.toast('Error Fetching Comments', 6000);
+                    Materialize.toast('Error Handling Report', 6000);
                 }
             );
         }
 
-        //function to create blog
-        me.createEditBlog = function () {
-
-            me.createBlog.userId = user.id;
-            me.createBlog.userName = user.userName;
-            var dateNow = new Date();
-            me.createBlog.postDate = dateTimeFormat(dateNow);
-            me.createBlog.imageUrl = "noPic.jgp";
-
-            BlogFactory.createEditBlog(me.createBlog).then(function () {
-                $location.path("/user/blogs");
-                Materialize.toast('Blog Created Sucessfully!', 6000);
+        //function to handle the report
+        function reportHandle(handle, blogReportId) {
+            BlogCommentReportFactory.handleReport(handle).then(function () {
+                deleteReport(blogReportId);
             },
                 function (errorResponse) {
-                    Materialize.toast('Error While Creating The Blog', 6000);
+                    Materialize.toast('Error Handling Report', 6000);
                 }
             );
-
-        }
-        //function to edit blog
-        me.editBlog = function () {
-
-            BlogFactory.createEditBlog(me.blog).then(function () {
-                $location.path("/user/blogs");
-                Materialize.toast('Blog Successfully Updated!', 6000);
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error While Updating The Blog', 6000);
-                }
-            );
-
         }
 
-        //function to create or Edit blog comment
-        me.createEditBlogComment = function () {
-            var blogId = $routeParams.id;
-            me.createBlogComment.blog = blogId;
-            me.createBlogComment.userId = user.id;
-            me.createBlogComment.userName = user.userName;
-            var now = new Date();
-            me.createBlogComment.commentDate = dateTimeFormat(now);
-
-            BlogFactory.createEditBlogComment(me.createBlogComment).then(function () {
+        //function to delete the report
+        function deleteReport(id) {
+            BlogCommentReportFactory.deleteReport(id).then(function () {
                 $route.reload();
-                Materialize.toast("Comment Added Sucessfully!", 6000);
+                Materialize.toast('Report Handled Successfully', 6000)
             },
                 function (errorResponse) {
-                    Materialize.toast("Error Adding Comment", 6000);
+                    Materialize.toast('Error Deleting Report', 6000);
                 }
             );
         }
 
-        //function to Like the blog
-        me.blogLike = function () {
-            var blogId = $routeParams.id;
-            me.likeBlog.blogId = blogId;
-            me.likeBlog.blogName = me.blog.title;
-            console.log(me.likeBlog.blogName);
-            me.likeBlog.userId = user.id;
-            me.likeBlog.userName = user.userName;
-            var now = new Date();
-            me.likeBlog.dateTime = dateTimeFormat(now);
+        me.fetchHandledBlogComments = function () {
+            var categoryName = "BLOG COMMENT";
+            BlogCommentReportFactory.fetchHandleReports(categoryName).then(function (handled) {
+                var sortingOrder = 'id'; //default sort
 
-            console.log(me.likeBlog);
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = true;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = handled;
 
-            BlogFactory.likeBlog(me.likeBlog).then(function () {
-                $route.reload();
-                Materialize.toast('Liked Blog Successfully!', 6000);
-            },
-                function (erorrResponse) {
-                    Materialize.toast('Error Liking The Blog', 6000);
-                }
-            );
-        }
+                var searchMatch = function (haystack, needle) {
+                    if (!needle) {
 
-        //function to report blog
-        me.blogReport = function () {
-            me.reportBlog.typeOfReport = 'BLOG';
-            me.reportBlog.userName = user.userName;
-            me.reportBlog.userId = user.id;
-            var now = new Date();
-            me.reportBlog.dateTime = dateTimeFormat(now);
-            me.reportBlog.reportId = me.blog.blogId;
-            me.reportBlog.title = me.blog.title;
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
 
-            //console.log(me.reportBlog);
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['title'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
 
-            BlogFactory.blogReport(me.reportBlog).then(function () {
-                $route.reload();
-                Materialize.toast('Blog Reported Sucessfully!', 6000);
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Reporting Blog', 6000);
-                }
-            );
-        }
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
 
-        // //function to handle blog report
-        // me.handleReport = function () {
-        //     var handleId = $routeParams.id;
-        //     BlogFactory.handleReport(handleId).then(function () {
-        //         $route.reload();
-        //         Materialize('Report Handled Successfully!', 6000);
-        //     },
-        //         function (errorResponse) {
-        //             Materialize.toast('Erorr Handling Report', 6000);
-        //         }
-        //     );
-        // }
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
 
-        //function to report a blog
-        me.blogReportComment = function () {
-            me.reportBlogComment.typeOfReport = 'BLOG COMMENT';
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
 
-            var now = new Date();
-            me.reportBlogComment.dateTime = dateTimeFormat(now);
-            me.reportBlogComment.userName = user.userName;
-            me.reportBlogComment.userId = user.id;
-            var commentId = $routeParams.id;
-            me.reportBlogComment.reportId = commentId;
-            me.reportBlogComment.title = me.blogComment.blogComment;
-            //console.log(me.reportBlogComment);
-            BlogFactory.blogReportComment(me.reportBlogComment).then(function () {
-                $location.path('/user/blogs');
-                Materialize.toast('Comment Reported Sucessfully!', 6000);
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Reporting Blog Comment', 6000);
-                }
-            );
-        }
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
 
-        //function to get comment
-        me.getComment = function () {
-            var commentId = $routeParams.id;
-            BlogFactory.getComment(commentId).then(function (comment) {
-                me.blogComment = comment;
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Fetching Comment', 6000);
-                }
-            );
-        }
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
 
-        //function to Edit blog comment
-        me.editComment = function () {
-            BlogFactory.createEditBlogComment(me.blogComment).then(function () {
-                $location.path('/user/blog/view/' + me.blogComment.blog);
-                Materialize.toast('Comment Edited Successfully!', 6000);
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
             },
                 function (errorResponse) {
-                    Materialize.toast('Error Editing Blog', 6000);
-                }
-            );
-        }
-
-        //function to delete blog
-        me.deleteBlog = function (action, id) {
-            BlogFactory.deleteBlog(action, id).then(function () {
-                $route.reload();
-                Materialize.toast('Blog Deleted Successfully!', 6000);
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Deleting Blogs', 6000);
-                }
-            );
-        }
-
-        //function to delete blog comment
-        me.deleteComment = function (id) {
-            BlogFactory.deleteBlogComment(id).then(function () {
-                $route.reload();
-                Materialize.toast('Comment Deleted Successfully!', 6000);
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Deleting Comment', 6000);
+                    Materialize.toast('Error Handling Report', 6000);
                 }
             );
         }

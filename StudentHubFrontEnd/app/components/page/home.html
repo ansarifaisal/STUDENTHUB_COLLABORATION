@@ -66,28 +66,65 @@
 
         <!--Blogs Section Starts From Here-->
         <div id="blogs" class="col s12">
-            <div class="row" ng-repeat="blog in homePageCtrl.content.latestBlogs">
+            <div class="row">
                 <div class="card-panel">
                     <h4 class="header">Latest Blogs</h4>
-                    <div class="card horizontal">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <p style="font-size: 18px;"><a href="" class="black-text">{{blog.title}}</a></p>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                        <td>On: <span>{{blog.postDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                            {{blog.noOfComments}}
-                                        </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
-                                    </tr>
-                                </table>
+                    <div ng-show="!homePageCtrl.content.latestBlogs">
+                        No Latest Blogs Available
+                    </div>
+                    <div ng-hide="!homePageCtrl.content.latestBlogs">
+
+                        <div ng-repeat="blog in homePageCtrl.content.latestBlogs">
+                            <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO' ">
+
+                                <div class="card-image">
+                                    <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                                </div>
+                                <div class="card-stacked">
+                                    <div class="card-content">
+                                        <div class="row nomargin">
+                                            <div class="col m10">
+                                                <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
+                                            </div>
+
+                                            <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
+                                <span class="right">
+                                            <!-- Dropdown Trigger -->
+                                <a class='dropdown-button' href='#' data-activates='OP_{{blog.blogId}}_Select'><i class="material-icons">more_vert</i></a>
+                                            <!-- Dropdown Structure -->
+                                    <ul id='OP_{{blog.blogId}}_Select' class='dropdown-content'>
+                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                        
+                                        <span ng-if="blog.userId == user.id">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/blog/edit/{{blog.blogId}}">Edit</a></li>
+                                    <li><a href="" ng-click="homePageCtrl.deleteBlog('Disabled', blog.blogId)">Delete</a></li>
+                                        </span>
+                                            </ul>
+                                            </span>
+                                            </span>
+                                        </div>
+                                        <table class="bordered" style="font-size: 12px; color:grey;">
+                                            <tr>
+                                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                                <td>On: <span>{{blog.postDate}}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                                    {{blog.noOfComments}}
+                                                </td>
+                                                <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
+                                            </tr>
+                                            <span ng-hide="blog.userId == user.id">
+                                        <tr>
+                                            <td>Status: {{blog.status}}
+                                            </td>
+                                            <td>Report: {{blog.report}}</td>
+                                        </tr>
+                                    </span>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -100,43 +137,51 @@
 
         <!--Jobs Section Starts Here-->
         <div id="jobs" class="col s12">
-            <div class="row" ng-repeat="job in homePageCtrl.content.latestJobs">
+            <div class="row">
                 <div class="card-panel">
                     <h4 class="header">Latest Jobs</h4>
-                    <div class="card horizontal">
-                        <!--<div class="card-image">
+
+                    <div ng-show="!homePageCtrl.content.latestJobs">
+                        No Latest Jobs Available
+                    </div>
+                    <div ng-hide="!homePageCtrl.content.latestJobs">
+
+                        <div class="row nomargin" ng-repeat="job in homePageCtrl.content.latestJobs">
+                            <div class="card horizontal" ng-hide="blog.status != 'CLOSED' || blog.report != 'NO'">
+                                <!--<div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                     </div>-->
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <p style="font-size: 18px;">{{job.title}}</p>
-                                <p style="color: grey; font-size: 14px;">{{job.company}}</p>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                        <td> <span>On: {{job.postDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
-                                            yrs
-                                        </td>
-                                        <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&#8377; {{job.salary}} P.A.
-                                        </td>
-                                        <td>Key Skills: {{job.keySkills}}</td>
-                                    </tr>
-                                </table>
-                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                            </div>
+                                <div class="card-stacked">
+                                    <div class="card-content">
+                                        <p style="font-size: 18px;">{{job.title}}</p>
+                                        <p style="color: grey; font-size: 14px;">{{job.company}}</p>
+                                        <table class="bordered" style="font-size: 12px; color:grey;">
+                                            <tr>
+                                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                                <td> <span>On: {{job.postDate}}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                                    yrs
+                                                </td>
+                                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>&#8377; {{job.salary}} P.A.
+                                                </td>
+                                                <td>Key Skills: {{job.keySkills}}</td>
+                                            </tr>
+                                        </table>
+                                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                    </div>
+                                </div>
+                            </div><br>
                         </div>
-                    </div><br>
-                    <div class="right-align"><a href="">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                    </div>
+                    <div class="right-align"><a href="#!/user/jobs">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
                 </div>
             </div>
         </div>
-
 
         <!--Events Section Ends Here-->
         <div id="events" class="col s12">
