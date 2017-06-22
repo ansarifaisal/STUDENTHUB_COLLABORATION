@@ -253,9 +253,61 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
-    '/user/event/view': {
+    '/user/event/view/:id': {
         //page path
         templateUrl: 'app/components/event/event.html',
+        //controller that will handle this page
+        controller: 'EventController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/event/appliedEvents': {
+        //page path
+        templateUrl: 'app/components/event/appliedEvent.html',
+        //controller that will handle this page
+        controller: 'EventController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/event/createdEvents': {
+        //page path
+        templateUrl: 'app/components/event/createdEvent.html',
+        //controller that will handle this page
+        controller: 'EventController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/event/edit/:id': {
+        //page path
+        templateUrl: 'app/components/event/editEvent.html',
+        //controller that will handle this page
+        controller: 'EventController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/event/report/:id': {
+        //page path
+        templateUrl: 'app/components/event/reportEvent.html',
         //controller that will handle this page
         controller: 'EventController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
@@ -584,7 +636,7 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
-    //<=====================Blog Report Module================>
+    //<=====================Blog Comment Report Module================>
 
     '/admin/report/blogcomments': {
         //page path
@@ -634,6 +686,34 @@ window.routes = {
         controller: 'JobReportController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
         controllerAs: 'jobReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    //<=====================Job Report Module================>
+
+    '/admin/report/events': {
+        //page path
+        templateUrl: 'app/components/report/eventReport.html',
+        //controller that will handle this page
+        controller: 'EventReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/events': {
+        //page path
+        templateUrl: 'app/components/report/handledEventReport.html',
+        //controller that will handle this page
+        controller: 'EventReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'eventReportCtrl',
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page

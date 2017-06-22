@@ -53,6 +53,20 @@ JobModule.controller('JobController', [
             reportId: null
         }
 
+        me.handle = {
+            id: null,
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            userId: null,
+            userName: '',
+            title: '',
+            handledBy: '',
+            handledByUserId: null,
+            reportId: null,
+            status: ''
+        }
+
         //load jquery
         $timeout(function () {
             //this method is declared in the myScript file to this is use to instantiate the methods
@@ -476,5 +490,6 @@ JobModule.controller('JobController', [
                     Materialize.toast('Error Approving Job', 6000);
                 });
         }
+
 
     }]);

@@ -74,22 +74,21 @@
                                 <div class="row nomargin">
                                     <span class="right">
                                             <a class='dropdown-button' href='#' data-activates='jobOption_{{appliedJob.id}}'><i class="material-icons">more_vert</i></a>
-
                                             <!-- Dropdown Structure -->
                                             <ul id='jobOption_{{appliedJob.id}}' class='dropdown-content'>
-                                                 <div ng-show="appliedJob.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                                <li><a href="" ng-click="jobCtrl.approveJob( appliedJob.id, 'Approved')">Approve Job</a></li>  
+                                                 <div ng-show="appliedJob.job.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="" ng-click="jobCtrl.approveJob(appliedJob.job.id, 'Approved')">Approve Job</a></li>  
                                                 <li><a href="" ng-click="jobCtrl.deleteJob('Closed', appliedJob.id)">Delete</a></li>
                                             </div>
-                                            <div ng-show="appliedJob.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                                <li><a href="#!/user/job/report/{{appliedJob.id}}">Handle Report</a></li>  
+                                            <!--<div ng-show="appliedJob.job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="" ng-click="jobCtrl.handleReport(appliedJob.id)">Handle Report</a></li>  
                                                 <li><a href="" ng-click="jobCtrl.deleteJob('Closed', appliedJob.id)">Delete</a></li>
-                                            </div>
-                                            <div ng-hide="appliedJob.report == 'YES' || appliedJob.status != 'APPROVED'">
-                                            <li><a href="#!/user/job/report/{{appliedJob.id}}">Report</a></li>
+                                            </div>-->
+                                            <div ng-hide="appliedJob.job.report == 'YES' || appliedJob.job.status != 'APPROVED'">
+                                            <li><a href="#!/user/job/report/{{appliedJob.job.id}}">Report</a></li>
                                             <span ng-show="appliedJob.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                                 <li class="divider"></li>
-                                                <li><a href="#!/user/job/editJob/{{appliedJob.id}}">Edit</a></li>
+                                                <li><a href="#!/user/job/editJob/{{appliedJob.job.id}}">Edit</a></li>
                                                 <li><a href="" ng-click="jobCtrl.deleteJob('Closed', appliedJob.id)">Delete</a></li>
                                             </span>
                                 </div>
@@ -119,9 +118,9 @@
 
                                 <div ng-show="jobCtrl.job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <tr>
-                                        <td>Report: {{appliedJob.report}}
+                                        <td>Report: {{appliedJob.job.report}}
                                         </td>
-                                        <td>Status: {{appliedJob.status}}</td>
+                                        <td>Status: {{appliedJob.job.status}}</td>
                                     </tr>
                                 </div>
                             </table>

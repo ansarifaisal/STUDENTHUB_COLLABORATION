@@ -1,16 +1,12 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
@@ -72,8 +68,9 @@ public class Event implements Serializable {
 	@Column(name = "STATUS", nullable = false)
 	private String status;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.EAGER)
-	private List<EventJoined> eventJoined;
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event", fetch = FetchType.EAGER)
+//	@JsonBackReference
+//	private List<EventJoined> eventJoined;
 
 	/*
 	 * Getter and Setters
@@ -190,26 +187,26 @@ public class Event implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	public List<EventJoined> getEventJoined() {
-		return eventJoined;
-	}
-
-	public void setEventJoined(List<EventJoined> eventJoined) {
-		this.eventJoined = eventJoined;
-	}
-
-	/*
-	 * Overriding toString method for debugging
-	 */
-
-	@Override
-	public String toString() {
-		return "Event [id=" + id + ", userId=" + userId + ", userName=" + userName + ", eventTitle=" + eventTitle
-				+ ", imageURL=" + imageURL + ", venue=" + venue + ", description=" + description + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", postDate=" + postDate + ", noOfApplied=" + noOfApplied
-				+ ", reported=" + reported + ", eventStatus=" + eventStatus + ", status=" + status + ", eventJoined="
-				+ eventJoined + "]";
-	}
+//
+//	public List<EventJoined> getEventJoined() {
+//		return eventJoined;
+//	}
+//
+//	public void setEventJoined(List<EventJoined> eventJoined) {
+//		this.eventJoined = eventJoined;
+//	}
+//
+//	/*
+//	 * Overriding toString method for debugging
+//	 */
+//
+//	@Override
+//	public String toString() {
+//		return "Event [id=" + id + ", userId=" + userId + ", userName=" + userName + ", eventTitle=" + eventTitle
+//				+ ", imageURL=" + imageURL + ", venue=" + venue + ", description=" + description + ", startDate="
+//				+ startDate + ", endDate=" + endDate + ", postDate=" + postDate + ", noOfApplied=" + noOfApplied
+//				+ ", reported=" + reported + ", eventStatus=" + eventStatus + ", status=" + status + ", eventJoined="
+//				+ eventJoined + "]";
+//	}
 
 }

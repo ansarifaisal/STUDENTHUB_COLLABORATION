@@ -82,10 +82,10 @@
                                                 <li><a href="" ng-click="jobCtrl.approveJob( job.id, 'Approved')">Approve Job</a></li>  
                                                 <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
                                             </div>
-                                            <div ng-show="job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                            <!--<div ng-show="job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
                                                 <li><a href="#!/user/job/report/{{job.id}}">Handle Report</a></li>  
                                                 <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
-                                            </div>
+                                            </div>-->
                                             <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
                                             <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
                                             <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">

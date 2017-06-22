@@ -10,6 +10,10 @@ public interface EventJoinedDAO {
 	
 	List<EventJoined> list();
 	
+	List<EventJoined> joinEventList(int eventID);
+	
+	List<EventJoined> joinedEventList(int userID);
+	
 	boolean addEventJoined(EventJoined eventJoined);
 	
 	boolean deleteEventJoined(EventJoined eventJoined);

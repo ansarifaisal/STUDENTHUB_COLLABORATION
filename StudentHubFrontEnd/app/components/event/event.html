@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-init="eventCtrl.getEvent()">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -8,7 +8,7 @@
 
                         <a href="#!" class="breadcrumb">Event</a>
 
-                        <a href="#!" class="breadcrumb">Event Name</a>
+                        <a href="#!" class="breadcrumb">{{eventCtrl.event.eventTitle}}</a>
                     </div>
                 </div>
             </nav>
@@ -17,59 +17,59 @@
         <div class="card">
             <div class="card-image">
                 <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
-                <span class="card-title"><strong>Event Name</strong></span>
+                <span class="card-title"><strong>{{eventCtrl.event.eventTitle}}</strong></span>
             </div>
 
             <div class="card-content">
 
-                Posted By: {{user.firstName}} {{user.lastName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <i class="material-icons" style="font-size: 14px;">query_builder</i> June 6th, 2017 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <i class="material-icons" style="font-size: 16px;">person</i><a href=""> 0 Applied</a>
+                Posted By: {{eventCtrl.event.userName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="material-icons" style="font-size: 14px;">query_builder</i> {{eventCtrl.event.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="material-icons" style="font-size: 16px;">person</i><a href=""> {{eventCtrl.event.noOfApplied}} Applied</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-
+                <a href="" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="" class="btn light-blue waves-effect waves-light">Cancel</a>
                 <span class="right">
-                    <a href="!#" class="btn">Apply</a>
-                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                   
+                    <a class='dropdown-button' href='#' data-activates='eventOption_{{eventCtrl.event.id}}'><i class="material-icons">more_vert</i></a>
 
-                    <!-- Dropdown Structure -->
-                    <ul id='dropdown1' class='dropdown-content'>
-                        <li><a href="#!">Report</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#!">Edit</a></li>
-                        <li><a href="#!">Delete</a></li>
-                    </ul>
-                </span>
+                       <!-- Dropdown Structure -->
+                            <ul id='eventOption_{{eventCtrl.event.id}}' class='dropdown-content'>
+                                <div ng-hide="eventCtrl.event.report == 'YES' || eventCtrl.event.status != 'APPROVED'">
+                                <li><a href="#!/user/event/report/{{eventCtrl.event.id}}">Report</a></li>
+                                <span ng-show="eventCtrl.event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/event/edit/{{eventCtrl.event.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', eventCtrl.event.id)">Delete</a></li>
+                                </span>
             </div>
-
-            <div class="card-panel">
-                <strong style="font-size: 20px;" class="grey-text">Details</strong>
-                <hr/>
-                <i class="material-icons" style="font-size: 14px;">today</i> &nbsp;May 13, 2017 - Jul 1, 2017 <br/>
-                <i class="material-icons" style="font-size: 14px;">query_builder</i> &nbsp;8:00 am - 5:00 pm
-            </div>
-            <div class="card-panel">
-                <strong style="font-size: 20px;" class="grey-text">Venue</strong>
-                <hr/>
-                <br/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
-                it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
-                including versions of Lorem Ipsum.
-            </div>
-            <div class="card-panel">
-                <strong style="font-size: 20px;" class="grey-text">Description</strong>
-                <hr/>
-                <br/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
-                it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker
-                including versions of Lorem Ipsum.
-            </div>
+            </ul>
+            </span>
         </div>
 
+        <div class="card-panel">
+            <strong style="font-size: 20px;" class="grey-text">Details</strong>
+            <hr/>
+            <i class="material-icons" style="font-size: 14px;">today</i> &nbsp;Start Date: {{eventCtrl.event.startDate}}<br>
+            <i class="material-icons" style="font-size: 14px;">today</i>&nbsp; End Date: {{eventCtrl.event.endDate}}
+            <br/>
+            <!--<i class="material-icons" style="font-size: 14px;">query_builder</i> &nbsp;8:00 am - 5:00 pm-->
+        </div>
+        <div class="card-panel">
+            <strong style="font-size: 20px;" class="grey-text">Venue</strong>
+            <hr/>
+            <br/> {{eventCtrl.event.venue}}
+        </div>
+        <div class="card-panel">
+            <strong style="font-size: 20px;" class="grey-text">Description</strong>
+            <hr/>
+            <br/> {{eventCtrl.event.description}}
+        </div>
+        <div class="card-panel">
+            <a href="!#" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>
+        </div>
     </div>
+
+</div>
 
 </div>
 </div>

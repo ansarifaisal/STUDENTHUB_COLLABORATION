@@ -1,0 +1,88 @@
+<div row ng-init="eventReportCtrl.fetchEventReports();">
+
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <span class="right">
+                            <a href="#!/admin/handled/events" class="btn light-blue waves-effect waves-light">View Handled Events</a>
+                        </span>
+                        <a href="#!/admin/report/events" class="breadcrumb">Event Reports</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="card-panel">
+            <div id="reported">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="col m2 nopadding nomargin">
+                        <strong style="font-size:20px;" class="grey-text">Reported Events</strong>
+                    </div>
+                    <div class="col m4">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Report</label>
+                        </div>
+                    </div>
+
+                    <div class="col m3">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                        <label>Materialize Select</label>
+                    </div>
+
+                    <div class="col m2 offset-m1">
+                        <!--<a href="" ng-click="manageBlogCtrl.validateAllEvents()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
+                    </div>
+
+                </div>
+                <hr/>
+
+                <div ng-hide="pagedItems[currentPage]">
+                    <strong> <h3>There Are No Pending Reports OR Search Match Available </h3> </strong>
+                </div>
+                <div ng-hide="!pagedItems[currentPage]">
+
+                    <table class="highlight bordered">
+                        <thead>
+                            <tr>
+                                <td><a href="" ng-click="sort_by('eventTitle')">Title</a></td>
+                                <td><a href="" ng-click="sort_by('details')">Details</a></td>
+                                <td><a href="" ng-click="sort_by('userName')">Reported By</a></td>
+                                <td><a href="" ng-click="sort_by('dateTime')">Reported Date</a></td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                <td><a href="#!/user/event/view/{{event.reportId}}">{{event.title}}</a></td>
+                                <td>{{event.details}}</td>
+                                <td><a href="">{{event.userName}}</a></td>
+                                <td>{{event.dateTime}}</td>
+                                <td><a href="" ng-click="eventReportCtrl.handleReport(event.id)">Handle</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col offset-m5">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

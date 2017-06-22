@@ -1,0 +1,116 @@
+<div class="row" ng-init="eventCtrl.getEvent();">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!/user/events" class="breadcrumb">Events</a>
+                        <a class="breadcrumb">Edit Event</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Edit Event</strong>
+            <hr/>
+            <div class="row">
+                <div class="col offset-m3 m6">
+                    <div class="card-panel">
+                        <form name="editForm" ng-submit="eventCtrl.editEvent()" novalidate>
+
+                            <!--Id field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="hidden" name="id" id="id" ng-model="eventCtrl.event.id" placeholder="Event ID" required="required">
+                            </div>
+                            <!--Id field ends here-->
+
+                            <!--eventTitle field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="eventTitle" id="eventTitle" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="eventCtrl.event.eventTitle" placeholder="Event Name" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.eventTitle.$dirty">
+                                    <span ng-show="editForm.eventTitle.$dirty && editForm.eventTitle.$error.required">Please, Provide Event Title</span>
+                                    <span ng-show="editForm.eventTitle.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.eventTitle.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.eventTitle.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--eventTitle field ends here-->
+
+                            <!--venue field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="venue" id="venue" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="eventCtrl.event.venue" placeholder="Venue" required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.venue.$dirty">
+                                    <span ng-show="editForm.venue.$dirty && editForm.venue.$error.required">Please, Provide Venue</span>
+                                    <span ng-show="editForm.venue.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="editForm.venue.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="editForm.venue.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--company field ends here-->
+
+                            <!--description field starts here-->
+                            <div class="input-field nomargin">
+
+                                <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                    ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Event Description" data-length="500"
+                                    ng-model="eventCtrl.event.description" placeholder="description" required="required"></textarea>
+                                <div class="invalid-data center-align" ng-show="editForm.description.$dirty">
+                                    <span ng-show="editForm.description.$dirty && editForm.description.$error.required">Please, Provide Description</span>
+                                    <span ng-show="editForm.description.$error.minlength">This field must contain atleast 20 charachters</span>
+                                    <span ng-show="editForm.description.$error.maxlength">This field can contain maximum 500 charachters</span>
+                                    <span ng-show="editForm.description.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                                </div>
+
+                            </div>
+                            <!--description field ends here-->
+
+                            <!--startDate field starts here-->
+                            <div class="input-field nomargin">
+
+                                <input type="text" name="startDate" class="datepicker" id="startDate" ng-pattern="/^[a-zA-z0-9\s\:\,]+$/" ng-minlength="5"
+                                    maxlength="5" ng-maxlength="50" data-length="50" ng-model="eventCtrl.event.startDate" placeholder="Start Date"
+                                    required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.startDate.$dirty">
+                                    <span ng-show="editForm.startDate.$dirty && editForm.startDate.$error.required">Please, Provide Start Date</span>
+                                    <span ng-show="editForm.startDate.$error.minlength">This field must contain atleast 5 number</span>
+                                    <span ng-show="editForm.startDate.$error.maxlength">This field can contain maximum 50 numbers</span>
+                                    <span ng-show="editForm.startDate.$error.pattern">This field can contain only numbers</span>
+                                </div>
+
+                            </div>
+                            <!--startDate field ends here-->
+
+                            <!--endDate field starts here-->
+                            <div class="input-field nomargin">
+
+                                <input type="text" name="endDate" class="datepicker" id="endDate" ng-pattern="/^[a-zA-Z0-9\s\:\,]+$/" ng-minlength="5" maxlength="5"
+                                    ng-maxlength="50" data-length="50" ng-model="eventCtrl.event.endDate" placeholder="End Date"
+                                    required="required">
+                                <div class="invalid-data center-align" ng-show="editForm.endDate.$dirty">
+                                    <span ng-show="editForm.endDate.$dirty && editForm.endDate.$error.required">Please, Provide End Date</span>
+                                    <span ng-show="editForm.endDate.$error.minlength">This field must contain atleast 5 number</span>
+                                    <span ng-show="editForm.endDate.$error.maxlength">This field can contain maximum 50 numbers</span>
+                                    <span ng-show="editForm.endDate.$error.pattern">This field can contain only numbers</span>
+                                </div>
+
+                            </div>
+                            <!--endDate field ends here-->
+
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

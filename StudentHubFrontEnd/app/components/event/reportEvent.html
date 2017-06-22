@@ -1,13 +1,13 @@
-<div class="row" ng-init="jobCtrl.getJob();">
+<div class="row" ng-init="eventCtrl.getEvent();">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
                 <div class="nav-wrapper">
-                    <div class="col s12 row">
+                    <div class="col s12">
 
                         <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
+                        <a href="#!/user/events" class="breadcrumb">Events</a>
 
                         <a class="breadcrumb">Report</a>
 
@@ -15,19 +15,19 @@
                 </div>
             </nav>
         </div>
-        <div id="reportJobForm">
+        <div id="reportEventForm">
             <div class="card-panel">
-                <h5><strong class="grey-text">Report <a class="grey-text" href="#!/user/job/view/{{jobCtrl.job.id}}">{{jobCtrl.job.title}}</a></strong></h5>
+                <h5><strong class="grey-text">Report <a href="#!/user/event/view/{{eventCtrl.event.id}}">{{eventCtrl.event.eventTitle}}</a></strong></h5>
                 <hr/>
                 <div class="row">
                     <div class="col m6 offset-m3">
-                        <form name="reportForm" ng-submit="jobCtrl.jobReport()" novalidate>
+                        <form name="reportForm" ng-submit="eventCtrl.eventReport()" novalidate>
 
                             <!--details field starts here-->
                             <div class="input-field nomargin">
                                 <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
                                     maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
-                                    ng-model="jobCtrl.reportJob.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
+                                    ng-model="eventCtrl.reportEvent.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
                                 <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
                                     <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
                                     <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
@@ -41,7 +41,7 @@
                             <div class="input-field">
                                 <div class="hoverable">
                                     <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
-                                        value="Report Blog">
+                                        value="Report Event">
                                 </div>
                             </div>
                         </form>

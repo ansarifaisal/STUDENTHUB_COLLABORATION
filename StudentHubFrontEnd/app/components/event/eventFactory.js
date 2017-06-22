@@ -8,6 +8,7 @@ EventModule.factory('EventFactory', [
         var REST_API_URI = "http://localhost:9005/webapp/";
 
         var eventFactory = {
+
             fetchAllEvents: fetchAllEvents,
             getEvent: getEvent,
             applyEvent: applyEvent,
@@ -16,7 +17,9 @@ EventModule.factory('EventFactory', [
             editEvent: editEvent,
             deleteEvent: deleteEvent,
             fetchAppliedEvents: fetchAppliedEvents,
-            delAppliedEvent: delAppliedEvent
+            leaveEvent: leaveEvent,
+            fetchCreatedEvents: fetchCreatedEvents
+
         };
 
         return eventFactory;
@@ -53,37 +56,122 @@ EventModule.factory('EventFactory', [
         }
 
         //function to apply Event
-        function applyEvent() {
-            
+        function applyEvent(joinEvent) {
+            var deferred = $q.defer();
+            $http.post(REST_API_URI + 'event/join', joinEvent).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Creating Events');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
         }
 
         //function to report event
-        function reportEvent() {
+        function reportEvent(report) {
+
+            var deferred = $q.defer();
+            $http.post(REST_API_URI + 'event/report', report).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Reporting Events');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
 
         }
 
         //function to create event
-        function createEvent() {
-
+        function createEvent(event) {
+            var deferred = $q.defer();
+            $http.post(REST_API_URI + 'event/createEditEvent', event).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Creating Events');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
         }
 
         //function to edit event
-        function editEvent() {
+        function editEvent(event) {
+
+            var deferred = $q.defer();
+            $http.post(REST_API_URI + 'event/createEditEvent', event).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Editing Events');
+                    deferred.reject(errorResponse);
+                }
+            );
+
+            return deferred.promise;
 
         }
 
         //function to delete event
-        function deleteEvent() {
+        function deleteEvent(action, id) {
+
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + 'admin/event/' + action + '/' + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error While Delete Event!');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
 
         }
 
         //function to fetch applied event
-        function fetchAppliedEvents() {
-
+        function fetchAppliedEvents(id) {
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + '/' + id + '/events').then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error While Fetching Events');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
         }
 
         //function to delete applied event
-        function delAppliedEvent() {
-
+        function leaveEvent(id) {
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + 'event/leave/' + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error While Leaving Event!');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
         }
+
+        //function to fetch created Events
+        function fetchCreatedEvents(id) {
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + 'event/created/' + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error While Leaving Event!');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
     }]);

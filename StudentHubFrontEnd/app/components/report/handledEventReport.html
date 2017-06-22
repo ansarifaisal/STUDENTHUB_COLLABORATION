@@ -1,4 +1,4 @@
-<div row ng-init="jobReportCtrl.fetchHandledJobs();">
+<div row ng-init="eventReportCtrl.fetchHandledEvents();">
 
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
@@ -6,8 +6,8 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
-                        <a href="#!/admin/report/job" class="breadcrumb">Job Reports</a>
-                        <a href="#!/admin/handled/job" class="breadcrumb">Handled Reports</a>
+                        <a href="#!/admin/report/events" class="breadcrumb">Event Reports</a>
+                        <a href="#!/admin/handled/events" class="breadcrumb">Handled Reports</a>
                     </div>
                 </div>
             </nav>
@@ -16,7 +16,7 @@
             <div id="reported">
                 <div class="row" style="margin-bottom:0px;">
                     <div class="col m2 nopadding nomargin">
-                        <strong style="font-size:20px;" class="grey-text">Handled Jobs</strong>
+                        <strong style="font-size:20px;" class="grey-text">Handled Events</strong>
                     </div>
                     <div class="col m4">
                         <div class="input-field nomargin">
@@ -54,13 +54,13 @@
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="job in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                                <td><a href="#!/user/job/view/{{job.reportId}}">{{job.title}}</a></td>
-                                <td>{{job.details}}</td>
-                                <td><a href="#!/user/job/view/{{job.userId}}">{{job.userName}}</a></td>
-                                <td>{{job.dateTime}}</td>
-                                <td><a href="#!/user/job/view/{{job.handledByUserId}}">{{job.handledBy}}</td>
-                            <td>{{job.status}}</td>
+                            <tr ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                <td><a href="#!/user/event/view/{{event.reportId}}">{{event.title}}</a></td>
+                                <td>{{event.details}}</td>
+                                <td><a href="#!/user/event/view/{{event.userId}}">{{event.userName}}</a></td>
+                                <td>{{event.dateTime}}</td>
+                                <td><a href="#!/user/event/view/{{event.handledByUserId}}">{{event.handledBy}}</td>
+                            <td>{{event.status}}</td>
                         </tr>
                     </tbody>
                 </table>

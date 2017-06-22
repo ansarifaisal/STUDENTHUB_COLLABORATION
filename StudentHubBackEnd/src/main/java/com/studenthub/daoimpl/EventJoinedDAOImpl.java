@@ -55,4 +55,22 @@ public class EventJoinedDAOImpl implements EventJoinedDAO {
 		}
 	}
 
+	@Override
+	@Transactional
+	public List<EventJoined> joinEventList(int eventID) {
+		String hql = "FROM EVENT_JOINED WHERE EVENT_ID = :eventID";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("eventID", eventID);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public List<EventJoined> joinedEventList(int userID) {
+		String hql = "FROM EVENT_JOINED WHERE USER_ID = :userID ORDER BY JOINED_ID";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userID", userID);
+		return query.list();
+	}
+
 }

@@ -211,19 +211,41 @@
 
     <!--Events Section Ends Here-->
     <div id="events" class="col s12">
-        <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
-            <div class="card-panel">
-                <h4 class="header">Latest Events</h4>
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">{{event.eventTitle}}</p>
+        <div class="card-panel">
+            <h4 class="header">Latest Events</h4>
+            <div ng-show="!homePageCtrl.content.latestEvents">
+                No Latest Events Available
+            </div>
+            <div ng-hide="!homePageCtrl.content.latestEvents">
+                <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
+                    <div class="card horizontal" ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <div class="row nomargin">
+                                    <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='eventOption_{{event.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='eventOption_{{event.id}}' class='dropdown-content'>
+                                <div ng-hide="event.report == 'YES' || event.status != 'APPROVED'">
+                                <li><a href="#!/user/event/report/{{event.id}}">Report</a></li>
+                                <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                </span>
+                                </div>
+                                </ul>
+
+                                </span>
+                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
+                            </div>
                             <table class="bordered" style="font-size: 12px; color:grey;">
                                 <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                    <td>By <a href="">{{event.userName}}</a></td>
                                     <td> <span>On: {{event.postDate}}</span></td>
                                 </tr>
                                 <tr>
@@ -231,13 +253,20 @@
                                     </td>
                                     <td>Status: {{event.eventStatus}}</td>
                                 </tr>
+                                <div ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <tr>
+                                        <td>Report: {{event.reported}}
+                                        </td>
+                                        <td>Status: {{event.status}}</td>
+                                    </tr>
+                                </div>
                             </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                         </div>
                     </div>
-                </div><br>
-                <div class="right-align"><a href="#!/user/events">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                </div>
             </div>
+            <div class="right-align"><a href="#!/user/events">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
         </div>
     </div>
 </div>

@@ -7,7 +7,7 @@
                         <a href="#!/user/home" class="breadcrumb">Home</a>
                         <a href="#!" class="breadcrumb">Manage</a>
                         <a href="#!/admin/managejobs" class="breadcrumb">Jobs</a>
-                        <a href="#!/admin/editjob" class="breadcrumb">Edit Job</a>
+                        <a class="breadcrumb">Edit Job</a>
                     </div>
                 </div>
             </nav>
@@ -72,7 +72,7 @@
                             <!--Experience field starts here-->
                             <div class="input-field nomargin">
 
-                                 <input type="text" name="experience" id="experience" ng-pattern="/^[0-9]+$/" ng-minlength="1" maxlength="2" ng-maxlength="2"
+                                <input type="text" name="experience" id="experience" ng-pattern="/^[0-9]+$/" ng-minlength="1" maxlength="2" ng-maxlength="2"
                                     data-length="2" ng-model="manageJobCtrl.job.experience" placeholder="Experience Name" required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.experience.$dirty">
                                     <span ng-show="editForm.experience.$dirty && editForm.experience.$error.required">Please, Provide Experience</span>
@@ -84,11 +84,11 @@
                             </div>
                             <!--Experience field ends here-->
 
-                             <!--Salary field starts here-->
+                            <!--Salary field starts here-->
                             <div class="input-field nomargin">
 
-                                 <input type="text" name="salary" id="salary" ng-pattern="/^[0-9]+$/" ng-minlength="4" maxlength="9" ng-maxlength="9"
-                                    data-length="9" ng-model="manageJobCtrl.job.salary" placeholder="Salary Name" required="required">
+                                <input type="text" name="salary" id="salary" ng-pattern="/^[0-9]+$/" ng-minlength="4" maxlength="9" ng-maxlength="9" data-length="9"
+                                    ng-model="manageJobCtrl.job.salary" placeholder="Salary Name" required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.salary.$dirty">
                                     <span ng-show="editForm.salary.$dirty && editForm.salary.$error.required">Please, Provide Salary</span>
                                     <span ng-show="editForm.salary.$error.minlength">This field must contain atleast 4 numbers</span>
@@ -102,7 +102,7 @@
                             <!--Location field starts here-->
                             <div class="input-field nomargin">
 
-                                 <input type="text" name="location" id="location" ng-pattern="/^[A-Za-z\s\-]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                <input type="text" name="location" id="location" ng-pattern="/^[A-Za-z\s\-]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
                                     data-length="20" ng-model="manageJobCtrl.job.location" placeholder="Location Name" required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.location.$dirty">
                                     <span ng-show="editForm.location.$dirty && editForm.location.$error.required">Please, Provide Location</span>
