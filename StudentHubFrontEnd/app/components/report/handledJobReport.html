@@ -1,4 +1,4 @@
-<div row ng-init="blogReportCtrl.fetchHandledBlogs();">
+<div row ng-init="jobReportCtrl.fetchHandledJobs();">
 
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
@@ -6,8 +6,8 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
-                        <a href="#!/admin/report/blogs" class="breadcrumb">Blog Reports</a>
-                        <a href="#!/admin/report/blogs" class="breadcrumb">Handled Reports</a>
+                        <a href="#!/admin/report/job" class="breadcrumb">Job Reports</a>
+                        <a href="#!/admin/handled/job" class="breadcrumb">Handled Reports</a>
                     </div>
                 </div>
             </nav>
@@ -20,7 +20,7 @@
                 <div ng-hide="!pagedItems[currentPage]">
                     <div class="row" style="margin-bottom:0px;">
                         <div class="col m2 nopadding nomargin">
-                            <strong style="font-size:20px;" class="grey-text">Handled Blogs</strong>
+                            <strong style="font-size:20px;" class="grey-text">Handled Jobs</strong>
                         </div>
                         <div class="col m4">
                             <div class="input-field nomargin">
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="col m2 offset-m1">
-                            <a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Handle All</a>
+                            <!--<a href="" ng-click="managejobCtrl.validateAlljobs()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
                         </div>
 
                     </div>
@@ -58,13 +58,13 @@
                             </thead>
                             <tbody>
 
-                                <tr ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                                    <td><a href="#!/user/blog/view/{{blog.reportId}}">{{blog.title}}</a></td>
-                                    <td>{{blog.details}}</td>
-                                    <td><a href="#!/user/blog/view/{{blog.userId}}">{{blog.userName}}</a></td>
-                                    <td>{{blog.dateTime}}</td>
-                                    <td><a href="#!/user/blog/view/{{blog.handledByUserId}}">{{blog.handledBy}}</td>
-                            <td>{{blog.status}}</td>
+                                <tr ng-repeat="job in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                    <td><a href="#!/user/job/view/{{job.reportId}}">{{job.title}}</a></td>
+                                    <td>{{job.details}}</td>
+                                    <td><a href="#!/user/job/view/{{job.userId}}">{{job.userName}}</a></td>
+                                    <td>{{job.dateTime}}</td>
+                                    <td><a href="#!/user/job/view/{{job.handledByUserId}}">{{job.handledBy}}</td>
+                            <td>{{job.status}}</td>
                         </tr>
                     </tbody>
                 </table>

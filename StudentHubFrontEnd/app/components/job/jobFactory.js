@@ -19,7 +19,8 @@ JobModule.factory('JobFactory', [
             delAppliedJob: delAppliedJob,
             fetchCreateJobList: fetchCreateJobList,
             createJob: createJob,
-            deleteJob: deleteJob
+            deleteJob: deleteJob,
+            editJob: editJob
 
         };
 
@@ -63,7 +64,7 @@ JobModule.factory('JobFactory', [
 
             var deferred = $q.defer();
 
-            $http.get(REST_API_URI + '/job/' + id).then(function (response) {
+            $http.get(REST_API_URI + 'job/' + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
@@ -122,7 +123,7 @@ JobModule.factory('JobFactory', [
         }
 
         //function to report job
-        function reportJob() {
+        function reportJob(report) {
 
             var deferred = $q.defer();
             $http.post(REST_API_URI + "job/report", report).then(function (response) {
@@ -153,6 +154,7 @@ JobModule.factory('JobFactory', [
             return deferred.promise;
         }
 
+        //function to fetch created jobs
         function fetchCreateJobList(id) {
 
             var deferred = $q.defer();
@@ -169,6 +171,7 @@ JobModule.factory('JobFactory', [
 
         }
 
+        //function to create job
         function createJob(job) {
 
             var deferred = $q.defer();
@@ -184,6 +187,7 @@ JobModule.factory('JobFactory', [
 
         }
 
+        //function to delete job
         function deleteJob(action, id) {
 
             var deferred = $q.defer();
@@ -192,6 +196,22 @@ JobModule.factory('JobFactory', [
             },
                 function (errorResponse) {
                     console.log("Error Deleting Job");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+
+        }
+
+        //function to edit job
+        function editJob(job) {
+
+            var deferred = $q.defer();
+            $http.post(REST_API_URI + "job/createEditJob", job).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error Reporting Job");
                     deferred.reject(errorResponse);
                 }
             );

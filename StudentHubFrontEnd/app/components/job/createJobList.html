@@ -7,8 +7,8 @@
 
                         <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <span class="right"><button class="btn light-blue waves-effect waves-light" data-target="creationForm">+ Create Job</button></span>
-
+                        <span ng-show="user.role != 'USER'" class="right"><button class="btn light-blue waves-effect waves-light" data-target="creationForm">+ Create Job</button></span>
+                        
                         <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
 
                         <a href="#!" class="breadcrumb">Created Job</a>
@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class="row nomargin" ng-repeat="createdJob in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                <div class="card horizontal" ng-hide="createdJob.status != 'APPROVED'">
+                <div class="card horizontal">
                     <!--<div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                     </div>-->
@@ -74,60 +74,80 @@
 
                                             <!-- Dropdown Structure -->
                                             <ul id='jobOption_{{createdJob.id}}' class='dropdown-content'>
-                                                <li><a href="#!">Report</a></li>
+                                                <div ng-show="createdJob.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="" ng-click="jobCtrl.approveJob( createdJob.id, 'Approved')">Approve Job</a></li>  
+                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', createdJob.id)">Delete</a></li>
+                                            </div>
+                                            <div ng-show="createdJob.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="#!/user/job/report/{{createdJob.id}}">Handle Report</a></li>  
+                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', createdJob.id)">Delete</a></li>
+                                            </div>
+                                            <div ng-hide="createdJob.report == 'YES' || createdJob.status != 'APPROVED'">
+                                            <li><a href="#!/user/job/report/{{createdJob.id}}">Report</a></li>
+                                            <span ng-show="createdJob.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                                 <li class="divider"></li>
-                                                <li><a href="#!">Edit</a></li>
-                                                <li><a href="#!">Delete</a></li>
-                                            </ul>
-
-                                        </span>
-
-                                <p style="font-size: 18px;"><a class="black-text" href = "#!/user/job/view/{{createdJob.id}}">{{createdJob.title}}</a></p>
-                                <p style="color: grey; font-size: 14px;">{{createdJob.company}}</p>
+                                                <li><a href="#!/user/job/editJob/{{createdJob.id}}">Edit</a></li>
+                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', createdJob.id)">Delete</a></li>
+                                            </span>
                             </div>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>On: {{createdJob.postDate}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{createdJob.experience}}
-                                        yrs
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{createdJob.location}}</td>
-                                </tr>
-                                <tr>
-                                    <td>&#8377; {{createdJob.salary}} P.A.
-                                    </td>
-                                    <td>Key Skills: {{createdJob.keySkills}}</td>
-                                </tr>
-                            </table>
-                            <a ng-click="jobCtrl.deleteJob('Closed', createdJob.id)" ; class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+                            </ul>
+
+                            </span>
+
+                            <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{createdJob.id}}">{{createdJob.title}}</a></p>
+                            <p style="color: grey; font-size: 14px;">{{createdJob.company}}</p>
                         </div>
+                        <table class="bordered" style="font-size: 12px; color:grey;">
+                            <tr>
+                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                <td> <span>On: {{createdJob.postDate}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{createdJob.experience}}
+                                    yrs
+                                </td>
+                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{createdJob.location}}</td>
+                            </tr>
+                            <tr>
+                                <td>&#8377; {{createdJob.salary}} P.A.
+                                </td>
+                                <td>Key Skills: {{createdJob.keySkills}}</td>
+                            </tr>
+
+                            <div ng-show="createdJob.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                <tr>
+                                    <td>Report: {{createdJob.report}}
+                                    </td>
+                                    <td>Status: {{createdJob.status}}</td>
+                                </tr>
+                            </div>
+                        </table>
+                        <a ng-click="jobCtrl.deleteJob('Closed', createdJob.id)" ; class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
                     </div>
-                </div><br/>
-            </div>
-
-            <div ng-hide="!pagedItems[currentPage]">
-
-                <div class="center">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                        </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                        </li>
-                    </ul>
                 </div>
-
-            </div>
+            </div><br/>
         </div>
 
+        <div ng-hide="!pagedItems[currentPage]">
+
+            <div class="center">
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
     </div>
+
+</div>
 </div>
 
 

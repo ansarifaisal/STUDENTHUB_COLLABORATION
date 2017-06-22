@@ -86,7 +86,7 @@ public class EventController {
 
 	@RequestMapping(value = "/event/createEditEvent", method = RequestMethod.POST)
 	public ResponseEntity<Event> createEditJob(@RequestBody Event event) {
-		if (event.getId()== 0) {
+		if (event.getId() == 0) {
 			event.setEventStatus("Coming Soon");
 			event.setStatus("PENDING");
 			event.setReported("NO");

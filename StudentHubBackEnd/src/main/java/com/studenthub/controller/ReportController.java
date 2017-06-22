@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.studenthub.dao.BlogCommentDAO;
 import com.studenthub.dao.BlogDAO;
 import com.studenthub.dao.HandledDAO;
+import com.studenthub.dao.JobDAO;
 import com.studenthub.dao.ReportDAO;
 import com.studenthub.entity.Blog;
 import com.studenthub.entity.BlogComment;
 import com.studenthub.entity.Handled;
+import com.studenthub.entity.Job;
 import com.studenthub.entity.Report;
 
 @RestController
@@ -46,6 +48,12 @@ public class ReportController {
 
 	@Autowired
 	BlogCommentDAO blogCommentDAO;
+	
+	@Autowired
+	Job job;
+	
+	@Autowired
+	JobDAO jobDAO;
 
 	// <!-------------------Get Report By Category----------------!>
 
@@ -116,6 +124,11 @@ public class ReportController {
 				blogComment = blogCommentDAO.getBlogComment(handled.getCommentId());
 				blogComment.setReport("NO");
 				blogCommentDAO.updateBlogComment(blogComment);
+				break;
+			case "JOB":
+				job = jobDAO.getJob(handled.getReportId());
+				job.setReport("NO");
+				jobDAO.updateJob(job);
 				break;
 			}
 			return new ResponseEntity<Handled>(HttpStatus.OK);

@@ -23,7 +23,7 @@
 
                             <!--Id field starts here-->
                             <div class="input-field nomargin">
-                                <input type="hiddenhttps://github.com/ansarifaisal/COLLABORATION_STUDENTHUB.git" name="id" id="id" ng-model="manageEventCtrl.event.id" placeholder="Event ID" required="required">
+                                <input type="hidden" name="id" id="id" ng-model="manageEventCtrl.event.id" placeholder="Event ID" required="required">
                             </div>
                             <!--Id field ends here-->
 
@@ -43,7 +43,7 @@
                             <!--venue field starts here-->
                             <div class="input-field nomargin">
                                 <input type="text" name="venue" id="venue" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                                    data-length="50" ng-model="manageEventCtrl.event.venue" placeholder="venue Name" required="required">
+                                    data-length="50" ng-model="manageEventCtrl.event.venue" placeholder="Venue" required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.venue.$dirty">
                                     <span ng-show="editForm.venue.$dirty && editForm.venue.$error.required">Please, Provide Venue</span>
                                     <span ng-show="editForm.venue.$error.minlength">This field must contain atleast 2 charachters</span>
@@ -57,7 +57,7 @@
                             <div class="input-field nomargin">
 
                                 <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
-                                    ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Job Description" data-length="500"
+                                    ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Event Description" data-length="500"
                                     ng-model="manageEventCtrl.event.description" placeholder="description" required="required"></textarea>
                                 <div class="invalid-data center-align" ng-show="editForm.description.$dirty">
                                     <span ng-show="editForm.description.$dirty && editForm.description.$error.required">Please, Provide Description</span>
@@ -89,7 +89,7 @@
                             <div class="input-field nomargin">
 
                                 <input type="text" name="endDate" class="datepicker" id="endDate" ng-pattern="/^[a-zA-Z0-9\s\:\,]+$/" ng-minlength="5" maxlength="5"
-                                    ng-maxlength="50" data-length="50" ng-model="manageEventCtrl.event.endDate" placeholder="Start Date"
+                                    ng-maxlength="50" data-length="50" ng-model="manageEventCtrl.event.endDate" placeholder="End Date"
                                     required="required">
                                 <div class="invalid-data center-align" ng-show="editForm.endDate.$dirty">
                                     <span ng-show="editForm.endDate.$dirty && editForm.endDate.$error.required">Please, Provide End Date</span>

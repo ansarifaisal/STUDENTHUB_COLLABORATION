@@ -1,5 +1,6 @@
 JobModule.controller('JobController', [
     'JobFactory',
+    'ManageJobFactory',
     '$location',
     '$scope',
     '$timeout',
@@ -7,7 +8,7 @@ JobModule.controller('JobController', [
     '$filter',
     '$route',
     '$rootScope',
-    function (JobFactory, $location, $scope, $timeout, $routeParams, $filter, $route, $rootScope) {
+    function (JobFactory, ManageJobFactory, $location, $scope, $timeout, $routeParams, $filter, $route, $rootScope) {
 
         var me = this;
 
@@ -40,6 +41,17 @@ JobModule.controller('JobController', [
             status: ''
 
         };
+
+        me.reportJob = {
+            id: null,
+            userName: '',
+            userId: '',
+            title: '',
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: null
+        }
 
         //load jquery
         $timeout(function () {
@@ -143,6 +155,7 @@ JobModule.controller('JobController', [
             );
         }
 
+        //function to fetch applied job
         me.appliedJob = function () {
             var userId = user.id;
             JobFactory.fetchAppliedJobs(userId).then(function (myJobs) {
@@ -238,7 +251,7 @@ JobModule.controller('JobController', [
                 }
             );
         }
-
+        //function to get job
         me.getJob = function () {
             var jobId = $routeParams.id;
             JobFactory.getJob(jobId).then(function (job) {
@@ -249,7 +262,7 @@ JobModule.controller('JobController', [
                 }
             );
         }
-
+        //function to apply job
         me.applyJob = function (id) {
 
             JobFactory.getJob(id).then(function (job) {
@@ -268,6 +281,7 @@ JobModule.controller('JobController', [
             );
         }
 
+        //function to apply job
         function jobApply(request) {
             JobFactory.applyJob(request).then(function () {
                 $route.reload();
@@ -279,6 +293,7 @@ JobModule.controller('JobController', [
             );
         }
 
+        //function to del applied job
         me.delAppliedJob = function (id) {
             JobFactory.delAppliedJob(id).then(function () {
                 $route.reload();
@@ -289,6 +304,7 @@ JobModule.controller('JobController', [
                 });
         }
 
+        //function to fetch created jobs
         me.createdJobList = function () {
 
             var userId = user.id;
@@ -386,6 +402,7 @@ JobModule.controller('JobController', [
                 });
         }
 
+        //function to create job
         me.jobCreate = function () {
 
             me.createJob.userId = user.id;
@@ -405,7 +422,7 @@ JobModule.controller('JobController', [
             );
         }
 
-
+        //function to delete or disable job
         me.deleteJob = function (action, id) {
             JobFactory.deleteJob(action, id).then(function () {
                 $route.reload();
@@ -415,4 +432,49 @@ JobModule.controller('JobController', [
                     Materialize.toast('Error While Deleting Job', 6000);
                 });
         }
+
+        //function to edit job
+        me.editJob = function () {
+            JobFactory.editJob(me.job).then(function () {
+                $location.path('/user/job/view/' + me.job.id);
+                Materialize.toast('Job Edited Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error While Deleting Job', 6000);
+                }
+            );
+        }
+
+        //function job report
+        me.jobReport = function () {
+            me.reportJob.typeOfReport = 'JOB';
+            me.reportJob.userName = user.userName;
+            me.reportJob.userId = user.id;
+            var now = new Date();
+            me.reportJob.dateTime = dateTimeFormat(now);
+            me.reportJob.reportId = me.job.id;
+            me.reportJob.title = me.job.title;
+
+            console.log(me.reportJob);
+
+            JobFactory.reportJob(me.reportJob).then(function () {
+                $location.path('/user/job/view/' + me.reportJob.reportId);
+                Materialize.toast('Job Reported Sucessfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Reporting Job', 6000);
+                }
+            );
+        }
+
+        me.approveJob = function (id, action) {
+            ManageJobFactory.validateJob(id, action).then(function () {
+                $route.reload();
+                Materialize.toast('Job Approved Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Approving Job', 6000);
+                });
+        }
+
     }]);

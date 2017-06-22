@@ -57,4 +57,24 @@ public class JobAppliedDAOImpl implements JobAppliedDAO {
 	public JobApplied getJobApplied(int id) {
 		return (JobApplied) sessionFactory.getCurrentSession().get(JobApplied.class, id);
 	}
+
+	@Override
+	@Transactional
+	public List<JobApplied> listAppliedJob() {
+		String hql = "FROM JOB_APPLIED ORDER BY APPLIED_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public boolean updateJobApplied(JobApplied jobApplied) {
+		try {
+			sessionFactory.getCurrentSession().update(jobApplied);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

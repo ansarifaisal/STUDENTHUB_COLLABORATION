@@ -1,4 +1,4 @@
-<div row ng-init="jobReportCtrl.fetchJobReports();">
+<div row ng-init="jobAcceptCtrl.fetchAllJob();">
 
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
@@ -6,29 +6,27 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
-                        <span class="right">
-                            <a href="#!/admin/handled/job" class="btn light-blue waves-effect waves-light">View Handled Jobs</a>
-                        </span>
-                        <a href="#!/admin/report/job" class="breadcrumb">Job Reports</a>
+                        <a href="#!/employer/appliedjob" class="breadcrumb">Applied Job</a>
                     </div>
                 </div>
             </nav>
         </div>
         <div class="card-panel">
-            <div id="reported">
+            <div id="Applied">
                 <div class="row" style="margin-bottom:0px;">
                     <div class="col m2 nopadding nomargin">
-                        <strong style="font-size:20px;" class="grey-text">Reported Jobs</strong>
+                        <strong style="font-size:20px;" class="grey-text">Applied Jobs</strong>
                     </div>
                     <div class="col m4">
                         <div class="input-field nomargin">
                             <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
-                            <label for="searchKeyword">Search For Report</label>
+                            <label for="searchKeyword">Search For User</label>
                         </div>
                     </div>
 
                     <div class="col m3">
                         <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                      
                     </select>
                         <label>Materialize Select</label>
                     </div>
@@ -41,7 +39,7 @@
                 <hr/>
 
                 <div ng-hide="pagedItems[currentPage]">
-                    <strong> <h3>There Are No Pending Reports OR Search Match Available </h3> </strong>
+                    <strong> <h3>There Are Applied Jobs OR Search Match Available </h3> </strong>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
 
@@ -49,20 +47,29 @@
                         <thead>
                             <tr>
                                 <td><a href="" ng-click="sort_by('title')">Title</a></td>
-                                <td><a href="" ng-click="sort_by('details')">Details</a></td>
-                                <td><a href="" ng-click="sort_by('userName')">Reported By</a></td>
-                                <td><a href="" ng-click="sort_by('dateTime')">Reported Date</a></td>
+                                <td><a href="" ng-click="sort_by('company')">Company Name</a></td>
+                                <td><a href="" ng-click="sort_by('userName')">Applied By</a></td>
+                                <td><a href="" ng-click="sort_by('appliedDate')">Applied Date</a></td>
+                                <td><a href="" ng-click="sort_by('status')">Status</a></td>
                                 <td>Action</td>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="job in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                                <td><a href="#!/user/job/view/{{job.reportId}}">{{job.title}}</a></td>
-                                <td>{{job.details}}</td>
-                                <td><a href="">{{job.userName}}</a></td>
-                                <td>{{job.dateTime}}</td>
-                                <td><a href="" ng-click="jobReportCtrl.handleReport(job.id)">Handle</a></td>
+                            <tr ng-repeat="jobApplied in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                <td><a href="#!/user/job/view/{{jobApplied.job.id}}">{{jobApplied.job.title}}</a></td>
+                                <td>{{jobApplied.job.company}}</td>
+                                <td><a href="">{{jobApplied.userName}}</a></td>
+                                <td>{{jobApplied.appliedDate}}</td>
+                                <td>{{jobApplied.status}}</td>
+                                <td ng-show="jobApplied.status == 'PENDING'">
+                                    <a href="" ng-click="jobAcceptCtrl.performAction('Accept', jobApplied.id)" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="" ng-click="jobAcceptCtrl.performAction('Reject', jobApplied.id)" style="color:black;"><i class="material-icons">close</i></a>
+                                </td>
+                                <td>
+                                    <a href="" ng-show="jobApplied.status == 'REJECT'" ng-click="jobAcceptCtrl.performAction('Accept', jobApplied.id)" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="" ng-show="jobApplied.status == 'ACCEPT'" ng-click="jobAcceptCtrl.performAction('Reject', jobApplied.id)" style="color:black;"><i class="material-icons">close</i></a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

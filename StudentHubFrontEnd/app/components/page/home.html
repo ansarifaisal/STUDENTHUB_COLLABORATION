@@ -147,72 +147,98 @@
                     <div ng-hide="!homePageCtrl.content.latestJobs">
 
                         <div class="row nomargin" ng-repeat="job in homePageCtrl.content.latestJobs">
-                            <div class="card horizontal" ng-hide="blog.status != 'CLOSED' || blog.report != 'NO'">
+                            <div class="card horizontal" ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
                                 <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
+                                    <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                                </div>-->
                                 <div class="card-stacked">
                                     <div class="card-content">
-                                        <p style="font-size: 18px;">{{job.title}}</p>
-                                        <p style="color: grey; font-size: 14px;">{{job.company}}</p>
-                                        <table class="bordered" style="font-size: 12px; color:grey;">
-                                            <tr>
-                                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                                <td> <span>On: {{job.postDate}}</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
-                                                    yrs
-                                                </td>
-                                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>&#8377; {{job.salary}} P.A.
-                                                </td>
-                                                <td>Key Skills: {{job.keySkills}}</td>
-                                            </tr>
-                                        </table>
-                                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                                    </div>
-                                </div>
-                            </div><br>
-                        </div>
-                    </div>
-                    <div class="right-align"><a href="#!/user/jobs">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
-                </div>
-            </div>
-        </div>
+                                        <div class="row nomargin">
+                                            <span class="right">
+                                            <a class='dropdown-button' href='#' data-activates='jobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
 
-        <!--Events Section Ends Here-->
-        <div id="events" class="col s12">
-            <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
-                <div class="card-panel">
-                    <h4 class="header">Latest Events</h4>
-                    <div class="card horizontal">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <p style="font-size: 18px;">{{event.eventTitle}}</p>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                        <td> <span>On: {{event.postDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Joined: {{event.noOfApplied}}
-                                        </td>
-                                        <td>Status: {{event.eventStatus}}</td>
-                                    </tr>
-                                </table>
-                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                                            <!-- Dropdown Structure -->
+                                        <ul id='jobOption_{{job.id}}' class='dropdown-content'>
+                                              <div ng-show="job.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="" ng-click="approveJob(job.id, 'Approved')">Approve Job</a></li>  
+                                                <li><a href="" ng-click="deleteJob('Closed', job.id)">Delete</a></li>
+                                              </div>
+                                            <div ng-show="job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
+                                                <li><a href="#!/user/job/report/{{job.id}}">Handle Report</a></li>  
+                                                <li><a href="" ng-click="deleteJob('Closed', job.id)">Delete</a></li>
+                                            </div>
+                                            <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
+                                            <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
+                                            <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                                <li class="divider"></li>
+                                                <li><a href="#!/user/job/editJob/{{job.id}}">Edit</a></li>
+                                                <li><a href="" ng-click="deleteJob('Closed', job.id)">Delete</a></li>
+                                            </span>
+                                        </div>
+                                        </ul>
+
+                                        </span>
+                                        <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
+                                        <p style="color: grey; font-size: 14px;">{{job.company}}</p>
+                                    </div>
+                                    <table class="bordered" style="font-size: 12px; color:grey;">
+                                        <tr>
+                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                            <td> <span>On: {{job.postDate}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                                yrs
+                                            </td>
+                                            <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#8377; {{job.salary}} P.A.
+                                            </td>
+                                            <td>Key Skills: {{job.keySkills}}</td>
+                                        </tr>
+                                    </table>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                </div>
                             </div>
-                        </div>
-                    </div><br>
-                    <div class="right-align"><a href="">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                        </div><br>
+                    </div>
                 </div>
+                <div class="right-align"><a href="#!/user/jobs">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
             </div>
         </div>
     </div>
+
+    <!--Events Section Ends Here-->
+    <div id="events" class="col s12">
+        <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
+            <div class="card-panel">
+                <h4 class="header">Latest Events</h4>
+                <div class="card horizontal">
+                    <div class="card-image">
+                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                    </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <p style="font-size: 18px;">{{event.eventTitle}}</p>
+                            <table class="bordered" style="font-size: 12px; color:grey;">
+                                <tr>
+                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                    <td> <span>On: {{event.postDate}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Joined: {{event.noOfApplied}}
+                                    </td>
+                                    <td>Status: {{event.eventStatus}}</td>
+                                </tr>
+                            </table>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                        </div>
+                    </div>
+                </div><br>
+                <div class="right-align"><a href="#!/user/events">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>

@@ -12,7 +12,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
     //routing to access the Login page
     '/login': {
@@ -51,7 +51,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/forum': {
@@ -64,7 +64,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     //=========ForumCategory Module Routing============>
@@ -79,7 +79,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/forumcategory': {
@@ -92,7 +92,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/admin/forumcategory/add': {
@@ -119,7 +119,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
     '/user/forum/view': {
         //page path
@@ -131,7 +131,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
     '/user/forum/details': {
         //page path
@@ -143,7 +143,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     //<=============Blog Routing Module===========>
@@ -158,7 +158,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/blogs': {
@@ -171,7 +171,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/blog/view/:id': {
@@ -184,7 +184,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/blog/comment/edit/:id': {
@@ -197,7 +197,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/blog/comment/report/:id': {
@@ -210,7 +210,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/blog/report/:id': {
@@ -223,7 +223,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
     //<=============Event Routing Module===========>
 
@@ -237,7 +237,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/events': {
@@ -250,7 +250,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/event/view': {
@@ -263,7 +263,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     //<=============Job Routing Module===========>
@@ -278,7 +278,33 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/job/editJob/:id': {
+        //page path
+        templateUrl: 'app/components/job/editJob.html',
+        //controller that will handle this page
+        controller: 'JobController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/job/report/:id': {
+        //page path
+        templateUrl: 'app/components/job/reportJob.html',
+        //controller that will handle this page
+        controller: 'JobController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/job/createdJobs': {
@@ -291,20 +317,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
-    },
-
-    '/user/job/editjob': {
-        //page path
-        templateUrl: 'app/components/job/editJob.html',
-        //controller that will handle this page
-        controller: 'JobController',
-        //nick name of the controller so that we dont have to declare the name in the HTML page
-        controllerAs: 'jobCtrl',
-        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
-        requireLogin: true,
-        //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/jobs': {
@@ -317,9 +330,8 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
-
 
 
     '/user/job/view/:id': {
@@ -332,7 +344,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     //<=============User Routing Module===========>
@@ -347,7 +359,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/account': {
@@ -360,7 +372,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     '/user/inbox': {
@@ -373,7 +385,7 @@ window.routes = {
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN']
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
     //<=====================Manage User Module================>
@@ -600,6 +612,48 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
+    //<=====================Job Report Module================>
+
+    '/admin/report/job': {
+        //page path
+        templateUrl: 'app/components/report/jobReport.html',
+        //controller that will handle this page
+        controller: 'JobReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/job': {
+        //page path
+        templateUrl: 'app/components/report/handledJobReport.html',
+        //controller that will handle this page
+        controller: 'JobReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    //<=====================Job Accept Module================>
+
+    '/employer/appliedjob': {
+        //page path
+        templateUrl: 'app/components/employer/jobAccept.html',
+        //controller that will handle this page
+        controller: 'JobAcceptController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'jobAcceptCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
 
 };
 
