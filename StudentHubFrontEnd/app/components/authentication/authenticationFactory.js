@@ -121,10 +121,9 @@ AuthenticationModule.factory('AuthenticationFactory', ['$http', '$q', '$rootScop
         return deffered.promise;
     }
 
-//method to check whether the username exists
+    //method to check whether the username exists
 
     function checkUserName(userName) {
-        debugger;
         var deffered = $q.defer();
         $http.post(url + 'existingUser', userName).then(function (response) {
             deffered.resolve(response);

@@ -1,4 +1,4 @@
-<div class="row" ng-init="eventCtrl.fetchJoinedEvents()">
+<div class="row" ng-init="eventCtrl.fetchJoinevents()">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -17,7 +17,7 @@
             </nav>
         </div>
 
-        <div class="card-panel row">
+        <div class="card-panel row" style="padding:10px;">
             <div class="left">
                 <strong class="black-text" style="font-size:24px;">Joined Events</strong>
             </div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="row nomargin" ng-repeat="joinEvent in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                <div ng-hide="joinEvent.reported == 'YES' || joinEvent.status != 'APPROVED'">
+                <div ng-hide="joinEvent.event.reported == 'YES' || joinEvent.event.status != 'APPROVED'">
                     <div class="card horizontal">
                         <div class="card-image">
                             <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -82,7 +82,7 @@
                                 <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <li class="divider"></li>
                                     <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
-                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteEvent('Closed', event.id)">Delete</a></li>
                                 </span>
                                 </div>
                                 </ul>
@@ -109,7 +109,7 @@
                                 </div>
                             </table>
 
-                            <a ng-show="joinEvent.event.userId == user.id" ng-click="eventCtrl.leaveEvent(joinEvent.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            <a  ng-click="eventCtrl.leaveEvent(joinEvent.event.id, user.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
 
                         </div>
                     </div>

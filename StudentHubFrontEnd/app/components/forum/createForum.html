@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!/user/forums" class="breadcrumb">Forums</a>
+                        <a class="breadcrumb">Create Forum</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="card-panel">
+            <strong style="font-size:20px;" class="grey-text">Create Forum</strong>
+            <hr/>
+            <div class="row">
+                <div class="col offset-m3 m6">
+                    <div class="card-panel">
+                        <form name="createForm" ng-submit="forumCtrl.createForum()" novalidate>
+
+                            <!--forumName field starts here-->
+                            <div class="input-field nomargin">
+                                <input type="text" name="forumName" id="forumName" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                    data-length="50" ng-model="forumCtrl.newForum.forumName" placeholder="Forum Name" required="required">
+                                <div class="invalid-data center-align" ng-show="createForm.forumName.$dirty">
+                                    <span ng-show="createForm.forumName.$dirty && createForm.forumName.$error.required">Please, Provide Forum Name</span>
+                                    <span ng-show="createForm.forumName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                    <span ng-show="createForm.forumName.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                    <span ng-show="createForm.forumName.$error.pattern">This field cannot contain special charachters</span>
+                                </div>
+                            </div>
+                            <!--title field ends here-->
+
+                            <!--forumDescription field starts here-->
+                            <div class="input-field nomargin">
+
+                                <textarea id="forumDescription" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                    ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Forum Description" data-length="500"
+                                    ng-model="forumCtrl.newForum.forumDescription" placeholder="forumDescription" required="required"></textarea>
+                                <div class="invalid-data center-align" ng-show="createForm.forumDescription.$dirty">
+                                    <span ng-show="createForm.forumDescription.$dirty && createForm.forumDescription.$error.required">Please, Provide forumDescription</span>
+                                    <span ng-show="createForm.forumDescription.$error.minlength">This field must contain atleast 20 charachters</span>
+                                    <span ng-show="createForm.forumDescription.$error.maxlength">This field can contain maximum 500 charachters</span>
+                                    <span ng-show="createForm.forumDescription.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                                </div>
+
+                            </div>
+                            <!--description field ends here-->
+
+                            <!--Image Field Starts Here-->
+                            <div class="file-field input-field">
+                                <div class="btn light-blue waves-effect waves-light">
+                                    <span>File</span>
+                                    <input type="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                            <!--Image Field Ends Here-->
+
+
+                            <div class="input-field">
+                                <div class="hoverable">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="createForm.$invalid" value="Save Changes">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

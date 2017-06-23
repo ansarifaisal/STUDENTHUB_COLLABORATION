@@ -10,6 +10,10 @@ public interface EventJoinedDAO {
 	
 	List<EventJoined> list();
 	
+	EventJoined getByUserID(int userID, int eventID);
+	
+	boolean checkExisiting(int eventID, int userID);
+	
 	List<EventJoined> joinEventList(int eventID);
 	
 	List<EventJoined> joinedEventList(int userID);

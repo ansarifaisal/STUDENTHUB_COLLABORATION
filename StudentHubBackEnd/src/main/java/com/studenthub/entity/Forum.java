@@ -1,15 +1,21 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "FORUMS")
 @Component
@@ -61,21 +67,15 @@ public class Forum extends Domain implements Serializable {
 
 	@Column(name = "STATUS", nullable = false)
 	private String status;
-	//
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "forum", fetch =
-	// FetchType.EAGER)
-	// private List<ForumComment> forumComment;
-	//
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "forum", fetch =
-	// FetchType.EAGER)
-	// private List<ForumRequest> forumRequest;
-	//
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "forum", fetch =
-	// FetchType.EAGER)
-	// private List<Topic> topics;
 
-	/*
-	 * Accessors and Mutators Or getters and setters
+	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	private List<ForumMember> members;
+
+	/**
+	 * 
+	 * Accessors And Mutators
+	 * 
 	 */
 
 	public int getId() {
@@ -174,42 +174,24 @@ public class Forum extends Domain implements Serializable {
 		this.status = status;
 	}
 
-	// public List<ForumComment> getForumComment() {
-	// return forumComment;
-	// }
-	//
-	// public void setForumComment(List<ForumComment> forumComment) {
-	// this.forumComment = forumComment;
-	// }
-	//
-	// public List<ForumRequest> getForumRequest() {
-	// return forumRequest;
-	// }
-	//
-	// public void setForumRequest(List<ForumRequest> forumRequest) {
-	// this.forumRequest = forumRequest;
-	// }
-	//
-	// public List<Topic> getTopics() {
-	// return topics;
-	// }
-	//
-	// public void setTopics(List<Topic> topics) {
-	// this.topics = topics;
-	// }
+	public List<ForumMember> getMembers() {
+		return members;
+	}
 
-	// /*Overriding toString Method For Debugging*/
-	// @Override
-	// public String toString() {
-	// return "Forum [id=" + id + ", userId=" + userId + ", userName=" +
-	// userName + ", forumName=" + forumName
-	// + ", createdDate=" + createdDate + ", noOfRequest=" + noOfRequest + ",
-	// imageURL=" + imageURL
-	// + ", noOfMembers=" + noOfMembers + ", noOfTopics=" + noOfTopics + ",
-	// report=" + report + ", status="
-	// + status + ", forumComment=" + forumComment + ", forumRequest=" +
-	// forumRequest + ", topics=" + topics
-	// + "]";
-	// }
+	public void setMembers(List<ForumMember> members) {
+		this.members = members;
+	}
+
+	/*
+	 * Overriding toString Method for Debugging
+	 */
+
+	@Override
+	public String toString() {
+		return "Forum [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forumName=" + forumName
+				+ ", forumDescription=" + forumDescription + ", createdDate=" + createdDate + ", noOfRequest="
+				+ noOfRequest + ", imageURL=" + imageURL + ", noOfMembers=" + noOfMembers + ", noOfTopics=" + noOfTopics
+				+ ", report=" + report + ", status=" + status + ", members=" + members + "]";
+	}
 
 }

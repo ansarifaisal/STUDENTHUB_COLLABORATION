@@ -60,7 +60,7 @@
                         <td>{{event.startDate}}</td>
                         <td>{{event.eventStatus}}</td>
                         <td>{{event.reported}}</td>
-                        <td>{{event.reported}}</td>
+                        <td>{{event.status}}</td>
                         <td ng-if=" event.status == 'APPROVED' ">
                             <a href="#!/admin/editevent/{{event.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>

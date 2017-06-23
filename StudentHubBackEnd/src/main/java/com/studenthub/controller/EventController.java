@@ -118,31 +118,37 @@ public class EventController {
 	}
 
 	// <!----------------Join Event----------------------!>
+	
 	@RequestMapping(value = "/event/join", method = RequestMethod.POST)
 	public ResponseEntity<EventJoined> eventJoined(@RequestBody EventJoined eventJoined) {
-		boolean flag = eventJoinedDAO.addEventJoined(eventJoined);
+		boolean flag = eventJoinedDAO.checkExisiting(eventJoined.getEvent().getId(), eventJoined.getUserId());
 		if (flag != false) {
-			event = eventDAO.getEvent(eventJoined.getEvent().getId());
-			List<EventJoined> list = eventJoinedDAO.joinEventList(eventJoined.getEvent().getId());
-			event.setNoOfApplied(list.size());
-			eventDAO.updateEvent(event);
-			return new ResponseEntity<EventJoined>(HttpStatus.OK);
+			boolean added = eventJoinedDAO.addEventJoined(eventJoined);
+			if (added != false) {
+				event = eventDAO.getEvent(eventJoined.getEvent().getId());
+				List<EventJoined> list = eventJoinedDAO.joinEventList(eventJoined.getEvent().getId());
+				event.setNoOfApplied(list.size());
+				eventDAO.updateEvent(event);
+				return new ResponseEntity<EventJoined>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<EventJoined>(HttpStatus.NO_CONTENT);
+			}
 		} else {
-			return new ResponseEntity<EventJoined>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<EventJoined>(HttpStatus.FOUND);
 		}
+
 	}
 
 	// <!-----------------Leave Event--------------------------!>
 
-	@RequestMapping(value = "/event/leave/{id}", method = RequestMethod.GET)
-	public ResponseEntity<EventJoined> leaveEvent(@PathVariable("id") int id) {
-		eventJoined = eventJoinedDAO.getEventJoined(id);
-		int eventId = eventJoined.getEvent().getId();
-		if (eventJoined != null) {
+	@RequestMapping(value = "/event/leave/{userId}/{id}", method = RequestMethod.GET)
+	public ResponseEntity<EventJoined> leaveEvent(@PathVariable("id") int eventID, @PathVariable("userId") int userID) {
+		eventJoined = eventJoinedDAO.getByUserID(userID, eventID);
+		if (eventJoined.getId() != 0) {
 			boolean flag = eventJoinedDAO.deleteEventJoined(eventJoined);
 			if (flag != false) {
-				event = eventDAO.getEvent(eventId);
-				List<EventJoined> list = eventJoinedDAO.joinEventList(eventJoined.getEvent().getId());
+				event = eventDAO.getEvent(eventID);
+				List<EventJoined> list = eventJoinedDAO.joinEventList(eventID);
 				event.setNoOfApplied(list.size());
 				eventDAO.updateEvent(event);
 				return new ResponseEntity<EventJoined>(HttpStatus.OK);
@@ -174,7 +180,7 @@ public class EventController {
 	}
 
 	// <!----------------Fetch All Joined Events---------------------->
-	@RequestMapping(value = "{id}/events", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/events", method = RequestMethod.GET)
 	public ResponseEntity<List<EventJoined>> fetchAllJoinedEvents(@PathVariable("id") int id) {
 		List<EventJoined> events = eventJoinedDAO.joinedEventList(id);
 		if (events.isEmpty()) {

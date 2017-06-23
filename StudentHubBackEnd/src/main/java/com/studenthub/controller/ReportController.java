@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studenthub.dao.BlogCommentDAO;
 import com.studenthub.dao.BlogDAO;
+import com.studenthub.dao.EventDAO;
+import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.HandledDAO;
 import com.studenthub.dao.JobDAO;
 import com.studenthub.dao.ReportDAO;
 import com.studenthub.entity.Blog;
 import com.studenthub.entity.BlogComment;
+import com.studenthub.entity.Event;
+import com.studenthub.entity.Forum;
 import com.studenthub.entity.Handled;
 import com.studenthub.entity.Job;
 import com.studenthub.entity.Report;
@@ -48,12 +52,24 @@ public class ReportController {
 
 	@Autowired
 	BlogCommentDAO blogCommentDAO;
-	
+
 	@Autowired
 	Job job;
-	
+
 	@Autowired
 	JobDAO jobDAO;
+
+	@Autowired
+	Event event;
+
+	@Autowired
+	EventDAO eventDAO;
+
+	@Autowired
+	Forum forum;
+
+	@Autowired
+	ForumDAO forumDAO;
 
 	// <!-------------------Get Report By Category----------------!>
 
@@ -101,7 +117,6 @@ public class ReportController {
 				report.setStatus("READ");
 				reportDAO.updateReport(report);
 			}
-			int count = countReport();
 			return new ResponseEntity<Report>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
@@ -129,6 +144,16 @@ public class ReportController {
 				job = jobDAO.getJob(handled.getReportId());
 				job.setReport("NO");
 				jobDAO.updateJob(job);
+				break;
+			case "EVENT":
+				event = eventDAO.getEvent(handled.getReportId());
+				event.setReported("NO");
+				eventDAO.updateEvent(event);
+				break;
+			case "FORUM":
+				forum = forumDAO.getForum(handled.getReportId());
+				forum.setReport("NO");
+				forumDAO.updateForum(forum);
 				break;
 			}
 			return new ResponseEntity<Handled>(HttpStatus.OK);

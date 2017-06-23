@@ -1,4 +1,4 @@
-<div row ng-init="forumReportCtrl.fetchForumReports();">
+<div row ng-init="forumReportCtrl.fetchHandledForums();">
 
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
@@ -6,10 +6,8 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
-                        <span class="right">
-                            <a href="#!/admin/handled/forums" class="btn light-blue waves-effect waves-light">View Handled Forums</a>
-                        </span>
                         <a href="#!/admin/report/forums" class="breadcrumb">Forum Reports</a>
+                        <a href="#!/admin/handled/forums" class="breadcrumb">Handled Reports</a>
                     </div>
                 </div>
             </nav>
@@ -17,8 +15,8 @@
         <div class="card-panel">
             <div id="reported">
                 <div class="row" style="margin-bottom:0px;">
-                    <div class="col m3 nopadding nomargin">
-                        <strong style="font-size:20px;" class="grey-text">Reported Forums</strong>
+                    <div class="col m2 nopadding nomargin">
+                        <strong style="font-size:20px;" class="grey-text">Handled Forums</strong>
                     </div>
                     <div class="col m4">
                         <div class="input-field nomargin">
@@ -34,25 +32,24 @@
                     </div>
 
                     <div class="col m2 offset-m1">
-                        <!--a href="" ng-click="manageeventCtrl.validateAllevents()" class="btn light-blue waves-effect waves-light">Handle All</a-->
+                        <!--<a href="" ng-click="managejobCtrl.validateAlljobs()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
                     </div>
 
                 </div>
                 <hr/>
-
                 <div ng-hide="pagedItems[currentPage]">
                     <strong> <h3>There Are No Pending Reports OR Search Match Available </h3> </strong>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
-
                     <table class="highlight bordered">
                         <thead>
                             <tr>
                                 <td><a href="" ng-click="sort_by('title')">Title</a></td>
                                 <td><a href="" ng-click="sort_by('details')">Details</a></td>
                                 <td><a href="" ng-click="sort_by('userName')">Reported By</a></td>
-                                <td><a href="" ng-click="sort_by('dateTime')">Reported Date</a></td>
-                                <td>Action</td>
+                                <td><a href="" ng-click="sort_by('dateTime')">Handled Date</a></td>
+                                <td><a href="" ng-click="sort_by('dateTime')">Handled By</a></td>
+                                <td>Status</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,29 +57,30 @@
                             <tr ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
                                 <td><a href="#!/user/forum/view/{{forum.reportId}}">{{forum.title}}</a></td>
                                 <td>{{forum.details}}</td>
-                                <td><a href="">{{forum.userName}}</a></td>
+                                <td><a href="#!/user/forum/view/{{forum.userId}}">{{forum.userName}}</a></td>
                                 <td>{{forum.dateTime}}</td>
-                                <td><a href="" ng-click="forumReportCtrl.handleReport(forum.id)">Handle</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col offset-m5">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                                <td><a href="#!/user/forum/view/{{forum.handledByUserId}}">{{forum.handledBy}}</td>
+                            <td>{{forum.status}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                 <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                                    </li>
+                                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                    </li>
+                                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>

@@ -38,20 +38,20 @@ public class TopicDAOTestCases {
 		
 	}
 	
-	@Test
-	public void addTopicTestCase(){
-		forum = forumDAO.getForum(3);
-		topic.setUserId(1);
-		topic.setUserName("ansarifaisal");
-		topic.setForum(forum);
-		topic.setTitle("Test");
-		topic.setImageURL("noPic.jpg");
-		topic.setDescription("This is a test, This is a test");
-		topic.setCreatedDate("26-01-1995");
-		topic.setReport("NO");
-		topic.setStatus("OPEN");
-		topicDAO.addTopic(topic);
-	}
+//	@Test
+//	public void addTopicTestCase(){
+//		forum = forumDAO.getForum(3);
+//		topic.setUserId(1);
+//		topic.setUserName("ansarifaisal");
+//		topic.setForum(forum);
+//		topic.setTitle("Test");
+//		topic.setImageURL("noPic.jpg");
+//		topic.setDescription("This is a test, This is a test");
+//		topic.setCreatedDate("26-01-1995");
+//		topic.setReport("NO");
+//		topic.setStatus("OPEN");
+//		topicDAO.addTopic(topic);
+//	}
 	
 	/*public void updateTopicTestCase(){
 		topic = topicDAO.getTopic(3);

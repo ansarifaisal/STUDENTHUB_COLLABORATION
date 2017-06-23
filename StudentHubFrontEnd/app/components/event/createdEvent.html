@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="row nomargin" ng-repeat="createdEvent in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                <div ng-hide="createdEvent.status == 'DISABLE'">
+                <div ng-hide="createdEvent.status == 'DISABLED'">
                     <div class="card horizontal">
                         <div class="card-image">
                             <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -82,7 +82,7 @@
                                 <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <li class="divider"></li>
                                     <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
-                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteEvent('Disabled', event.id)">Delete</a></li>
                                 </span>
                                 </div>
                                 </ul>
@@ -109,7 +109,7 @@
                                 </div>
                             </table>
 
-                            <a ng-show="createdEvent.userId == user.id" ng-click="eventCtrl.leaveEvent(joinEvent.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+                            <a ng-click="eventCtrl.deleteEvent('Disabled', createdEvent.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
 
                         </div>
                     </div>

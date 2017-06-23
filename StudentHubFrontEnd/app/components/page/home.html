@@ -39,26 +39,29 @@
                                 <p style="font-size: 18px;">{{topic.title}} </p>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td>By <a href="">{{topic.userName}}</a></td>
                                         <td>On <span>{{topic.createdDate}}</span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                            1
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:{{topic.noOfComments}}
                                         </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">group</i>Group: {{topic.forum.forumName}}
+                                        <td><i class="material-icons" style="font-size: 12px;">group</i>Group: {{topic.forumName}}
                                         </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">person</i>Admin: <a href="">{{user.firstName}} {{user.lastName}}</a></td>
                                     </tr>
+                                    <div ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <tr>
+                                            <td>Report: {{topic.report}}
+                                            </td>
+                                            <td>Status: {{topic.status}}</td>
+                                        </tr>
+                                    </div>
+
                                 </table>
                                 <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
                             </div>
                         </div>
                     </div><br>
-                    <div class="right-align"><a href="">View All Topics <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+                    <div class="right-align"><a href="#!/user/forums">View All Topics <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
                 </div>
             </div>
         </div>
@@ -235,7 +238,7 @@
                                 <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <li class="divider"></li>
                                     <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
-                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteEvent('Closed', event.id)">Delete</a></li>
                                 </span>
                                 </div>
                                 </ul>

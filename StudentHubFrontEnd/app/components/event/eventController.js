@@ -13,6 +13,10 @@ EventModule.controller('EventController', [
 
         me.event = {};
 
+        events = [];
+
+        me.joinedEvent = [];
+
         me.createEvent = {
 
             id: null,
@@ -63,20 +67,6 @@ EventModule.controller('EventController', [
 
             EventFactory.fetchAllEvents().then(function (events) {
                 var sortingOrder = 'id'; //default sort
-
-                var test = {
-                    "Pascal": [
-                        { "Name": "Pascal Made Simple", "price": 700 },
-                        { "Name": "Guide to Pascal", "price": 400 }],
-
-                    "Scala": [
-                        { "Name": "Scala for the Impatient", "price": 1000 },
-                        { "Name": "Scala in Depth", "price": 1300 }]
-                }
-                events.push(test);
-
-                console.log(events);
-
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -204,6 +194,7 @@ EventModule.controller('EventController', [
                 eventJoined(me.joinEvent);
             },
                 function (errorResponse) {
+
                     Materialize.toast('Error Joining Event', 6000);
                 });
         }
@@ -214,7 +205,12 @@ EventModule.controller('EventController', [
                 Materialize.toast('Event Joined Successfully!', 6000);
             },
                 function (errorResponse) {
-                    Materialize.toast('Error Joining Event', 6000);
+                    console.log(errorResponse);
+                    if (errorResponse.status == 302) {
+                        Materialize.toast('You Already Applied For This Event', 6000);
+                    } else {
+                        Materialize.toast('Error Joining Event', 6000);
+                    }
                 }
             );
         }
@@ -223,8 +219,6 @@ EventModule.controller('EventController', [
             var eventId = $routeParams.id;
             EventFactory.getEvent(eventId).then(function (event) {
                 me.event = event;
-
-                console.log(me.event);
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Event', 6000);
@@ -243,13 +237,17 @@ EventModule.controller('EventController', [
             );
         }
 
-        me.leaveEvent = function (id) {
-            EventFactory.leaveEvent(id).then(function () {
+        me.leaveEvent = function (id, userId) {
+            EventFactory.leaveEvent(id, userId).then(function () {
                 $route.reload();
                 Materialize.toast('Event Left Successfully!', 6000);
             },
                 function (errorResponse) {
-                    Materialize.toast('Error Leaving Event', 6000);
+                    if (errorResponse.status == 404) {
+                        Materialize.toast('<strong>Request Not Found!</strong>', 6000);
+                    } else {
+                        Materialize.toast('<strong>Error Leaving Event</strong>', 6000);
+                    }
                 }
             );
         }
@@ -282,7 +280,6 @@ EventModule.controller('EventController', [
 
             EventFactory.fetchAppliedEvents(userID).then(function (myEvents) {
                 var sortingOrder = 'id'; //default sort
-
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
                 $scope.reverse = true;
@@ -305,7 +302,7 @@ EventModule.controller('EventController', [
                 $scope.search = function () {
                     $scope.filteredItems = $filter('filter')($scope.items, function (item) {
                         for (var attr in item) {
-                            if (searchMatch(item['eventTitle'], $scope.query))
+                            if (searchMatch(item['event']['eventTitle'], $scope.query))
                                 return true;
                         }
                         return false;
@@ -465,6 +462,18 @@ EventModule.controller('EventController', [
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Events', 6000);
+                }
+            );
+        }
+
+        me.deleteEvent = function (action, id) {
+            console.log(action);
+            EventFactory.deleteEvent(action, id).then(function () {
+                $route.reload();
+                Materialize.toast('Event Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Event', 6000);
                 }
             );
         }

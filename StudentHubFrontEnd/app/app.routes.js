@@ -54,9 +54,48 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
-    '/user/forum': {
+    '/user/forum/create': {
+        //page path
+        templateUrl: 'app/components/forum/createForum.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/forum/edit/:id': {
+        //page path
+        templateUrl: 'app/components/forum/editForum.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/forum/view/:id': {
         //page path
         templateUrl: 'app/components/forum/forum.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/forum/report/:id': {
+        //page path
+        templateUrl: 'app/components/forum/reportForum.html',
         //controller that will handle this page
         controller: 'ForumController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
@@ -714,6 +753,34 @@ window.routes = {
         controller: 'EventReportController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
         controllerAs: 'eventReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    //<=====================Forum Report Module================>
+
+    '/admin/report/forums': {
+        //page path
+        templateUrl: 'app/components/report/forumReport.html',
+        //controller that will handle this page
+        controller: 'ForumReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/forums': {
+        //page path
+        templateUrl: 'app/components/report/handledForumReport.html',
+        //controller that will handle this page
+        controller: 'ForumReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumReportCtrl',
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page

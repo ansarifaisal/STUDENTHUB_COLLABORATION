@@ -4,15 +4,17 @@
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <div class="col s12">
-                        <a href="#!" class="breadcrumb">Home</a>
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <a href="#!" class="breadcrumb">Event</a>
+                        <a href="#!/user/events" class="breadcrumb">Event</a>
 
                         <a href="#!" class="breadcrumb">{{eventCtrl.event.eventTitle}}</a>
                     </div>
                 </div>
             </nav>
         </div>
+
+        {{}}
 
         <div class="card">
             <div class="card-image">
@@ -26,9 +28,27 @@
                 <i class="material-icons" style="font-size: 14px;">query_builder</i> {{eventCtrl.event.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <i class="material-icons" style="font-size: 16px;">person</i><a href=""> {{eventCtrl.event.noOfApplied}} Applied</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                <a href="" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="" class="btn light-blue waves-effect waves-light">Cancel</a>
-                <span class="right">
+                <span ng-show="eventCtrl.event.reported == 'YES'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is reported</span>
+                </span>
+
+                <span ng-show="eventCtrl.event.status == 'DISABLED'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is Disabled</span>
+                </span>
+
+                <span ng-show="eventCtrl.event.status == 'PENDING'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is pending</span>
+                </span>
+
+                <span ng-show="eventCtrl.event.status == 'REJECTED'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is Rejected</span>
+                </span>
+
+                <span ng-hide="eventCtrl.event.status != 'APPROVED' || eventCtrl.event.reported == 'YES'">
+                    <a href="" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="" ng-click="eventCtrl.leaveEvent(eventCtrl.event.id, user.id)" class="btn light-blue waves-effect waves-light">Cancel</a>
+                </span>
+                <span ng-hide="eventCtrl.event.status != 'APPROVED' || eventCtrl.event.reported == 'YES'" class="right">
                    
                     <a class='dropdown-button' href='#' data-activates='eventOption_{{eventCtrl.event.id}}'><i class="material-icons">more_vert</i></a>
 
@@ -39,7 +59,7 @@
                                 <span ng-show="eventCtrl.event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <li class="divider"></li>
                                     <li><a href="#!/user/event/edit/{{eventCtrl.event.id}}">Edit</a></li>
-                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', eventCtrl.event.id)">Delete</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteEvent('Disabled', eventCtrl.event.id)">Delete</a></li>
                                 </span>
             </div>
             </ul>
@@ -65,7 +85,26 @@
             <br/> {{eventCtrl.event.description}}
         </div>
         <div class="card-panel">
-            <a href="!#" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>
+            <div ng-hide="eventCtrl.event.status != 'APPROVED' || eventCtrl.event.reported != 'NO'">
+                <a href="!#" ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" class="btn light-blue waves-effect waves-light">Apply</a>
+            </div>
+
+            <span ng-show="eventCtrl.event.reported == 'YES'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is reported</span>
+            </span>
+
+            <span ng-show="eventCtrl.event.status == 'DISABLED'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is Disabled</span>
+            </span>
+
+            <span ng-show="eventCtrl.event.status == 'PENDING'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is pending</span>
+            </span>
+
+            <span ng-show="eventCtrl.event.status == 'REJECTED'">
+                       <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Event is Rejected</span>
+            </span>
+
         </div>
     </div>
 

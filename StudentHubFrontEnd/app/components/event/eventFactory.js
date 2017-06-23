@@ -62,7 +62,7 @@ EventModule.factory('EventFactory', [
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
-                    console.log('Error Creating Events');
+                    // console.log(errorResponse);
                     deferred.reject(errorResponse);
                 }
             );
@@ -118,7 +118,7 @@ EventModule.factory('EventFactory', [
 
         //function to delete event
         function deleteEvent(action, id) {
-
+            
             var deferred = $q.defer();
             $http.get(REST_API_URI + 'admin/event/' + action + '/' + id).then(function (response) {
                 deferred.resolve(response.data);
@@ -147,9 +147,9 @@ EventModule.factory('EventFactory', [
         }
 
         //function to delete applied event
-        function leaveEvent(id) {
+        function leaveEvent(id, userId) {
             var deferred = $q.defer();
-            $http.get(REST_API_URI + 'event/leave/' + id).then(function (response) {
+            $http.get(REST_API_URI + 'event/leave/' + userId + '/' + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
