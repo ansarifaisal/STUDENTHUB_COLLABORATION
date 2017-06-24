@@ -14,6 +14,11 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         deleteForum: deleteForum,
         joinForum: joinForum,
         performActionOnRequest: performActionOnRequest,
+        get12Members: get12Members,
+        approveAllRequest: approveAllRequest,
+        performActionOnForum: performActionOnForum,
+        createForumComment: createForumComment,
+        getForumComment: getForumComment,
         // fetchCreatedForums: fetchCreatedForums,
         // fetchJoinForums: fetchJoinForums,
         // fetchAllMembers: fetchAllMembers,
@@ -23,7 +28,6 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         // createTopic: createTopic,
         // createForumComment: createForumComment,
         // createTopicComment: createTopicComment,
-        // editForum: editForum,
         // editTopic: editTopic,
         // editForumComment: editForumComment,
         // editTopicComment: editTopicComment,
@@ -155,7 +159,7 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     function performActionOnRequest(action, id) {
         var deferred = $q.defer();
 
-        $http.get(REST_API_URI + '/forum/request/' + action + "/" + id ).then(function (response) {
+        $http.get(REST_API_URI + 'forum/request/' + action + "/" + id).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
@@ -165,5 +169,86 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         );
         return deferred.promise;
     }
+
+    //function to get 12 members
+    function get12Members(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + '/forum/twelveMembers/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Members');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+
+    //function to get 12 members
+    function approveAllRequest(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'forum/approveAll/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Members');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    function performActionOnForum(action, id) {
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'admin/forum/' + action + "/" + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Canceling Forum');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function to create forum comment
+    function createForumComment(forumComment) {
+        var deferred = $q.defer();
+
+        $http.post(REST_API_URI + 'forum/comment/createEditForumComment', forumComment).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Joining Forum');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function to get forum comment
+    function getForumComment(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'forum/comment/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Members');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+    
 
 }]);

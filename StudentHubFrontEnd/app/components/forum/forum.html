@@ -1,154 +1,114 @@
-<div class="row">
+<div class="row" ng-init="forumCtrl.getForum()">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <div class="col s12">
-                        <a href="#!" class="breadcrumb">Home</a>
-                        <a href="#!" class="breadcrumb">Forums</a>
-                        <a href="#!" class="breadcrumb">Forum Name</a>
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <a href="#!/user/forums" class="breadcrumb">Forums</a>
+                        <a href="#!" class="breadcrumb">{{forumCtrl.forum.forumName}}</a>
                     </div>
                 </div>
             </nav>
         </div>
-
         <div class="col m12">
             <div class="card">
                 <div class="card-image">
                     <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
-                    <span class="card-title"><strong>Forum Name</strong></span>
-                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-                </div>
-                <div class="row">
-                    <div class="col s12">
-                        <ul class="tabs tabs-fixed-width">
-                            <li class="tab col s3"><a href="#details">Details</a></li>
-                            <li class="tab col s3"><a href="#discussion">Discussion Board</a></li>
-                            <li class="tab col s3"><a href="#topics">Topics</a></li>
-                        </ul>
+
+                    <span class="card-title"><strong>{{forumCtrl.forum.forumName}}</strong></span>
+                    <div ng-hide="forumCtrl.forum.status == 'PENDING'">
+                        <a ng-hide="forumCtrl.forum.status != 'APPROVED'" ng-click="forumCtrl.joinForum(forumCtrl.forum.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <a ng-show="forumCtrl.forum.status == 'CLOSED'" ng-click="forumCtrl.performActionOnForum('Approved', forumCtrl.forum.id)"
+                            class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">done</i></a>
+                        <div ng-repeat="member in forumCtrl.forum['members']">
+                            <a ng-show="member.userId == user.id && member.role != 'ADMIN' && forumCtrl.forum.status == 'APPROVED'" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)"
+                                class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            <a ng-show="member.userId == user.id && member.role == 'ADMIN' && forumCtrl.forum.status == 'APPROVED'" ng-click="forumCtrl.performActionOnForum('Closed', forumCtrl.forum.id)"
+                                class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
-            <!--Details Section Starts here-->
-            <div id="details" class="col m12">
-                <div class="col m7 row">
-                    <div class="card-panel">
-                        <span> Members (93,287) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="right"><a href = "">View All</a></span></span>
-
-                        <div class="grey-text row"><strong>Friends</strong><br>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                        </div>
-                        <hr/>
-
-                        <div class="grey-text row"><strong>Admin</strong><br>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                        </div>
-                        <hr/>
-                        <div class="grey-text row"><strong>Other Members</strong><br/>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
-                            </div>
-                            <div class=" col m2">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50"> {{user.firstName}}
-                                {{user.lastName}}
+            <div ng-hide="forumCtrl.forum.status == 'PENDING' || forumCtrl.forum.status == 'CLOSED' ">
+                <div ng-repeat="member in forumCtrl.forum['members']">
+                    <div ng-show="member.status == 'APPROVED' && member.userId == user.id">
+                        <div class="row card-panel nopadding">
+                            <div class="col s12">
+                                <ul class="tabs tabs-fixed-width">
+                                    <li class="tab col s3"><a href="#details">Details</a></li>
+                                    <li class="tab col s3"><a href="#discussion">Discussion Board</a></li>
+                                    <li class="tab col s3"><a href="#topics">Topics</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col m5">
-                    <div class="card-panel">
-
-                        <span class="grey-text" style="font-size: 12px;">Name</span><br>
-                        <div class="truncate">Forum Name</div>
-
-                        <span class="grey-text" style="font-size: 12px;">Status</span><br>
-                        <div class="truncate">Open</div>
-
-                        <span class="grey-text" style="font-size: 12px;">Description</span><br>
-                        <div class="truncate">This is a test This is a test This is a test This is a test This is a test This is a test This is
-                            a test
-                        </div>
-                        <a href="" style="font-size: 14px;" class="right">See More</a>
+                    <div ng-show="member.status == 'PENDING' && member.userId == user.id">
+                        <h5 class="red-text center"> Your Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
                     </div>
                 </div>
+                <!--Details Section Starts here-->
+                <div id="details" class="col m12">
+                    <div class="col m7 row">
+                        <div class="card-panel">
+                            <span> Members ({{forumCtrl.forum.noOfMembers}}) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="right"><a href = "#!/user/forum/members/{{forumCtrl.forum.id}}">View All</a></span></span>
+                            <div class="grey-text row"><strong>Admin</strong><br>
+                                <div ng-hide="!forumCtrl.twelveMembers['admins']">
+                                    <div ng-repeat="admin in forumCtrl.twelveMembers['admins']">
+                                        <div class=" col m2">
+                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                            <div class="truncate"> {{admin.userName}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="!forumCtrl.twelveMembers['admins']">
+                                    There Are No Admin(s).
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="grey-text row"><strong>Members</strong><br/>
+                                <div ng-hide="!forumCtrl.twelveMembers['members']">
+                                    <div ng-repeat="member in forumCtrl.twelveMembers['members']">
+                                        <div class=" col m2">
+                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                            <div class="truncate"> {{member.userName}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="!forumCtrl.twelveMembers['members']">
+                                    There Are No Member(s).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="col m5">
+                        <div class="card-panel">
+
+                            <span class="grey-text" style="font-size: 12px;">Name</span><br>
+                            <div class="truncate">{{forumCtrl.forum.forumName}}</div>
+
+                            <span class="grey-text" style="font-size: 12px;">Created On:</span><br>
+                            <div class="truncate">{{forumCtrl.forum.createdDate}}</div>
+
+                            <span class="grey-text" style="font-size: 12px;">Status</span><br>
+                            <div class="truncate">{{forumCtrl.forum.status}}</div>
+
+                            <span class="grey-text" style="font-size: 12px;">Description</span><br>
+                            <div class="truncate">{{forumCtrl.forum.forumDescription}} </div>
+                            <a href="" style="font-size: 14px;" class="right">See More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="forumCtrl.forum.status == 'PENDING'">
+                <h5 class="red-text center"> Your Forum Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
+            </div>
+            <div ng-show="forumCtrl.forum.status == 'CLOSED'">
+                <h5 class="red-text center"> Your Forum Is Closed</h5>
             </div>
         </div>
         <!--Details Section Ends here-->
@@ -159,14 +119,15 @@
             <div class="row">
                 <div class="card-panel">
                     <div class="card-panel row">
-                        <form class="col s12">
+                        <form ng-submit="forumCtrl.createForumComment()" class="col s12" name="comments">
                             <div class="row nomargin">
                                 <div class="input-field col s12">
-                                    <textarea id="discussion" class="materialize-textarea nopadding nomargin" maxlength="120" data-length="120" placeholder="Write Something..."
+                                    <textarea id="discussion" ng-model="forumCtrl.newForumComment.comment" class="materialize-textarea nopadding nomargin" minimum="2"
+                                        ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" maxlength="500" data-length="500" placeholder="Write Something..."
                                         style="margin-bottom:0px;"></textarea>
                                 </div>
                             </div>
-                            <input type="submit" class="btn waves-effect waves-light" value="Post">
+                            <input type="submit" ng-disabled="comments.$invalid" class="btn waves-effect waves-light" value="Post">
                         </form>
                     </div>
 
@@ -181,23 +142,45 @@
                             <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
                         </ul>
                     </div>
+                    <div ng-repeat="comment in pagedItems[currentPage]">
+                        <div class="card-panel">
+                            <div class="row nopadding nomargin">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                                </div>
+                                <a href="">{{comment.userName}}</a> {{comment.comment}}
+                                <span class="right">
+                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdown1' class='dropdown-content'>
+                                        <li><a href="#!">Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#!">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                    </ul>
+                                    </span><br/>
+                                <span class="grey-text" style="font-size: 12px;">{{comment.commentDate}}</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-panel">
                         <div class="row nopadding nomargin">
                             <div class=" col m0">
                                 <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
                             </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
+                            <span class="right">
+                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
-                                <!-- Dropdown Structure -->
-                                <ul id='dropdown1' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                            </span><br/>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdown1' class='dropdown-content'>
+                                        <li><a href="#!">Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#!">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                    </ul>
+                                    </span><br/>
                             <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
                         </div>
                     </div>
@@ -207,17 +190,18 @@
                             <div class=" col m0">
                                 <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
                             </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
+                            <span class="right">
+                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
-                                <!-- Dropdown Structure -->
-                                <ul id='dropdown1' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                            </span><br/>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdown1' class='dropdown-content'>
+                                        <li><a href="#!">Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#!">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                    </ul>
+                                    </span><br/>
                             <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
                         </div>
                     </div>
@@ -227,17 +211,18 @@
                             <div class=" col m0">
                                 <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
                             </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
+                            <span class="right">
+                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
-                                <!-- Dropdown Structure -->
-                                <ul id='dropdown1' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                            </span><br/>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdown1' class='dropdown-content'>
+                                        <li><a href="#!">Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#!">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                    </ul>
+                                    </span><br/>
                             <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
                         </div>
                     </div>
@@ -247,37 +232,18 @@
                             <div class=" col m0">
                                 <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
                             </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
+                            <span class="right">
+                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
-                                <!-- Dropdown Structure -->
-                                <ul id='dropdown1' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                            </span><br/>
-                            <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
-                        </div>
-                    </div>
-
-                    <div class="card-panel">
-                        <div class="row nopadding nomargin">
-                            <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                            </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
-
-                                <!-- Dropdown Structure -->
-                                <ul id='dropdown1' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
-                                </ul>
-                            </span><br/>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdown1' class='dropdown-content'>
+                                        <li><a href="#!">Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#!">Edit</a></li>
+                                        <li><a href="#!">Delete</a></li>
+                                    </ul>
+                                    </span><br/>
                             <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
                         </div>
                     </div>

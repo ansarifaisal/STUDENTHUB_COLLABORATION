@@ -26,7 +26,7 @@
 
                         <!--details field starts here-->
                         <div class="input-field nomargin">
-                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
+                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" ng-minlength="20"
                                 maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
                                 ng-model="forumCtrl.reportForum.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
                             <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">

@@ -1,7 +1,6 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity(name = "FORUM_COMMENTS")
 @Component
@@ -35,6 +36,7 @@ public class ForumComment implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "FORUM_ID", nullable = false)
+	@JsonBackReference
 	private Forum forum;
 	
 	@Column(name = "USER_ID", nullable = false)
@@ -47,7 +49,7 @@ public class ForumComment implements Serializable {
 	private String comment;
 	
 	@Column(name = "COMMENT_DATE", nullable = false)
-	private LocalDateTime commentDate;
+	private String commentDate;
 
 	/*
 	 * Getters and Setters or Accessors and Mutators
@@ -92,12 +94,23 @@ public class ForumComment implements Serializable {
 		this.comment = comment;
 	}
 
-	public LocalDateTime getCommentDate() {
+	public String getCommentDate() {
 		return commentDate;
 	}
 
-	public void setCommentDate(LocalDateTime commentDate) {
+	public void setCommentDate(String commentDate) {
 		this.commentDate = commentDate;
 	}
 
+	/**
+	 * Overriding toString Method For Debugging
+	 */
+	@Override
+	public String toString() {
+		return "ForumComment [id=" + id + ", forum=" + forum + ", userId=" + userId + ", userName=" + userName
+				+ ", comment=" + comment + ", commentDate=" + commentDate + "]";
+	}
+
+	
+	
 }

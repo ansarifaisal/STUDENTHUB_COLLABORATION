@@ -30,7 +30,7 @@ public class ForumMember implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
-	@SequenceGenerator(name = "generator", sequenceName = "FORUM_REQUEST_SEQ", allocationSize = 1)
+	@SequenceGenerator(name = "generator", sequenceName = "FORUM_MEMBERS_SEQ", allocationSize = 1)
 	@Column(name = "MEMBER_ID", nullable = false)
 	private int id;
 
@@ -40,13 +40,25 @@ public class ForumMember implements Serializable {
 	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
 
+	@Column(name = "IMAGE_URL", nullable = false)
+	private String imageURL;
+
 	@ManyToOne
 	@JsonBackReference
 	@JoinColumn(name = "FORUM_ID", nullable = false)
 	private Forum forum;
+	
+	@Column(name = "TEMP_ID", nullable = false)
+	private int forumId;
+	
+	@Column(name = "TEMP_NAME", nullable = false)
+	private String forumName;
 
 	@Column(name = "REQUEST_DATE", nullable = false)
 	private String requestDate;
+
+	@Column(name = "ROLE", nullable = false)
+	private String role;
 
 	@Column(name = "STATUS", nullable = false)
 	private String status;
@@ -90,9 +102,33 @@ public class ForumMember implements Serializable {
 	public String getRequestDate() {
 		return requestDate;
 	}
+	
+	public int getForumId() {
+		return forumId;
+	}
+
+	public void setForumId(int forumId) {
+		this.forumId = forumId;
+	}
+
+	public String getForumName() {
+		return forumName;
+	}
+
+	public void setForumName(String forumName) {
+		this.forumName = forumName;
+	}
 
 	public void setRequestDate(String requestDate) {
 		this.requestDate = requestDate;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getStatus() {
@@ -103,14 +139,22 @@ public class ForumMember implements Serializable {
 		this.status = status;
 	}
 
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
 	/*
 	 * Overriding toString Method for Debugging
 	 */
 
 	@Override
 	public String toString() {
-		return "ForumMember [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forum=" + forum
-				+ ", requestDate=" + requestDate + ", status=" + status + "]";
+		return "ForumMember [id=" + id + ", userId=" + userId + ", userName=" + userName + ", imageURL=" + imageURL
+				+ ", forum=" + forum + ", requestDate=" + requestDate + ", role=" + role + ", status=" + status + "]";
 	}
 
 }

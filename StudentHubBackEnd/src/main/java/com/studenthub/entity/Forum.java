@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -71,6 +73,16 @@ public class Forum extends Domain implements Serializable {
 	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private List<ForumMember> members;
+
+	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonManagedReference
+	private List<ForumComment> comments;
+
+	// @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
+	// @LazyCollection(LazyCollectionOption.FALSE)
+	// @JsonManagedReference
+	// private List<Topic> topics;
 
 	/**
 	 * 
@@ -182,16 +194,26 @@ public class Forum extends Domain implements Serializable {
 		this.members = members;
 	}
 
+	public List<ForumComment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<ForumComment> comments) {
+		this.comments = comments;
+	}
+	
 	/*
 	 * Overriding toString Method for Debugging
 	 */
+
 
 	@Override
 	public String toString() {
 		return "Forum [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forumName=" + forumName
 				+ ", forumDescription=" + forumDescription + ", createdDate=" + createdDate + ", noOfRequest="
 				+ noOfRequest + ", imageURL=" + imageURL + ", noOfMembers=" + noOfMembers + ", noOfTopics=" + noOfTopics
-				+ ", report=" + report + ", status=" + status + ", members=" + members + "]";
+				+ ", report=" + report + ", status=" + status + ", members=" + members + ", comments=" + comments + "]";
 	}
 
+	
 }

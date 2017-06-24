@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studenthub.dao.ForumCommentDAO;
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.ForumMemberDAO;
 import com.studenthub.dao.ReportDAO;
 import com.studenthub.entity.Forum;
+import com.studenthub.entity.ForumComment;
 import com.studenthub.entity.ForumMember;
+import com.studenthub.entity.ForumMemberModel;
 import com.studenthub.entity.Report;
 
 @RestController
@@ -32,6 +35,12 @@ public class ForumController {
 
 	@Autowired
 	ForumMemberDAO forumMemberDAO;
+
+	@Autowired
+	ForumComment forumComment;
+
+	@Autowired
+	ForumCommentDAO forumCommentDAO;
 
 	@Autowired
 	Report report;
@@ -102,7 +111,7 @@ public class ForumController {
 		if (forum.getId() == 0) {
 
 			forumDAO.addForum(forum);
-			return new ResponseEntity<Forum>(HttpStatus.OK);
+			return new ResponseEntity<Forum>(forum, HttpStatus.OK);
 
 		} else {
 			boolean flag = forumDAO.updateForum(forum);
@@ -153,7 +162,7 @@ public class ForumController {
 	public ResponseEntity<ForumMember> joinForum(@RequestBody ForumMember forumMember) {
 		boolean addForum = forumMemberDAO.addForumMember(forumMember);
 		if (addForum != false) {
-			int noOfRequest = forumMemberDAO.pendingList().size();
+			int noOfRequest = forumMemberDAO.pendingList(forumMember.getForumId()).size();
 			forumMember.getForum().setNoOfRequest(noOfRequest);
 			boolean flag = forumDAO.updateForum(forumMember.getForum());
 			if (flag != false) {
@@ -173,24 +182,37 @@ public class ForumController {
 	public ResponseEntity<ForumMember> performAction(@PathVariable("action") String action,
 			@PathVariable("id") int id) {
 		forumMember = forumMemberDAO.getForumMember(id);
+		int forumId = forumMember.getForum().getId();
 		boolean flag = false;
 		if (forumMember != null) {
 			switch (action) {
 			case "Reject":
 				flag = forumMemberDAO.deleteForumMember(forumMember);
 				break;
-			case "Accept":
-				forumMember.setStatus("ACCEPT");
-				forumMemberDAO.updateForumMember(forumMember);
+			case "Approved":
+				forumMember.setStatus("APPROVED");
+				flag = forumMemberDAO.updateForumMember(forumMember);
 				break;
 			case "Cancel":
 				flag = forumMemberDAO.deleteForumMember(forumMember);
 				break;
 			}
 			if (flag != false) {
-				int noOfRequest = forumMemberDAO.pendingList().size();
-				forumMember.getForum().setNoOfRequest(noOfRequest);
-				forumDAO.updateForum(forumMember.getForum());
+				if (action.equals("Approved")) {
+					int noOfMembers = forumMemberDAO.membersList(forumId).size();
+					int noOfRequest = forumMemberDAO.pendingList(forumId).size();
+					forum = forumDAO.getForum(forumId);
+					forum.setNoOfMembers(noOfMembers);
+					forum.setNoOfRequest(noOfRequest);
+					forumDAO.updateForum(forum);
+				} else {
+					int noOfMembers = forumMemberDAO.membersList(forumId).size();
+					int noOfRequest = forumMemberDAO.pendingList(forumId).size();
+					forum = forumDAO.getForum(forumId);
+					forum.setNoOfRequest(noOfRequest);
+					forum.setNoOfMembers(noOfMembers);
+					forumDAO.updateForum(forum);
+				}
 				return new ResponseEntity<ForumMember>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ForumMember>(HttpStatus.NO_CONTENT);
@@ -200,4 +222,68 @@ public class ForumController {
 			return new ResponseEntity<ForumMember>(HttpStatus.NO_CONTENT);
 		}
 	}
+
+	// <!---------------------Get 12 Members----------------------------->
+
+	@RequestMapping(value = "/forum/twelveMembers/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ForumMemberModel> get12Members(@PathVariable("id") int id) {
+
+		ForumMemberModel forumMemberModel = new ForumMemberModel();
+
+		List<ForumMember> forumMembers = forumMemberDAO.get12Members(id);
+		forumMemberModel.setMembers(forumMembers);
+
+		// System.out.println(forumMembers);
+
+		List<ForumMember> forumAdmins = forumMemberDAO.get12Admin(id);
+		forumMemberModel.setAdmins(forumAdmins);
+
+		return new ResponseEntity<ForumMemberModel>(forumMemberModel, HttpStatus.OK);
+	}
+
+	// <!------------------------Accept All Request--------------------!>
+
+	@RequestMapping(value = "/forum/approveAll/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ForumMember> approveAll(@PathVariable("id") int id) {
+		List<ForumMember> pendingMembers = forumMemberDAO.pendingList(id);
+
+		for (ForumMember forumMember : pendingMembers) {
+			forumMember.setStatus("APPROVED");
+			forumMemberDAO.updateForumMember(forumMember);
+		}
+
+		int noOfMembers = forumMemberDAO.membersList(id).size();
+		int noOfRequest = forumMemberDAO.pendingList(id).size();
+
+		forum = forumDAO.getForum(id);
+		forum.setNoOfRequest(noOfRequest);
+		forum.setNoOfMembers(noOfMembers);
+		forumDAO.updateForum(forum);
+
+		return new ResponseEntity<ForumMember>(HttpStatus.OK);
+	}
+
+	// <!------------------------Create Forum Comment-------------------!>
+
+	@RequestMapping(value = "/forum/comment/createEditForumComment", method = RequestMethod.POST)
+	public ResponseEntity<ForumComment> createEditForumComment(@RequestBody ForumComment forumComment) {
+		boolean createComment = forumCommentDAO.addForumComment(forumComment);
+		if (createComment != false) {
+			return new ResponseEntity<ForumComment>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-------------------------get Forum Comment-----------------------!>
+
+	public ResponseEntity<ForumComment> getForumComment(@PathVariable("id") int id) {
+		forumComment = forumCommentDAO.getForumComment(id);
+		if (forumComment != null) {
+			return new ResponseEntity<ForumComment>(forumComment, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
+		}
+	}
+
 }

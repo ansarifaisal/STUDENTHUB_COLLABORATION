@@ -218,3 +218,8 @@ input.ng-dirty.ng-valid, .confirmPassword, textarea, .materialize-textarea{
     right: 7%;
     max-width: 86%;
   }
+
+  .tabs .tab.disabled a, .tabs .tab.disabled a:hover {
+    color: #0277bd;
+    cursor: default;
+}
