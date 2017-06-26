@@ -15,11 +15,13 @@ import com.studenthub.dao.ForumCommentDAO;
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.ForumMemberDAO;
 import com.studenthub.dao.ReportDAO;
+import com.studenthub.dao.TopicDAO;
 import com.studenthub.entity.Forum;
 import com.studenthub.entity.ForumComment;
 import com.studenthub.entity.ForumMember;
 import com.studenthub.entity.ForumMemberModel;
 import com.studenthub.entity.Report;
+import com.studenthub.entity.Topic;
 
 @RestController
 public class ForumController {
@@ -41,6 +43,12 @@ public class ForumController {
 
 	@Autowired
 	ForumCommentDAO forumCommentDAO;
+
+	@Autowired
+	Topic topic;
+
+	@Autowired
+	TopicDAO topicDAO;
 
 	@Autowired
 	Report report;
@@ -267,9 +275,17 @@ public class ForumController {
 
 	@RequestMapping(value = "/forum/comment/createEditForumComment", method = RequestMethod.POST)
 	public ResponseEntity<ForumComment> createEditForumComment(@RequestBody ForumComment forumComment) {
-		boolean createComment = forumCommentDAO.addForumComment(forumComment);
-		if (createComment != false) {
-			return new ResponseEntity<ForumComment>(HttpStatus.OK);
+		if (forumComment != null) {
+			if (forumComment.getId() == 0) {
+				forumCommentDAO.addForumComment(forumComment);
+				return new ResponseEntity<ForumComment>(HttpStatus.OK);
+			} else {
+				ForumComment tempForumComment = forumCommentDAO.getForumComment(forumComment.getId());
+				forum = tempForumComment.getForum();
+				forumComment.setForum(forum);
+				forumCommentDAO.updateForumComment(forumComment);
+				return new ResponseEntity<ForumComment>(forumComment, HttpStatus.OK);
+			}
 		} else {
 			return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
 		}
@@ -277,6 +293,7 @@ public class ForumController {
 
 	// <!-------------------------get Forum Comment-----------------------!>
 
+	@RequestMapping(value = "/forum/comment/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ForumComment> getForumComment(@PathVariable("id") int id) {
 		forumComment = forumCommentDAO.getForumComment(id);
 		if (forumComment != null) {
@@ -286,4 +303,85 @@ public class ForumController {
 		}
 	}
 
+	// <!----------------------get Forum Comments---------------------------!>
+
+	@RequestMapping(value = "/forum/comments/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<ForumComment>> getForumComments(@PathVariable("id") int id) {
+		List<ForumComment> forumComments = forumCommentDAO.forumComments(id);
+		if (forumComment != null) {
+			return new ResponseEntity<List<ForumComment>>(forumComments, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<ForumComment>>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!------------------------Report Forum Comment------------------------!>
+	@RequestMapping(value = "/forum/comment/report", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportForumComment(@RequestBody Report report) {
+		forumComment = forumCommentDAO.getForumComment(report.getReportId());
+		if (forumComment != null) {
+			report.setCommentId(forumComment.getId());
+			report.setReportId(forumComment.getForum().getId());
+			report.setStatus("UNREAD");
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				forumComment.setReport("YES");
+				forumCommentDAO.updateForumComment(forumComment);
+				return new ResponseEntity<Report>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!---------------------Delete Forum Comment---------------------!>
+	@RequestMapping(value = "/forum/comment/delete/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ForumComment> deleteForumComment(@PathVariable("id") int id) {
+		forumComment = forumCommentDAO.getForumComment(id);
+		if (forumComment != null) {
+			boolean flag = forumCommentDAO.deleteForumComment(forumComment);
+			if (flag != false) {
+				return new ResponseEntity<ForumComment>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
+		}
+
+	}
+
+	// <!--------------------Create topic----------------------->
+	@RequestMapping(value = "forum/topic/createEditTopic", method = RequestMethod.POST)
+	public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
+		if (topic != null) {
+			if (topic.getId() == 0) {
+				// List<Topic> topics = new ArrayList<Topic>();
+				// topics.add(topic);
+				boolean flag = topicDAO.addTopic(topic);
+				if (flag != false) {
+					return new ResponseEntity<Topic>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
+				}
+			} else {
+				return new ResponseEntity<Topic>(HttpStatus.OK);
+			}
+		} else {
+			return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-----------------------Get Topics--------------------------!>
+	@RequestMapping(value = "/forum/{id}/topics", method = RequestMethod.GET)
+	public ResponseEntity<List<Topic>> getTopics(@PathVariable("id") int id) {
+		List<Topic> topics = topicDAO.list(id);
+		if (topics != null) {
+			return new ResponseEntity<List<Topic>>(topics, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Topic>>(HttpStatus.NO_CONTENT);
+		}
+	}
 }

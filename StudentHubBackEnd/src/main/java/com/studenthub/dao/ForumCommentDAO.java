@@ -10,10 +10,12 @@ public interface ForumCommentDAO {
 
 	List<ForumComment> list();
 
+	List<ForumComment> forumComments(int id);
+
 	boolean addForumComment(ForumComment forumComment);
 
 	boolean updateForumComment(ForumComment forumComment);
 
 	boolean deleteForumComment(ForumComment forumComment);
-	
+
 }

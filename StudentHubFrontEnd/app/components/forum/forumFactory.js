@@ -18,7 +18,12 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         approveAllRequest: approveAllRequest,
         performActionOnForum: performActionOnForum,
         createForumComment: createForumComment,
+        getForumComments: getForumComments,
         getForumComment: getForumComment,
+        reportForumComment: reportForumComment,
+        deleteForumComment: deleteForumComment,
+        fetchTopics: fetchTopics,
+        createEditTopic: createEditTopic,
         // fetchCreatedForums: fetchCreatedForums,
         // fetchJoinForums: fetchJoinForums,
         // fetchAllMembers: fetchAllMembers,
@@ -143,7 +148,7 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     function joinForum(forumMember) {
         var deferred = $q.defer();
 
-        $http.post(REST_API_URI + 'forum/join/', forumMember).then(function (response) {
+        $http.post(REST_API_URI + 'forum/join', forumMember).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
@@ -242,13 +247,93 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
-                console.log('Error Fetching Members');
+                console.log('Error Fetching Comments');
                 deferred.reject(errorResponse);
             }
         );
         return deferred.promise;
 
     }
-    
+
+    //function to get forumComments
+    function getForumComments(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'forum/comments/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Comments');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to report forumComment
+
+    function reportForumComment(report) {
+
+        var deferred = $q.defer();
+
+        $http.post(REST_API_URI + 'forum/comment/report', report).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Comments');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to delete forum comments
+    function deleteForumComment(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'forum/comment/delete/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Comments');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function to get all topics
+    function fetchTopics(id) {
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'forum/comment/delete/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Comments');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function create edit topic
+    function createEditTopic(topic) {
+        var deferred = $q.defer();
+
+        $http.post(REST_API_URI + 'forum/topic/createEditTopic', topic).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Creating Topic');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
 
 }]);

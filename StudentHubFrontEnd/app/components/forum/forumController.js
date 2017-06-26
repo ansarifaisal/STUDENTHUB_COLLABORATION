@@ -70,8 +70,39 @@ ForumModule.controller('ForumController', [
             userId: null,
             userName: '',
             comment: '',
-            commentDate: ''
+            commentDate: '',
+            report: ''
         };
+
+        me.forumComment = {};
+
+        me.reportForumComment = {
+            id: null,
+            userName: '',
+            userId: '',
+            title: '',
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: null
+        }
+
+        me.newTopic = {
+            id: null,
+            userId: '',
+            userName: '',
+            forum: '',
+            title: '',
+            imageURL: '',
+            description: '',
+            createdDate: '',
+            noOfComments: '',
+            noOfLikes: '',
+            report: '',
+            status: ''
+        }
+
+        me.topics = [];
 
         //function to fetch all forums
 
@@ -284,7 +315,7 @@ ForumModule.controller('ForumController', [
                 me.forumMember.requestDate = dateTimeFormat(now);
                 me.forumMember.role = 'USER';
                 me.forumMember.status = 'PENDING';
-
+                console.log(me.forumMember);
                 ForumFactory.joinForum(me.forumMember).then(function () {
                     $route.reload();
                     Materialize.toast('<strong>Forum Join Request Sent Successfully!</strong>', 6000);
@@ -460,11 +491,11 @@ ForumModule.controller('ForumController', [
             me.newForumComment.userName = user.userName;
             var now = new Date();
             me.newForumComment.commentDate = dateTimeFormat(now);
+            me.newForumComment.report = 'NO';
 
-            console.log(me.newForumComment);
 
             ForumFactory.createForumComment(me.newForumComment).then(function () {
-                //$location.path('/user/forum/view/' + me.forum.id + '#discussion');
+                //  $location.path('/user/forum/view/' + me.forum.id + '#discussion');
                 $route.reload();
                 Materialize.toast('Comment Posted Successfully!', 6000);
             },
@@ -477,8 +508,6 @@ ForumModule.controller('ForumController', [
         //function to sort comments
 
         me.getComments = function () {
-
-            console.log(me.forum.comments);
 
             var comments = me.forum.comments;
 
@@ -568,6 +597,101 @@ ForumModule.controller('ForumController', [
                 $scope.sortingOrder = newSortingOrder;
             };
 
+        }
+
+        //function to get comment
+        me.getComment = function () {
+            var commentId = $routeParams.id;
+
+            ForumFactory.getForumComment(commentId).then(function (comment) {
+                me.forumComment = comment;
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Comments', 6000);
+                }
+            );
+        }
+
+        //function to edit comment
+        me.editComment = function () {
+            ForumFactory.createForumComment(me.forumComment).then(function (comment) {
+                $location.path('/user/forums');
+                Materialize.toast('Comment Edited Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Editing Comments', 6000);
+                }
+            );
+        }
+
+        me.reportComment = function () {
+
+            me.reportForumComment.typeOfReport = 'FORUM COMMENT';
+            var now = new Date();
+            me.reportForumComment.dateTime = dateTimeFormat(now);
+            me.reportForumComment.userName = user.userName;
+            me.reportForumComment.userId = user.id;
+            var commentId = $routeParams.id;
+            me.reportForumComment.reportId = commentId;
+            me.reportForumComment.title = me.forumComment.comment;
+
+            ForumFactory.reportForumComment(me.reportForumComment).then(function () {
+                $location.path('/user/forums');
+                Materialize.toast('Comment Reported Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast("Error Reporting Comment", 6000);
+                });
+
+        }
+
+        //function to delete forumComment
+        me.deleteForumComment = function (id) {
+            ForumFactory.deleteForumComment(id).then(function () {
+                $route.reload();
+                Materialize.toast('Comment Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast("Error Deleting Comment", 6000)
+                });
+        }
+
+        //function to get all forum topics
+
+        me.fetchTopics = function () {
+            var forumId = $routeParams.id;
+            ForumFactory.fetchTopics(forumId).then(function (topics) {
+                me.topics = topics;
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Topics', 6000);
+                }
+            );
+        }
+
+        me.createTopic = function () {
+            me.newTopic.userId = user.id;
+            me.newTopic.userName = user.userName;
+            me.newTopic.forum = me.forum;
+            //console.log(me.forum);
+            var now = new Date();
+            me.newTopic.createdDate = dateTimeFormat(now);
+            me.newTopic.noOfComments = 0;
+            me.newTopic.noOfLikes = 0;
+            me.newTopic.imageURL = "noPic.jpg";
+            me.newTopic.report = "NO";
+            me.newTopic.status = "PENDING"
+
+            console.log(me.newTopic);
+
+            ForumFactory.createEditTopic(me.newTopic).then(function () {
+                $route.reload();
+                Materialize.toast('Topic Created Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Creating Topic', 6000);
+                }
+            );
         }
     }
 ]);

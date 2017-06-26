@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
@@ -36,11 +38,15 @@ public class Topic extends Domain implements Serializable {
 	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
 
-	@Column(name = "FORUM_ID", nullable = false)
-	private int forumId;
+	@ManyToOne
+	@JoinColumn(name = "FORUM_ID", nullable = false)
+	private Forum forum;
 
-	@Column(name = "FORUM_NAME", nullable = false)
-	private String forumName;
+	// @Column(name = "FORUM_ID", nullable = false)
+	// private int forumId;
+	//
+	// @Column(name = "FORUM_NAME", nullable = false)
+	// private String forumName;
 
 	@Column(name = "TITLE", nullable = false)
 	private String title;
@@ -94,21 +100,21 @@ public class Topic extends Domain implements Serializable {
 		this.userName = userName;
 	}
 
-	public int getForumId() {
-		return forumId;
-	}
-
-	public void setForumId(int forumId) {
-		this.forumId = forumId;
-	}
-
-	public String getForumName() {
-		return forumName;
-	}
-
-	public void setForumName(String forumName) {
-		this.forumName = forumName;
-	}
+	// public int getForumId() {
+	// return forumId;
+	// }
+	//
+	// public void setForumId(int forumId) {
+	// this.forumId = forumId;
+	// }
+	//
+	// public String getForumName() {
+	// return forumName;
+	// }
+	//
+	// public void setForumName(String forumName) {
+	// this.forumName = forumName;
+	// }
 
 	public int getNoOfComments() {
 		return noOfComments;
@@ -174,16 +180,27 @@ public class Topic extends Domain implements Serializable {
 		this.status = status;
 	}
 
+	public Forum getForum() {
+		return forum;
+	}
+
+	public void setForum(Forum forum) {
+		this.forum = forum;
+	}
+
 	/*
 	 * Overriding toString Method For Debugging
 	 */
 
-	@Override
-	public String toString() {
-		return "Topic [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forumId=" + forumId
-				+ ", forumName=" + forumName + ", title=" + title + ", imageURL=" + imageURL + ", description="
-				+ description + ", createdDate=" + createdDate + ", noOfComments=" + noOfComments + ", noOfLikes="
-				+ noOfLikes + ", report=" + report + ", status=" + status + "]";
-	}
+	// @Override
+	// public String toString() {
+	// return "Topic [id=" + id + ", userId=" + userId + ", userName=" +
+	// userName + ", forumId=" + forumId
+	// + ", forumName=" + forumName + ", title=" + title + ", imageURL=" +
+	// imageURL + ", description="
+	// + description + ", createdDate=" + createdDate + ", noOfComments=" +
+	// noOfComments + ", noOfLikes="
+	// + noOfLikes + ", report=" + report + ", status=" + status + "]";
+	// }
 
 }

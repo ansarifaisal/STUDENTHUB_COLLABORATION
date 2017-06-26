@@ -41,6 +41,7 @@
                                     <li class="tab col s3"><a href="#details">Details</a></li>
                                     <li class="tab col s3"><a href="#discussion">Discussion Board</a></li>
                                     <li class="tab col s3"><a href="#topics">Topics</a></li>
+                                    <li ng-show="member.role == 'ADMIN'" class="tab col s3"><a href="#pendingTopics">Pending Topics</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -131,133 +132,83 @@
                         </form>
                     </div>
 
-                    <div class="center">
-                        <ul class="pagination">
-                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                            <li class="active"><a href="#!">1</a></li>
-                            <li class="waves-effect"><a href="#!">2</a></li>
-                            <li class="waves-effect"><a href="#!">3</a></li>
-                            <li class="waves-effect"><a href="#!">4</a></li>
-                            <li class="waves-effect"><a href="#!">5</a></li>
-                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                        </ul>
+                    <div ng-show="!pagedItems[currentPage]">
+                        <h4 class="center">There Are No Comments</h4>
+                    </div>
+                    <div ng-hide="!pagedItems[currentPage]">
+                        <div class="row">
+                            <div class="center col offset-m4 m3">
+                                <ul class="pagination">
+                                    <li ng-class="{disabled: currentPage == 0}">
+                                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                                    </li>
+                                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col m4 offset-m1">
+                                <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                                <label>Materialize Select</label>
+                            </div>
+                        </div>
                     </div>
                     <div ng-repeat="comment in pagedItems[currentPage]">
+
                         <div class="card-panel">
-                            <div class="row nopadding nomargin">
+                            <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
                                 <div class=" col m0">
                                     <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
                                 </div>
-                                <a href="">{{comment.userName}}</a> {{comment.comment}}
+                                <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.comment}}</span>
+                                <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.comment}}</span>
                                 <span class="right">
-                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                                    <span ng-show="comment.report =='YES'"><i class="material-icons"><a href = "" class="red-text">report_problem</a></i></span>
+                                </span>
+                                <span class="right" ng-hide="comment.report == 'YES'">
+                                <a class='dropdown-button' href='#' data-activates='commentOption_{{comment.id}}'><i class="material-icons">more_vert</i></a>
 
-                                    <!-- Dropdown Structure -->
-                                    <ul id='dropdown1' class='dropdown-content'>
-                                        <li><a href="#!">Report</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
-                                    </ul>
-                                    </span><br/>
+                                <!-- Dropdown Structure -->
+
+                                <ul id='commentOption_{{comment.id}}' class='dropdown-content'>
+                                    <div ng-repeat="forum in forumCtrl.forum"></div>
+
+                                    <li><a href="#!/user/forum/comment/report/{{comment.id}}">Report</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/forum/edit/comment/{{comment.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="forumCtrl.deleteForumComment(comment.id)">Delete</a></li>
+                                </ul>
+                                </span>
+
+                                <br/>
                                 <span class="grey-text" style="font-size: 12px;">{{comment.commentDate}}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-panel">
-                        <div class="row nopadding nomargin">
-                            <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+
+                            <div ng-show="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                                <h6 class="center red-text">This Comment Is Reported</h6>
                             </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
-                            <span class="right">
-                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
 
-                                    <!-- Dropdown Structure -->
-                                    <ul id='dropdown1' class='dropdown-content'>
-                                        <li><a href="#!">Report</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
-                                    </ul>
-                                    </span><br/>
-                            <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
                         </div>
                     </div>
-
-                    <div class="card-panel">
-                        <div class="row nopadding nomargin">
-                            <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                            </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
-                            <span class="right">
-                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
-
-                                    <!-- Dropdown Structure -->
-                                    <ul id='dropdown1' class='dropdown-content'>
-                                        <li><a href="#!">Report</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
-                                    </ul>
-                                    </span><br/>
-                            <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
+                    <div ng-hide="!pagedItems[currentPage]">
+                        <div class="center">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-
-                    <div class="card-panel">
-                        <div class="row nopadding nomargin">
-                            <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                            </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
-                            <span class="right">
-                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
-
-                                    <!-- Dropdown Structure -->
-                                    <ul id='dropdown1' class='dropdown-content'>
-                                        <li><a href="#!">Report</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
-                                    </ul>
-                                    </span><br/>
-                            <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
-                        </div>
-                    </div>
-
-                    <div class="card-panel">
-                        <div class="row nopadding nomargin">
-                            <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                            </div>
-                            <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl
-                            <span class="right">
-                                    <a class='dropdown-button' href='#' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
-
-                                    <!-- Dropdown Structure -->
-                                    <ul id='dropdown1' class='dropdown-content'>
-                                        <li><a href="#!">Report</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#!">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
-                                    </ul>
-                                    </span><br/>
-                            <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
-                        </div>
-                    </div>
-
-                    <div class="center">
-                        <ul class="pagination">
-                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                            <li class="active"><a href="#!">1</a></li>
-                            <li class="waves-effect"><a href="#!">2</a></li>
-                            <li class="waves-effect"><a href="#!">3</a></li>
-                            <li class="waves-effect"><a href="#!">4</a></li>
-                            <li class="waves-effect"><a href="#!">5</a></li>
-                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                        </ul>
                     </div>
 
                 </div>
@@ -268,6 +219,13 @@
 
         <!--Topics Section Starts here-->
         <div id="topics" class="col s12">
+            <div class="card-panel row nomargin" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">Topics</strong>
+                </div>
+
+                <div class="right"><a data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Topic</a></div>
+            </div>
             <div class="card-panel">
                 <div class="card horizontal">
                     <div class="card-image">
@@ -291,53 +249,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!--Topics Section Ends here-->
 
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card horizontal">
-                    <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                    <td> <span>April 4th, 2017</span></td>
-                                </tr>
-                                <tr>
-                                    <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments: 1
-                                    </td>
-                                    <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: 1</td>
-                                </tr>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                        </div>
-                    </div>
-                </div>
-
+        <!--Pending Topics Section Starts here-->
+        <div id="pendingTopics" class="col s12">
+            <div class="card-panel">
                 <div class="card horizontal">
                     <div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -362,7 +280,71 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--Topics Section Ends here-->
+        <!--Pending Topics Section Ends here-->
 
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div id="creationForm" class="modal">
+    <div class="modal-content">
+        <h5>Create Topic</h5>
+        <hr/>
+        <div class="row nomargin">
+            <div class="col offset-m3 m6">
+                <div class="card-panel">
+                    <form name="createForm" ng-submit="forumCtrl.createTopic()" novalidate>
+
+                        <!--title field starts here-->
+                        <div class="input-field nomargin">
+                            <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                data-length="50" ng-model="forumCtrl.newTopic.title" placeholder="Topic Name" required="required">
+                            <div class="invalid-data center-align" ng-show="createForm.title.$dirty">
+                                <span ng-show="createForm.title.$dirty && createForm.title.$error.required">Please, Provide Topic Name</span>
+                                <span ng-show="createForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="createForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="createForm.title.$error.pattern">This field cannot contain special charachters</span>
+                            </div>
+                        </div>
+                        <!--title field ends here-->
+
+                        <!--description field starts here-->
+                        <div class="input-field nomargin">
+
+                            <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Forum Description" data-length="4000"
+                                ng-model="forumCtrl.newTopic.description" placeholder="description" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
+                                <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide Description</span>
+                                <span ng-show="createForm.description.$error.minlength">This field must contain atleast 20 charachters</span>
+                                <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 4000 charachters</span>
+                                <span ng-show="createForm.description.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                            </div>
+
+                        </div>
+                        <!--description field ends here-->
+
+                        <!--ImageURL field starts here-->
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>File</span>
+                                <input type="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        <!--ImageURL field ends here-->
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue modal-close waves-effect waves-light full-width" ng-disabled="createForm.$invalid" value="Save Changes">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

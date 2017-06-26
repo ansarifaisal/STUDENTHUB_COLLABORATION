@@ -8,7 +8,7 @@ public interface TopicDAO {
 
 	Topic getTopic(int id);
 
-	List<Topic> list();
+	List<Topic> list(int id);
 
 	List<Topic> getAllPendingTopics();
 

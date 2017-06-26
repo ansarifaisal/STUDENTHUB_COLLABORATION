@@ -1,4 +1,4 @@
-<div row ng-init="blogCommentReportCtrl.fetchBlogCommentReports();">
+<div row ng-init="forumCommentReportCtrl.fetchForumCommentReports();">
 
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
@@ -7,9 +7,9 @@
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
                         <span class="right">
-                            <a href="#!/admin/handled/blogComments" class="btn light-blue waves-effect waves-light">View Handled Blogs Comments</a>
+                            <a href="#!/admin/handled/forumcomments" class="btn light-blue waves-effect waves-light">View Handled Forum Comments</a>
                         </span>
-                        <a href="#!/admin/report/blogcomments" class="breadcrumb">Blog Reports</a>
+                        <a class="breadcrumb">Forum Comment Reports</a>
                     </div>
                 </div>
             </nav>
@@ -18,7 +18,7 @@
             <div id="reported">
                 <div class="row" style="margin-bottom:0px;">
                     <div class="col m2 nopadding nomargin">
-                        <strong style="font-size:20px;" class="grey-text">Reported Blogs</strong>
+                        <strong style="font-size:20px;" class="grey-text">Reported Forums</strong>
                     </div>
                     <div class="col m4">
                         <div class="input-field nomargin">
@@ -34,14 +34,14 @@
                     </div>
 
                     <div class="col m2 offset-m1">
-                        <a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Handle All</a>
+                        <!--<a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
                     </div>
 
                 </div>
                 <hr/>
 
                 <div ng-hide="pagedItems[currentPage]">
-                    <strong> <h3>There Are No Pending Reports OR Search Match Available </h3> </strong>
+                    <strong> <h3>There Are No Pending Reports OR Search Match Available</h3> </strong>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
                     <table class="highlight bordered">
@@ -56,12 +56,12 @@
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="blogComment in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                                <td><a href="#!/user/blog/view/{{blog.reportId}}">{{blogComment.title}}</a></td>
-                                <td>{{blogComment.details}}</td>
-                                <td><a href="">{{blogComment.userName}}</a></td>
-                                <td>{{blogComment.dateTime}}</td>
-                                <td><a href="" ng-click="blogCommentReportCtrl.handleReport(blogComment.id)">Handle</a></td>
+                            <tr ng-repeat="forumComment in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                <td><a href="#!/user/blog/view/{{forumComment.reportId}}">{{forumComment.title}}</a></td>
+                                <td>{{forumComment.details}}</td>
+                                <td><a href="">{{forumComment.userName}}</a></td>
+                                <td>{{forumComment.dateTime}}</td>
+                                <td><a href="" ng-click="forumCommentReportCtrl.handleReport(forumComment.id)">Handle</a></td>
                             </tr>
                         </tbody>
                     </table>

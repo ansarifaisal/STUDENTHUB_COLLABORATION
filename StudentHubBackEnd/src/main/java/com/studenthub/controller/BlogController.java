@@ -279,7 +279,6 @@ public class BlogController {
 
 	@RequestMapping(value = "/blog/report/comment", method = RequestMethod.POST)
 	public ResponseEntity<Report> reportComment(@RequestBody Report report) {
-		System.out.println(report);
 		blogComment = blogCommentDAO.getBlogComment(report.getReportId());
 		if (blogComment != null) {
 			report.setCommentId(blogComment.getId());

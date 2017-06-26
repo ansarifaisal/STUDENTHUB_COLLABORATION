@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.studenthub.dao.BlogCommentDAO;
 import com.studenthub.dao.BlogDAO;
 import com.studenthub.dao.EventDAO;
+import com.studenthub.dao.ForumCommentDAO;
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.HandledDAO;
 import com.studenthub.dao.JobDAO;
@@ -22,6 +23,7 @@ import com.studenthub.entity.Blog;
 import com.studenthub.entity.BlogComment;
 import com.studenthub.entity.Event;
 import com.studenthub.entity.Forum;
+import com.studenthub.entity.ForumComment;
 import com.studenthub.entity.Handled;
 import com.studenthub.entity.Job;
 import com.studenthub.entity.Report;
@@ -70,6 +72,12 @@ public class ReportController {
 
 	@Autowired
 	ForumDAO forumDAO;
+	
+	@Autowired
+	ForumComment forumComment;
+	
+	@Autowired
+	ForumCommentDAO forumCommentDAO;
 
 	// <!-------------------Get Report By Category----------------!>
 
@@ -154,6 +162,11 @@ public class ReportController {
 				forum = forumDAO.getForum(handled.getReportId());
 				forum.setReport("NO");
 				forumDAO.updateForum(forum);
+				break;
+			case "FORUM COMMENT":
+				forumComment = forumCommentDAO.getForumComment(handled.getCommentId());
+				forumComment.setReport("NO");
+				forumCommentDAO.updateForumComment(forumComment);
 				break;
 			}
 			return new ResponseEntity<Handled>(HttpStatus.OK);

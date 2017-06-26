@@ -16,7 +16,7 @@ public class ForumCommentDAOImpl implements ForumCommentDAO {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Override
 	@Transactional
 	public ForumComment getForumComment(int id) {
@@ -65,5 +65,14 @@ public class ForumCommentDAOImpl implements ForumCommentDAO {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	@Transactional
+	public List<ForumComment> forumComments(int id) {
+		String hql = "FROM FORUM_COMMENTS WHERE FORUM_ID = :id ORDER BY FORUM_ID DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("id", id);
+		return query.list();
 	}
 }

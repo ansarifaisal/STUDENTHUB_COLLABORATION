@@ -79,10 +79,18 @@ public class Forum extends Domain implements Serializable {
 	@JsonManagedReference
 	private List<ForumComment> comments;
 
-	// @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
-	// @LazyCollection(LazyCollectionOption.FALSE)
-	// @JsonManagedReference
-	// private List<Topic> topics;
+//	@OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
+//	@LazyCollection(LazyCollectionOption.FALSE)
+//	@JsonBackReference
+//	private List<Topic> topics;
+
+//	public List<Topic> getTopics() {
+//		return topics;
+//	}
+//
+//	public void setTopics(List<Topic> topics) {
+//		this.topics = topics;
+//	}
 
 	/**
 	 * 
@@ -201,11 +209,10 @@ public class Forum extends Domain implements Serializable {
 	public void setComments(List<ForumComment> comments) {
 		this.comments = comments;
 	}
-	
+
 	/*
 	 * Overriding toString Method for Debugging
 	 */
-
 
 	@Override
 	public String toString() {
@@ -215,5 +222,4 @@ public class Forum extends Domain implements Serializable {
 				+ ", report=" + report + ", status=" + status + ", members=" + members + ", comments=" + comments + "]";
 	}
 
-	
 }
