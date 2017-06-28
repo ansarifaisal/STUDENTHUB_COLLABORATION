@@ -102,7 +102,18 @@ ForumModule.controller('ForumController', [
             status: ''
         }
 
-        me.topics = [];
+        me.topic = {};
+
+        me.reportTopic = {
+            id: null,
+            userName: '',
+            userId: '',
+            title: '',
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: null
+        }
 
         //function to fetch all forums
 
@@ -251,6 +262,7 @@ ForumModule.controller('ForumController', [
                 me.forum = forum;
                 me.get12Members(forumID);
                 me.getComments();
+                me.fetchForumTopic(forumID);
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Forum', 6000);
@@ -656,19 +668,7 @@ ForumModule.controller('ForumController', [
                 });
         }
 
-        //function to get all forum topics
-
-        me.fetchTopics = function () {
-            var forumId = $routeParams.id;
-            ForumFactory.fetchTopics(forumId).then(function (topics) {
-                me.topics = topics;
-            },
-                function (errorResponse) {
-                    Materialize.toast('Error Fetching Topics', 6000);
-                }
-            );
-        }
-
+        //function to create topic
         me.createTopic = function () {
             me.newTopic.userId = user.id;
             me.newTopic.userName = user.userName;
@@ -693,5 +693,171 @@ ForumModule.controller('ForumController', [
                 }
             );
         }
+
+        //function to fetch forum topic
+        me.fetchForumTopic = function (forumId) {
+            ForumFactory.fetchTopics(forumId).then(function (topics) {
+
+                var topicSortingOrder = 'id'; //default sort
+
+                $scope.topicSortingOrder = topicSortingOrder;
+                $scope.topicPageSizes = [5, 10, 25, 50];
+                $scope.reverse = true;
+                $scope.filteredTopics = [];
+                $scope.groupedTopics = [];
+                $scope.topicPerPage = 10;
+                $scope.pagedTopics = [];
+                $scope.topicPage = 0;
+                $scope.topics = topics;
+
+                var searchMatched = function (haystack, needle) {
+                    if (!needle) {
+
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered topics
+                $scope.searched = function () {
+                    $scope.filteredTopics = $filter('filter')($scope.topics, function (item) {
+                        for (var attr in item) {
+                            if (searchMatched(item['title'], $scope.queried))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.topicSortingOrder !== '') {
+                        $scope.filteredTopics = $filter('orderBy')($scope.filteredTopics, $scope.topicSortingOrder, $scope.reverse);
+                    }
+
+                    $scope.topicPage = 0;
+                    // now group by pages
+                    $scope.groupToTopicPages();
+                };
+
+                // show items per page
+                $scope.perPageTopic = function () {
+                    $scope.groupToTopicPages();
+                };
+
+                // calculate page in place
+                $scope.groupToTopicPages = function () {
+                    $scope.pagedTopics = [];
+
+                    for (var i = 0; i < $scope.filteredTopics.length; i++) {
+                        if (i % $scope.topicPerPage === 0) {
+                            $scope.pagedTopics[Math.floor(i / $scope.topicPerPage)] = [$scope.filteredTopics[i]];
+                        } else {
+                            $scope.pagedTopics[Math.floor(i / $scope.topicPerPage)].push($scope.filteredTopics[i]);
+                        }
+                    }
+                };
+
+                $scope.prevTopicPage = function () {
+                    if ($scope.topicPage > 0) {
+                        $scope.topicPage--;
+                    }
+                };
+
+                $scope.nextTopicPage = function () {
+                    if ($scope.topicPage < $scope.pagedTopics.length - 1) {
+                        $scope.topicPage++;
+                    }
+                };
+
+                $scope.setTopicPage = function () {
+                    $scope.topicPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.searched();
+
+
+                // change sorting order
+                $scope.topicSort_by = function (newSortingOrder) {
+                    if ($scope.topicSortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.topicSortingOrder = newSortingOrder;
+                };
+
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Topic', 6000);
+                }
+            );
+        }
+
+        //function to perform action on topic
+        me.performActionOnTopic = function (action, id) {
+            ForumFactory.performActionOnTopic(action, id).then(function () {
+                $route.reload();
+                Materialize.toast("Topic " + action + " Successfully!", 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error While ' + action + ' On Topic', 6000);
+                }
+            );
+        }
+
+        //function to approve all topics
+        me.approveAllTopics = function () {
+            ForumFactory.approveAllTopics().then(function () {
+                $route.reload();
+                Materialize.toast("Topics Opened Successfully!", 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error While Approving Topics', 6000);
+                }
+            );
+        }
+
+        //function to get topic
+        me.getTopic = function () {
+            var topicId = $routeParams.id;
+            ForumFactory.getTopic(topicId).then(function (topic) {
+                me.topic = topic;
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Topic', 6000);
+                }
+            );
+        }
+
+        me.topicReport = function () {
+            me.reportTopic.typeOfReport = 'TOPIC';
+            me.reportTopic.userName = user.userName;
+            me.reportTopic.userId = user.id;
+            var now = new Date();
+            me.reportTopic.dateTime = dateTimeFormat(now);
+            me.reportTopic.reportId = me.topic.id;
+            me.reportTopic.title = me.topic.title;
+
+            ForumFactory.topicReport(me.reportTopic).then(function () {
+                $location.path('/user/forum/view/' + me.reportTopic.reportId);
+                Materialize.toast('Topic Reported Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Reporting Forum', 6000);
+                }
+            );
+        }
+
+        me.editTopic = function () {
+
+            ForumFactory.createEditTopic(me.topic).then(function () {
+
+                $location.path("/user/forum/view/" + me.topic.forum.id);
+                Materialize.toast('Topic Edited Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Creating Topic', 6000);
+                }
+            );
+        }
+
     }
 ]);

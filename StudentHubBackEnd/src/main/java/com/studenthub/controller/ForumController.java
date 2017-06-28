@@ -353,35 +353,4 @@ public class ForumController {
 
 	}
 
-	// <!--------------------Create topic----------------------->
-	@RequestMapping(value = "forum/topic/createEditTopic", method = RequestMethod.POST)
-	public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
-		if (topic != null) {
-			if (topic.getId() == 0) {
-				// List<Topic> topics = new ArrayList<Topic>();
-				// topics.add(topic);
-				boolean flag = topicDAO.addTopic(topic);
-				if (flag != false) {
-					return new ResponseEntity<Topic>(HttpStatus.OK);
-				} else {
-					return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
-				}
-			} else {
-				return new ResponseEntity<Topic>(HttpStatus.OK);
-			}
-		} else {
-			return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
-		}
-	}
-
-	// <!-----------------------Get Topics--------------------------!>
-	@RequestMapping(value = "/forum/{id}/topics", method = RequestMethod.GET)
-	public ResponseEntity<List<Topic>> getTopics(@PathVariable("id") int id) {
-		List<Topic> topics = topicDAO.list(id);
-		if (topics != null) {
-			return new ResponseEntity<List<Topic>>(topics, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<List<Topic>>(HttpStatus.NO_CONTENT);
-		}
-	}
 }

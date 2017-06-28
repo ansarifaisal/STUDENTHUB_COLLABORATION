@@ -25,10 +25,9 @@ public class TopicDAOImpl implements TopicDAO {
 
 	@Override
 	@Transactional
-	public List<Topic> list(int id) {
-		String hql = "FROM TOPICS WHERE FORUM_ID = :id ORDER BY TOPIC_ID DESC";
+	public List<Topic> list() {
+		String hql = "FROM TOPICS ORDER BY TOPIC_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("id", id);
 		return query.list();
 	}
 
@@ -90,6 +89,15 @@ public class TopicDAOImpl implements TopicDAO {
 		String hql = "FROM TOPICS WHERE STATUS = 'OPEN' ORDER BY CREATED_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(5);
+		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public List<Topic> listByForum(int id) {
+		String hql = "FROM TOPICS WHERE FORUM_ID = :id ORDER BY TOPIC_ID DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("id", id);
 		return query.list();
 	}
 

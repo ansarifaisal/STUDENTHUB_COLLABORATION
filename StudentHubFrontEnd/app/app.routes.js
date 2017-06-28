@@ -158,6 +158,44 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
+    '/user/forum/topic/report/:id': {
+        //page path
+        templateUrl: 'app/components/forum/reportTopic.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
+    '/user/forum/topic/edit/:id': {
+        //page path
+        templateUrl: 'app/components/forum/editTopic.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+    '/user/forum/topic/view/:id': {
+        //page path
+        templateUrl: 'app/components/forum/singleforum.html',
+        //controller that will handle this page
+        controller: 'ForumController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'forumCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
     //=========ForumCategory Module Routing============>
 
     '/user/forumcategories': {
@@ -207,18 +245,6 @@ window.routes = {
         controller: 'ForumCategoryController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
         controllerAs: 'forumCategoryCtrl',
-        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
-        requireLogin: true,
-        //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
-    },
-    '/user/forum/view': {
-        //page path
-        templateUrl: 'app/components/forum/singleforum.html',
-        //controller that will handle this page
-        controller: 'ForumController',
-        //nick name of the controller so that we dont have to declare the name in the HTML page
-        controllerAs: 'forumCtrl',
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page
@@ -861,6 +887,34 @@ window.routes = {
         controller: 'ForumCommentReportController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
         controllerAs: 'forumCommentReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    //<=====================Topic Report Module================>
+
+    '/admin/report/topics': {
+        //page path
+        templateUrl: 'app/components/report/topicReport.html',
+        //controller that will handle this page
+        controller: 'TopicReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'topicReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/topics': {
+        //page path
+        templateUrl: 'app/components/report/handledTopicReport.html',
+        //controller that will handle this page
+        controller: 'TopicReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'topicReportCtrl',
         //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
         requireLogin: true,
         //roles is use to define which user can access this page

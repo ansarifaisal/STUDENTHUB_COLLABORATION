@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.studenthub.dao.ForumDAO;
+import com.studenthub.dao.ReportDAO;
 import com.studenthub.dao.TopicDAO;
+import com.studenthub.entity.Forum;
+import com.studenthub.entity.Report;
 import com.studenthub.entity.Topic;
 
 @RestController
@@ -23,6 +27,19 @@ public class TopicController {
 	@Autowired
 	TopicDAO topicDAO;
 
+	@Autowired
+	Forum forum;
+
+	@Autowired
+	ForumDAO forumDAO;
+
+	@Autowired
+	Report report;
+
+	@Autowired
+	ReportDAO reportDAO;
+
+	// <!--------------------List all the topic----------------------->
 	@RequestMapping(value = "/topics", method = RequestMethod.GET)
 	public ResponseEntity<List<Topic>> getAllTopic() {
 		List<Topic> topics = topicDAO.list();
@@ -36,6 +53,7 @@ public class TopicController {
 
 	}
 
+	// <!--------------------get topic----------------------->
 	@RequestMapping(value = "/topic/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Topic> getTopic(@PathVariable("id") int id) {
 		topic = topicDAO.getTopic(id);
@@ -50,6 +68,7 @@ public class TopicController {
 		}
 	}
 
+	// <!--------------------Perform action on topic----------------------->
 	@RequestMapping(value = "/admin/topic/{action}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Topic> validateTopic(@PathVariable("action") String action, @PathVariable("id") int id) {
 		topic = topicDAO.getTopic(id);
@@ -76,6 +95,7 @@ public class TopicController {
 		}
 	}
 
+	// <!--------------------Validate all topic----------------------->
 	@RequestMapping(value = "/admin/validatealltopics")
 	public ResponseEntity<Topic> validateAllTopics() {
 		List<Topic> pendingTopics = topicDAO.getAllPendingTopics();
@@ -86,25 +106,63 @@ public class TopicController {
 		return new ResponseEntity<Topic>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/topic/createEditTopic", method = RequestMethod.POST)
-	public ResponseEntity<Topic> createEditTopic(@RequestBody Topic topic) {
-
-		if (topic.getId() == 0) {
-			topic.setReport("NO");
-			topic.setStatus("PENDING");
-			topicDAO.addTopic(topic);
-			return new ResponseEntity<Topic>(HttpStatus.OK);
-
-		} else {
-			boolean flag = topicDAO.updateTopic(topic);
-
-			if (flag != false) {
-				return new ResponseEntity<Topic>(HttpStatus.OK);
+	// <!--------------------Create topic----------------------->
+	@RequestMapping(value = "forum/topic/createEditTopic", method = RequestMethod.POST)
+	public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
+		if (topic != null) {
+			if (topic.getId() == 0) {
+				boolean flag = topicDAO.addTopic(topic);
+				if (flag != false) {
+					forum = topic.getForum();
+					int noOfTopics = topicDAO.listByForum(topic.getForum().getId()).size();
+					forum.setNoOfTopics(noOfTopics);
+					forumDAO.updateForum(forum);
+					return new ResponseEntity<Topic>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
+				}
 			} else {
-				return new ResponseEntity<Topic>(HttpStatus.NOT_FOUND);
+				boolean flag = topicDAO.updateTopic(topic);
+
+				if (flag != false) {
+					return new ResponseEntity<Topic>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Topic>(HttpStatus.NOT_FOUND);
+				}
 			}
-
+		} else {
+			return new ResponseEntity<Topic>(HttpStatus.NO_CONTENT);
 		}
-
 	}
+
+	// <!-----------------------Get All Forum Topics--------------------------!>
+	@RequestMapping(value = "/forum/{id}/topics", method = RequestMethod.GET)
+	public ResponseEntity<List<Topic>> getTopics(@PathVariable("id") int id) {
+		List<Topic> topics = topicDAO.listByForum(id);
+		if (topics != null) {
+			return new ResponseEntity<List<Topic>>(topics, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Topic>>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-----------------------Report Forum----------------------------!>
+	@RequestMapping(value = "/forum/topic/report", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportTopic(@RequestBody Report report) {
+		topic = topicDAO.getTopic(report.getReportId());
+		if (topic != null) {
+			report.setStatus("UNREAD");
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				topic.setReport("YES");
+				topicDAO.updateTopic(topic);
+				return new ResponseEntity<Report>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
+
 }

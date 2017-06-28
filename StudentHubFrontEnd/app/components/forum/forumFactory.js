@@ -24,6 +24,10 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         deleteForumComment: deleteForumComment,
         fetchTopics: fetchTopics,
         createEditTopic: createEditTopic,
+        performActionOnTopic: performActionOnTopic,
+        approveAllTopics: approveAllTopics,
+        getTopic: getTopic,
+        topicReport: topicReport,
         // fetchCreatedForums: fetchCreatedForums,
         // fetchJoinForums: fetchJoinForums,
         // fetchAllMembers: fetchAllMembers,
@@ -309,12 +313,11 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     //function to get all topics
     function fetchTopics(id) {
         var deferred = $q.defer();
-
-        $http.get(REST_API_URI + 'forum/comment/delete/' + id).then(function (response) {
+        $http.get(REST_API_URI + 'forum/' + id + '/topics').then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
-                console.log('Error Fetching Comments');
+                console.log('Error Fetching Topic');
                 deferred.reject(errorResponse);
             }
         );
@@ -334,6 +337,70 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
             }
         );
         return deferred.promise;
+    }
+
+    //funtion to perform action on topic
+    function performActionOnTopic(action, id) {
+
+        var deferred = $q.defer();
+        $http.get(REST_API_URI + 'admin/topic/' + action + '/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error While ' + action + ' Topic');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function to approve all blogs
+    function approveAllTopics() {
+
+        var deferred = $q.defer();
+        $http.get(REST_API_URI + 'admin/validatealltopics').then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error While Approving Topics');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to get topic
+    function getTopic(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'topic/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Forum');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to report topic
+    function topicReport(report) {
+        var deferred = $q.defer();
+
+        $http.post(REST_API_URI + 'forum/topic/report', report).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Fetching Topic');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
     }
 
 }]);
