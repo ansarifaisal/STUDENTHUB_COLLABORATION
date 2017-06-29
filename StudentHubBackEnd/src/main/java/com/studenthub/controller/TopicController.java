@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.ReportDAO;
+import com.studenthub.dao.TopicCommentDAO;
 import com.studenthub.dao.TopicDAO;
+import com.studenthub.dao.TopicLikesDAO;
 import com.studenthub.entity.Forum;
+import com.studenthub.entity.ForumComment;
 import com.studenthub.entity.Report;
 import com.studenthub.entity.Topic;
+import com.studenthub.entity.TopicComment;
+import com.studenthub.entity.TopicLikes;
 
 @RestController
 public class TopicController {
@@ -32,6 +37,18 @@ public class TopicController {
 
 	@Autowired
 	ForumDAO forumDAO;
+
+	@Autowired
+	TopicLikes topicLikes;
+
+	@Autowired
+	TopicLikesDAO topicLikesDAO;
+
+	@Autowired
+	TopicComment topicComment;
+
+	@Autowired
+	TopicCommentDAO topicCommentDAO;
 
 	@Autowired
 	Report report;
@@ -165,4 +182,77 @@ public class TopicController {
 		}
 	}
 
+	// <!--------------------Topic Like-----------------------------!>
+
+	@RequestMapping(value = "/forum/topic/like", method = RequestMethod.POST)
+	public ResponseEntity<TopicLikes> topicLike(@RequestBody TopicLikes topicLike) {
+		if (topicLike != null) {
+			boolean flag = topicLikesDAO.addTopicLikes(topicLike);
+
+			if (flag != false) {
+				int noOfLikes = topicLikesDAO.list(topicLike.getTopic().getId()).size();
+				topic = topicLike.getTopic();
+				topic.setNoOfLikes(noOfLikes);
+				topicDAO.updateTopic(topic);
+				return new ResponseEntity<TopicLikes>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<TopicLikes>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<TopicLikes>(HttpStatus.NO_CONTENT);
+		}
+
+	}
+
+	// <!---------------------Dislike Topic---------------------------------!>
+	@RequestMapping(value = "/forum/topic/dislike/{id}", method = RequestMethod.GET)
+	public ResponseEntity<TopicLikes> dislikeTopic(@PathVariable("id") int id) {
+		topicLikes = topicLikesDAO.getTopicLike(id);
+		topic = topicLikes.getTopic();
+		if (topicLikes != null) {
+			boolean flag = topicLikesDAO.deleteLike(topicLikes);
+			if (flag != false) {
+				int noOfLikes = topicLikesDAO.list(topic.getId()).size();
+				topic.setNoOfLikes(noOfLikes);
+				topicDAO.updateTopic(topic);
+				return new ResponseEntity<TopicLikes>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<TopicLikes>(HttpStatus.NOT_FOUND);
+			}
+
+		} else {
+			return new ResponseEntity<TopicLikes>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// <!---------------------------Create Edit Comment-----------------------!>
+	
+	@RequestMapping(value = "/forum/topic/comment/createEditComment", method = RequestMethod.POST)
+	public ResponseEntity<TopicComment> createEditComment(@RequestBody TopicComment topicComment) {
+		if (topicComment != null) {
+			if (topicComment.getId() == 0) {
+				topicCommentDAO.addTopicComment(topicComment);
+				return new ResponseEntity<TopicComment>(HttpStatus.OK);
+			} else {
+				TopicComment tempTopicComment = topicCommentDAO.getTopicComment(topicComment.getId());
+				topic = tempTopicComment.getTopic();
+				topicComment.setTopic(topic);
+				topicCommentDAO.updateTopicComment(topicComment);
+				return new ResponseEntity<TopicComment>(topicComment, HttpStatus.OK);
+			}
+		} else {
+			return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!--------------------------Get Forum Comment ------------------------!>
+
+	public ResponseEntity<TopicComment> getTopicComment(@PathVariable("id") int id) {
+		topicComment = topicCommentDAO.getTopicComment(id);
+		if (topicComment != null) {
+			return new ResponseEntity<TopicComment>(topicComment, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
+		}
+	}
 }

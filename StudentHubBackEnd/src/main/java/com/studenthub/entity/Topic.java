@@ -1,6 +1,7 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "TOPICS")
 @Component
@@ -42,12 +48,6 @@ public class Topic extends Domain implements Serializable {
 	@JoinColumn(name = "FORUM_ID", nullable = false)
 	private Forum forum;
 
-	// @Column(name = "FORUM_ID", nullable = false)
-	// private int forumId;
-	//
-	// @Column(name = "FORUM_NAME", nullable = false)
-	// private String forumName;
-
 	@Column(name = "TITLE", nullable = false)
 	private String title;
 
@@ -71,6 +71,11 @@ public class Topic extends Domain implements Serializable {
 
 	@Column(name = "STATUS", nullable = false)
 	private String status;
+
+	@OneToMany(mappedBy = "topic")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonManagedReference
+	private List<TopicLikes> likes;
 
 	/*
 	 * Accessors And Mutators OR Getters and Setters
@@ -99,22 +104,6 @@ public class Topic extends Domain implements Serializable {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-	// public int getForumId() {
-	// return forumId;
-	// }
-	//
-	// public void setForumId(int forumId) {
-	// this.forumId = forumId;
-	// }
-	//
-	// public String getForumName() {
-	// return forumName;
-	// }
-	//
-	// public void setForumName(String forumName) {
-	// this.forumName = forumName;
-	// }
 
 	public int getNoOfComments() {
 		return noOfComments;
@@ -156,6 +145,14 @@ public class Topic extends Domain implements Serializable {
 		this.description = description;
 	}
 
+	public List<TopicLikes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<TopicLikes> likes) {
+		this.likes = likes;
+	}
+
 	public String getCreatedDate() {
 		return createdDate;
 	}
@@ -192,15 +189,12 @@ public class Topic extends Domain implements Serializable {
 	 * Overriding toString Method For Debugging
 	 */
 
-	// @Override
-	// public String toString() {
-	// return "Topic [id=" + id + ", userId=" + userId + ", userName=" +
-	// userName + ", forumId=" + forumId
-	// + ", forumName=" + forumName + ", title=" + title + ", imageURL=" +
-	// imageURL + ", description="
-	// + description + ", createdDate=" + createdDate + ", noOfComments=" +
-	// noOfComments + ", noOfLikes="
-	// + noOfLikes + ", report=" + report + ", status=" + status + "]";
-	// }
+	@Override
+	public String toString() {
+		return "Topic [id=" + id + ", userId=" + userId + ", userName=" + userName + ", forum=" + forum + ", title="
+				+ title + ", imageURL=" + imageURL + ", description=" + description + ", createdDate=" + createdDate
+				+ ", noOfComments=" + noOfComments + ", noOfLikes=" + noOfLikes + ", report=" + report + ", status="
+				+ status + ", likes=" + likes + "]";
+	}
 
 }

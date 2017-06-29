@@ -115,6 +115,25 @@ ForumModule.controller('ForumController', [
             reportId: null
         }
 
+        me.topicLikes = {
+            id: null,
+            topic: '',
+            userId: null,
+            userName: '',
+            dateTime: ''
+        }
+
+        me.newTopicComment = {
+            id: null,
+            topic: '',
+            userId: null,
+            userName: '',
+            topicComment: '',
+            commentDate: '',
+            noOfLikes: null,
+            report: '',
+        }
+
         //function to fetch all forums
 
         me.fetchAllForums = function () {
@@ -836,8 +855,10 @@ ForumModule.controller('ForumController', [
             me.reportTopic.reportId = me.topic.id;
             me.reportTopic.title = me.topic.title;
 
+            console.log(me.topic.forum.id);
+
             ForumFactory.topicReport(me.reportTopic).then(function () {
-                $location.path('/user/forum/view/' + me.reportTopic.reportId);
+                $location.path('/user/forum/topic/view/' + me.reportTopic.reportId);
                 Materialize.toast('Topic Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -859,5 +880,46 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        me.likeTopic = function () {
+            me.topicLikes.topic = me.topic;
+            me.topicLikes.userId = user.id;
+            me.topicLikes.userName = user.userName;
+            var now = new Date();
+            me.topicLikes.dateTime = dateTimeFormat(now);
+
+            ForumFactory.topicLike(me.topicLikes).then(function () {
+                $route.reload();
+                Materialize.toast("Topic Liked Successfully!", 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast("Error While Liking The Topic", 6000);
+                }
+            );
+        }
+
+        me.disLikeTopic = function (id) {
+            ForumFactory.disLikeTopic(id).then(function () {
+                $route.reload();
+                Materialize.toast("Topic Disliked Successfully!", 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast("Error Disliking Topic", 6000);
+                }
+            );
+        }
+
+        me.createTopicComment = function (){
+
+            me.newTopicComment.topic = me.topic;
+            me.newTopicComment.userId = user.id;
+            me.newTopicComment.userName = user.userName;
+            var now = new Date();
+            me.newTopicComment.commentDate = dateTimeFormat(now);
+            me.newTopicComment.noOfLikes = 0;
+            me.newTopicComment.report = "NO";
+
+            console.log(me.newTopicComment);
+
+        }
     }
 ]);

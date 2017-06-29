@@ -28,6 +28,9 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         approveAllTopics: approveAllTopics,
         getTopic: getTopic,
         topicReport: topicReport,
+        topicLike: topicLike,
+        disLikeTopic: disLikeTopic,
+        createTopicComment: createTopicComment,
         // fetchCreatedForums: fetchCreatedForums,
         // fetchJoinForums: fetchJoinForums,
         // fetchAllMembers: fetchAllMembers,
@@ -36,7 +39,6 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         // joinForum: joinForum,
         // createTopic: createTopic,
         // createForumComment: createForumComment,
-        // createTopicComment: createTopicComment,
         // editTopic: editTopic,
         // editForumComment: editForumComment,
         // editTopicComment: editTopicComment,
@@ -395,12 +397,59 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
-                console.log('Error Fetching Topic');
+                console.log('Error Reporting Topic');
                 deferred.reject(errorResponse);
             }
         );
         return deferred.promise;
 
+    }
+
+    //function to like topic
+    function topicLike(like) {
+
+        var deferred = $q.defer();
+        $http.post(REST_API_URI + "forum/topic/like", like).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Liking Topic");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to dislike topic
+    function disLikeTopic(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + "forum/topic/dislike/" + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Disliking Topic");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to create topic comment
+    function createTopicComment(comment) {
+        var deferred = $q.defer();
+        $http.post(REST_API_URI + "/forum/topic/comment/createEditComment", comment).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Liking Topic");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
     }
 
 }]);

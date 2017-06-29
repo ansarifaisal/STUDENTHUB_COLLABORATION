@@ -26,7 +26,7 @@ public class BlogCommentDAOImpl implements BlogCommentDAO {
 	@Override
 	@Transactional
 	public List<BlogComment> list(int id) {
-		String hql = "FROM BLOG_COMMENTS WHERE BLOG_ID = :blogID ORDER BY COMMENT_DATE DESC";
+		String hql = "FROM BLOG_COMMENTS WHERE BLOG_ID = :blogID ORDER BY BLOG_COMMENT_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("blogID", id);
 		return query.list();
