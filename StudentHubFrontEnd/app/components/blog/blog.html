@@ -19,44 +19,51 @@
             <div class="card">
                 <div class="card-image">
                     <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
-                    <span class="card-title"><strong>{{blogCtrl.blog.title}} - By {{user.firstName}} {{user.lastName}}</strong></span>
+                    <span class="card-title"><strong>{{blogCtrl.blog.title}}</strong></span>
                 </div>
                 <div class="card-panel">
+                    Posted By - {{blogCtrl.blog.userName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">query_builder</i> {{blogCtrl.blog.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">chat_bubble_outline</i> {{blogCtrl.blog.noOfComments}}
                     Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 16px;">thumb_up</i>{{blogCtrl.blog.noOfLikes}}
 
-                    <a href="" ng-click="blogCtrl.blogLike();" ng-hide="blogCtrl.blog.report == 'YES' ||  blogCtrl.blog.status != 'APPROVED'">Likes</a>
+                    <span ng-hide="blogCtrl.blog.status != 'APPROVED' || blogCtrl.blog.report == 'YES'">
+                    <a href="" ng-show="blogCtrl.blog.likes.length == 0" ng-click="blogCtrl.blogLike();">Like</a>
 
-                    <span ng-show="blogCtrl.blog.report == 'YES' || blogCtrl.blog.status != 'APPROVED'">Likes</span>
-
+                    <span ng-repeat="like in blogCtrl.blog.likes">
+                        <a  ng-show="like.userId == user.id" href = "" ng-click="blogCtrl.disLikeBlog(like.id);">Dislike</a>
+                    </span>
+                    </span>
                     <span ng-if="blogCtrl.blog.report == 'YES'">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Blog is reported</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="red-text"> <strong>This Blog Is Reported</strong></span>
                     </span>
                     <span ng-if="blogCtrl.blog.status == 'PENDING'">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Blog is in pending state, it will be visible after our admin approval</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="red-text"> <strong>This Blog Is In Pending State, It Will Be Visible After Admin Approval</strong></span>
                     </span>
                     <span ng-show="blogCtrl.blog.status == 'DISABLED'">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Blog Is Disabled</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="red-text"> <strong>This Blog Is Disabled</strong></span>
                     </span>
-                    <span ng-hide = "blogCtrl.blog.status != 'APPROVED' || blogCtrl.blog.report != 'NO'">
+                    <span ng-hide="blogCtrl.blog.status != 'APPROVED' || blogCtrl.blog.report != 'NO'">
                     <span class="right">
                                 <!-- Dropdown Trigger -->
                      <a class='dropdown-button' href='#' data-activates='{{blogCtrl.blog.blogId}}'><i class="material-icons">more_vert</i></a>
                                 <!-- Dropdown Structure -->
                         <ul id='{{blogCtrl.blog.blogId}}' class='dropdown-content'>
-                            <li><a data-target="reportBlogForm">Report</a></li>
+                            <li><a href = "#!/user/blog/report/{{blogCtrl.blog.blogId}}">Report</a></li>
                             
                             <span ng-if="blogCtrl.blog.userId == user.id">
                             <li class="divider"></li>
                             <li><a href="#!/user/blog/edit/{{blogCtrl.blog.blogId}}">Edit</a></li>
                             <li><a href="" ng-click="blogCtrl.deleteBlog('Disabled', blogCtrl.blog.blogId)">Delete</a></li>
                             </span>
-                         </ul>
-                        </span>
+                    </ul>
                     </span>
-                    
+                    </span>
+
                 </div>
                 <div class="card-panel" style="word-spacing: 0.1em; line-height: 2em; font-size:15px;">
                     {{blogCtrl.blog.description}}
@@ -64,15 +71,15 @@
             </div>
             <div class="card-panel">
                 <div ng-if="blogCtrl.blog.report == 'YES'">
-                    <h3><span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Blog is reported</span></h3>
+                    <h5 class="red-text center"> <strong>This Blog Is Reported</strong></h5>
                 </div>
                 <div ng-if="blogCtrl.blog.status == 'PENDING'">
-                    <h3><span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This Blog is in pending state, it will be visible after our admin approval</span></h3>
+                    <h5 class="red-text center"> <strong>This Blog Is In Pending State, It Will Be Visible After Admin Approval</strong></h5>
                 </div>
                 <div ng-show="blogCtrl.blog.status == 'DISABLED'">
-                    <h3><span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This blog is disabled</span></h3>
+                    <h5 class="red-text center"> <strong>This Blog Is Disabled</strong></h5>
                 </div>
-                <div ng-if="blogCtrl.blog.report != 'YES'" ng-hide ="blogCtrl.blog.status != 'APPROVED'">
+                <div ng-if="blogCtrl.blog.report != 'YES'" ng-hide="blogCtrl.blog.status != 'APPROVED'">
                     <strong style="font-size: 20px;">Leave a Comment</strong>
 
                     <div class="card-panel row">
@@ -88,7 +95,7 @@
                     </div>
                     <div ng-show="!pagedItems[currentPage].length">
                         <center>
-                            <h3><strong>There are no comments</strong></h3>
+                            <h5 class="center red-text">There Are No Comment(s)</h5>
                         </center>
                     </div>
                     <div ng-hide="!pagedItems[currentPage].length">
@@ -106,23 +113,28 @@
                                     </li>
                                 </ul>
                             </div>
+
+                            <!--<div class="col m4 offset-m1">
+                                <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                                </select>
+                                <label>Materialize Select</label>
+                            </div>-->
                         </div>
                         <div class="row nomargin nopadding" ng-repeat="blogComment in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                            <div ng-if="blogComment.length == 0"></div>
                             <div class="card-panel nomargin">
-                                <div ng-if="blogComment.report == 'YES'">
-                                    <span class="red-text"><i class="material-icons" style="font-size:30px;">report_problem</i> This comment is reported</span>
-                                </div>
-                                <div ng-if="blogComment.report != 'YES'">
-                                    <div class="row nopadding nomargin">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a> {{blogComment.blogComment}}
-                                        <span class="right">
+                                <div class="row nopadding nomargin" ng-hide="blogComment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                                    <div class=" col m0">
+                                        <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                                    </div>
+                                    <a href="">{{user.userName}}</a> <span ng-show="blogComment.report =='NO'">{{blogComment.blogComment}}</span>
+                                    <span ng-show="blogComment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{blogComment.blogComment}}</span>
+                                    <span class="right">
+                                    <span ng-show="blogComment.report =='YES'"><i class="material-icons"><a href = "#!/admin/report/blogcomments" class="red-text">report_problem</a></i></span>
+                                    </span>
+                                    <span class="right">
                                             
                                 <!-- Dropdown Trigger -->
-                                <a class='dropdown-button' data-hover = "true" href="#" data-activates='{{blogComment.id}}_OP'><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' href="#" data-activates='{{blogComment.id}}_OP' ng-hide="blogComment.report == 'YES'"><i class="material-icons">more_vert</i></a>
                                 <!-- Dropdown Structure -->
                                 <ul id='{{blogComment.id}}_OP' class='dropdown-content'>
                                     <li><a href = "#!/user/blog/comment/report/{{blogComment.id}}">Report</a></li>
@@ -131,10 +143,13 @@
                                     <li><a href="#!/user/blog/comment/edit/{{blogComment.id}}">Edit</a></li>
                                     <li><a href="" ng-click="blogCtrl.deleteComment(blogComment.id)">Delete</a></li>
                                     </span>
-                                        </ul>
-                                        </span><br/>
-                                        <span class="grey-text" style="font-size: 12px;">{{blogComment.commentDate}}</span>
-                                    </div>
+                                    </ul>
+                                    </span><br/>
+                                    <span class="grey-text" style="font-size: 12px;">{{blogComment.commentDate}}</span>
+                                </div>
+
+                                <div ng-show="blogComment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                                    <h6 class="center red-text">This Comment Is Reported</h6>
                                 </div>
                             </div><br/>
                         </div>
@@ -154,41 +169,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="reportBlogForm" class="modal">
-        <div class="modal-content">
-            <h5>Report Blog</h5>
-            <hr/>
-            <div class="row">
-                <div class="col m6 offset-m3">
-                    <form name="reportForm" ng-submit="blogCtrl.blogReport()" novalidate>
-
-                        <!--details field starts here-->
-                        <div class="input-field nomargin">
-                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
-                                maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
-                                ng-model="blogCtrl.reportBlog.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
-                            <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
-                                <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
-                                <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
-                                <span ng-show="reportForm.details.$error.maxlength">This field can contain maximum 50 charachters</span>
-                                <span ng-show="reportForm.details.$error.pattern">This field can contain '-,_;' these special charachters</span>
-                            </div>
-
-                        </div>
-                        <!--details field ends here-->
-
-                        <div class="input-field">
-                            <div class="hoverable">
-                                <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
-                                    value="Report Blog">
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

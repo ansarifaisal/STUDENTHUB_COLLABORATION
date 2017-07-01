@@ -170,7 +170,7 @@ public class ForumController {
 	public ResponseEntity<ForumMember> joinForum(@RequestBody ForumMember forumMember) {
 		boolean addForum = forumMemberDAO.addForumMember(forumMember);
 		if (addForum != false) {
-			int noOfRequest = forumMemberDAO.pendingList(forumMember.getForumId()).size();
+			int noOfRequest = forumMemberDAO.pendingList(forumMember.getForum().getId()).size();
 			forumMember.getForum().setNoOfRequest(noOfRequest);
 			boolean flag = forumDAO.updateForum(forumMember.getForum());
 			if (flag != false) {
@@ -277,6 +277,7 @@ public class ForumController {
 	public ResponseEntity<ForumComment> createEditForumComment(@RequestBody ForumComment forumComment) {
 		if (forumComment != null) {
 			if (forumComment.getId() == 0) {
+
 				forumCommentDAO.addForumComment(forumComment);
 				return new ResponseEntity<ForumComment>(HttpStatus.OK);
 			} else {

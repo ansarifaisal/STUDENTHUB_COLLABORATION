@@ -1,4 +1,5 @@
-<div class="row" ng-init="blogCtrl.getBlog();">
+<div class="row" ng-init="forumCtrl.getTopicComment()">
+
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -7,9 +8,13 @@
 
                         <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
+                        <a href="#!/user/forums" class="breadcrumb">Forums</a>
 
-                        <a href="#!/user/blog/view/{{blogCtrl.blog.blogId}}" class="breadcrumb">{{blogCtrl.blog.title}}</a>
+                        <a href="#!/user/forum/view/{{forumCtrl.topicComment.topic.forum.id}}" class="breadcrumb">{{forumCtrl.topicComment.topic.forum.forumName}}</a>
+
+                        <a href="#!/user/forum/topic/view/{{forumCtrl.topicComment.topic.id}}" class="breadcrumb">{{forumCtrl.topicComment.topic.title}}</a>
+
+                        <a class="breadcrumb">Comment</a>
 
                         <a class="breadcrumb">Report</a>
 
@@ -17,19 +22,19 @@
                 </div>
             </nav>
         </div>
-        <div class="card-panel">
-            <h5>Report Blog</h5>
+        <div id="reportForumForm" class="card-panel">
+
+            <h5><strong class="grey-text">Report Topic Comment</strong></h5>
             <hr/>
             <div class="row">
                 <div class="col m6 offset-m3">
-                    <form name="reportForm" ng-submit="blogCtrl.blogReport()" novalidate>
+                    <form name="reportForm" ng-submit="forumCtrl.topicCommentReport()" novalidate>
 
                         <!--details field starts here-->
                         <div class="input-field nomargin">
                             <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/"
                                 ng-minlength="20" maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report"
-                                data-length="1000" ng-model="blogCtrl.reportBlog.details" placeholder="Provide Details Of Your Report"
-                                required="required"></textarea>
+                                data-length="1000" ng-model="forumCtrl.reportTopicComment.details" required="required"></textarea>
                             <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
                                 <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
                                 <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
@@ -43,7 +48,7 @@
                         <div class="input-field">
                             <div class="hoverable">
                                 <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
-                                    value="Report Blog">
+                                    value="Report Topic Comment">
                             </div>
                         </div>
                     </form>
@@ -51,4 +56,5 @@
             </div>
         </div>
     </div>
+
 </div>

@@ -5,8 +5,12 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
+
                         <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
-                        <a href="" class="breadcrumb">Edit Blog</a>
+
+                        <a href="#!/user/blog/view/{{blogCtrl.blog.blogId}}" class="breadcrumb">{{blogCtrl.blog.title}}</a>
+
+                        <a class="breadcrumb">Edit Blog</a>
                     </div>
                 </div>
             </nav>
@@ -41,7 +45,7 @@
                             <!--description field starts here-->
                             <div class="input-field nomargin">
 
-                                <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/"
                                     ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Description" data-length="4000"
                                     ng-model="blogCtrl.blog.description" placeholder="description" required="required"></textarea>
                                 <div class="invalid-data center-align" ng-show="editForm.description.$dirty">

@@ -13,8 +13,6 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 @Entity(name = "FORUM_COMMENTS")
 @Component
 public class ForumComment implements Serializable {
@@ -36,7 +34,6 @@ public class ForumComment implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "FORUM_ID", nullable = false)
-	@JsonBackReference
 	private Forum forum;
 
 	@Column(name = "USER_ID", nullable = false)

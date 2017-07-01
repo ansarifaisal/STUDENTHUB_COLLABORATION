@@ -19,6 +19,7 @@ import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.HandledDAO;
 import com.studenthub.dao.JobDAO;
 import com.studenthub.dao.ReportDAO;
+import com.studenthub.dao.TopicCommentDAO;
 import com.studenthub.dao.TopicDAO;
 import com.studenthub.entity.Blog;
 import com.studenthub.entity.BlogComment;
@@ -29,6 +30,7 @@ import com.studenthub.entity.Handled;
 import com.studenthub.entity.Job;
 import com.studenthub.entity.Report;
 import com.studenthub.entity.Topic;
+import com.studenthub.entity.TopicComment;
 
 @RestController
 public class ReportController {
@@ -86,6 +88,12 @@ public class ReportController {
 
 	@Autowired
 	TopicDAO topicDAO;
+	
+	@Autowired
+	TopicComment topicComment;
+	
+	@Autowired
+	TopicCommentDAO topicCommentDAO;
 
 	// <!-------------------Get Report By Category----------------!>
 
@@ -180,6 +188,11 @@ public class ReportController {
 				topic = topicDAO.getTopic(handled.getReportId());
 				topic.setReport("NO");
 				topicDAO.updateTopic(topic);
+				break;
+			case "TOPIC COMMENT":
+				topicComment = topicCommentDAO.getTopicComment(handled.getCommentId());
+				topicComment.setReport("NO");
+				topicCommentDAO.updateTopicComment(topicComment);
 				break;
 			}
 			return new ResponseEntity<Handled>(HttpStatus.OK);

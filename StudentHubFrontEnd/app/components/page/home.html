@@ -19,145 +19,179 @@
     <div class="row col l10">
         <div class="col s12">
             <ul class="tabs tabs-fixed-width">
-                <li class="tab col s3"><a href="#topics">Latest Topics</a></li>
+                <li class="tab col s3"><a href="#forums">Latest Forums</a></li>
                 <li class="tab col s3"><a href="#blogs">Latest Blogs</a></li>
                 <li class="tab col s3"><a href="#jobs">Latest Jobs</a></li>
                 <li class="tab col s3"><a href="#events">Latest Events</a></li>
             </ul>
         </div>
 
-        <div id="topics" class="col s12">
-            <div class="row" ng-repeat="topic in homePageCtrl.content.latestTopics">
-                <div class="card-panel">
-                    <h4 class="header">Latest Topics</h4>
-                    <div class="card horizontal">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <p style="font-size: 18px;">{{topic.title}} </p>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{topic.userName}}</a></td>
-                                        <td>On <span>{{topic.createdDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:{{topic.noOfComments}}
-                                        </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">group</i>Group: {{topic.forumName}}
-                                        </td>
-                                    </tr>
-                                    <div ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                        <tr>
-                                            <td>Report: {{topic.report}}
-                                            </td>
-                                            <td>Status: {{topic.status}}</td>
-                                        </tr>
-                                    </div>
-
-                                </table>
-                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">reply</i></a>
-                            </div>
-                        </div>
-                    </div><br>
-                    <div class="right-align"><a href="#!/user/forums">View All Topics <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
-                </div>
-            </div>
-        </div>
-
-
-        <!--Blogs Section Starts From Here-->
-        <div id="blogs" class="col s12">
+        <div id="forums" class="col s12">
             <div class="row">
                 <div class="card-panel">
-                    <h4 class="header">Latest Blogs</h4>
-                    <div ng-show="!homePageCtrl.content.latestBlogs">
-                        No Latest Blogs Available
+                    <h4 class="header nomargin">Latest Forums</h4>
+                    <div ng-show="!homePageCtrl.content.latestForums">
+                        No Latest Forums Available
                     </div>
-                    <div ng-hide="!homePageCtrl.content.latestBlogs">
-
-                        <div ng-repeat="blog in homePageCtrl.content.latestBlogs">
-                            <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO' ">
-
+                    <div ng-hide="!homePageCtrl.content.latestForums">
+                        <div ng-repeat="forum in homePageCtrl.content.latestForums">
+                            <div class="card horizontal" ng-hide="forum.status != 'APPROVED' || forum.report != 'NO'">
                                 <div class="card-image">
                                     <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                                 </div>
                                 <div class="card-stacked">
                                     <div class="card-content">
                                         <div class="row nomargin">
-                                            <div class="col m10">
-                                                <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
-                                            </div>
+                                            <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='forumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
 
-                                            <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
+                            <!-- Dropdown Structure -->
+                            <ul id='forumOption_{{forum.id}}' class='dropdown-content'>
+                                <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
+                                    <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
+                                    <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/forum/edit/{{forum.id}}">Edit</a></li>
+                                        <li><a href="" ng-click="homePageCtrl.deleteForum('Closed', forum.id)">Delete</a></li>
+                                    </span>
+                                        </div>
+                                        </ul>
+
+                                        </span>
+                                        <p style="font-size: 18px;"><a href="#!/user/forum/view/{{forum.id}}" class="black-text">{{forum.forumName}}</a></p>
+                                    </div>
+                                    <table class="bordered" style="font-size: 12px; color:grey;">
+                                        <tr>
+                                            <td>Created By <a href="">{{forum.userName}}</a></td>
+                                            <td>On: <span>{{forum.createdDate}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="material-icons" style="font-size: 12px;">comment</i>&nbsp;{{forum.noOfTopics}}
+                                                Topics
+                                            </td>
+                                            <td><i class="material-icons" style="font-size: 14px;">group</i>&nbsp;{{forum.noOfMembers}}
+                                                Members
+                                            </td>
+                                        </tr>
+                                        <div ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                            <tr>
+                                                <td>Report: {{forum.report}}
+                                                </td>
+                                                <td>Status: {{forum.status}}</td>
+                                            </tr>
+                                        </div>
+                                    </table>
+
+                                    <a ng-click="homePageCtrl.joinForum(forum.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                    <div ng-repeat="member in forum['members']">
+                                        <a ng-show="member.userId == user.id && member.role != 'ADMIN' && forum.status == 'APPROVED'" ng-click="homePageCtrl.performActionOnRequest('Cancel', member.id)"
+                                            class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                                        <a ng-show="member.userId == user.id && member.role == 'ADMIN'" ng-click="homePageCtrl.performActionOnForum('Closed', forumCtrl.forum.id)"
+                                            class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+                <div class="right-align"><a href="#!/user/forums">View All Forums <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Blogs Section Starts From Here-->
+    <div id="blogs" class="col s12">
+        <div class="row">
+            <div class="card-panel">
+                <h4 class="header nomargin">Latest Blogs</h4>
+                <div ng-show="!homePageCtrl.content.latestBlogs">
+                    No Latest Blogs Available
+                </div>
+                <div ng-hide="!homePageCtrl.content.latestBlogs">
+
+                    <div ng-repeat="blog in homePageCtrl.content.latestBlogs">
+                        <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO' ">
+
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin nopadding">
+                                        <div class="col m10">
+                                            <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
+                                        </div>
+
+                                        <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
                                 <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='OP_{{blog.blogId}}_Select'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
                                     <ul id='OP_{{blog.blogId}}_Select' class='dropdown-content'>
-                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                        <li><a href="#!/user/blog/report/{{blog.blogId}}">Report</a></li>
                                         
                                         <span ng-if="blog.userId == user.id">
                                         <li class="divider"></li>
                                         <li><a href="#!/user/blog/edit/{{blog.blogId}}">Edit</a></li>
                                     <li><a href="" ng-click="homePageCtrl.deleteBlog('Disabled', blog.blogId)">Delete</a></li>
                                         </span>
-                                            </ul>
-                                            </span>
-                                            </span>
-                                        </div>
-                                        <table class="bordered" style="font-size: 12px; color:grey;">
-                                            <tr>
-                                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                                <td>On: <span>{{blog.postDate}}</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                                    {{blog.noOfComments}}
-                                                </td>
-                                                <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
-                                            </tr>
-                                            <span ng-hide="blog.userId == user.id">
+                                        </ul>
+                                        </span>
+                                        </span>
+                                    </div>
+                                    <table class="bordered" style="font-size: 12px; color:grey;">
+                                        <tr>
+                                            <td>By <a href="">{{blog.userName}}</a></td>
+                                            <td>On: <span>{{blog.postDate}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                                {{blog.noOfComments}}
+                                            </td>
+                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
+                                        </tr>
+                                        <span ng-hide="blog.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                         <tr>
                                             <td>Status: {{blog.status}}
                                             </td>
                                             <td>Report: {{blog.report}}</td>
                                         </tr>
                                     </span>
-                                        </table>
-                                    </div>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="right-align"><a href="#!/user/blogs">View All Blogs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
                 </div>
+                <div class="right-align"><a href="#!/user/blogs">View All Blogs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
             </div>
         </div>
+    </div>
 
-        <!--Blogs Section Ends Here-->
+    <!--Blogs Section Ends Here-->
 
-        <!--Jobs Section Starts Here-->
-        <div id="jobs" class="col s12">
-            <div class="row">
-                <div class="card-panel">
-                    <h4 class="header">Latest Jobs</h4>
+    <!--Jobs Section Starts Here-->
+    <div id="jobs" class="col s12">
+        <div class="row">
+            <div class="card-panel">
+                <h4 class="header nomargin">Latest Jobs</h4>
 
-                    <div ng-show="!homePageCtrl.content.latestJobs">
-                        No Latest Jobs Available
-                    </div>
-                    <div ng-hide="!homePageCtrl.content.latestJobs">
+                <div ng-show="!homePageCtrl.content.latestJobs">
+                    No Latest Jobs Available
+                </div>
+                <div ng-hide="!homePageCtrl.content.latestJobs">
 
-                        <div class="row nomargin" ng-repeat="job in homePageCtrl.content.latestJobs">
-                            <div class="card horizontal" ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
-                                <!--<div class="card-image">
+                    <div class="row nomargin" ng-repeat="job in homePageCtrl.content.latestJobs">
+                        <div class="card horizontal" ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
+                            <!--<div class="card-image">
                                     <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                                 </div>-->
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <span class="right">
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <span class="right">
                                             <a class='dropdown-button' href='#' data-activates='jobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
 
                                             <!-- Dropdown Structure -->
@@ -177,58 +211,58 @@
                                                 <li><a href="#!/user/job/editJob/{{job.id}}">Edit</a></li>
                                                 <li><a href="" ng-click="deleteJob('Closed', job.id)">Delete</a></li>
                                             </span>
-                                        </div>
-                                        </ul>
-
-                                        </span>
-                                        <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
-                                        <p style="color: grey; font-size: 14px;">{{job.company}}</p>
                                     </div>
-                                    <table class="bordered" style="font-size: 12px; color:grey;">
-                                        <tr>
-                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                            <td> <span>On: {{job.postDate}}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
-                                                yrs
-                                            </td>
-                                            <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>&#8377; {{job.salary}} P.A.
-                                            </td>
-                                            <td>Key Skills: {{job.keySkills}}</td>
-                                        </tr>
-                                    </table>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                    </ul>
+
+                                    </span>
+                                    <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
+                                    <p style="color: grey; font-size: 14px;">{{job.company}}</p>
                                 </div>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                        <td> <span>On: {{job.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                            yrs
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#8377; {{job.salary}} P.A.
+                                        </td>
+                                        <td>Key Skills: {{job.keySkills}}</td>
+                                    </tr>
+                                </table>
+                                <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                             </div>
-                        </div><br>
-                    </div>
+                        </div>
+                    </div><br>
                 </div>
-                <div class="right-align"><a href="#!/user/jobs">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
             </div>
+            <div class="right-align"><a href="#!/user/jobs">View All Jobs <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
         </div>
     </div>
+</div>
 
-    <!--Events Section Ends Here-->
-    <div id="events" class="col s12">
-        <div class="card-panel">
-            <h4 class="header">Latest Events</h4>
-            <div ng-show="!homePageCtrl.content.latestEvents">
-                No Latest Events Available
-            </div>
-            <div ng-hide="!homePageCtrl.content.latestEvents">
-                <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
-                    <div class="card horizontal" ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <div class="row nomargin">
-                                    <span class="right">
+<!--Events Section Ends Here-->
+<div id="events" class="col s12">
+    <div class="card-panel">
+        <h4 class="header nomargin">Latest Events</h4>
+        <div ng-show="!homePageCtrl.content.latestEvents">
+            No Latest Events Available
+        </div>
+        <div ng-hide="!homePageCtrl.content.latestEvents">
+            <div class="row" ng-repeat="event in homePageCtrl.content.latestEvents">
+                <div class="card horizontal" ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
+                    <div class="card-image">
+                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                    </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <div class="row nomargin">
+                                <span class="right">
                                 <a class='dropdown-button' href='#' data-activates='eventOption_{{event.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
@@ -240,37 +274,37 @@
                                     <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
                                     <li><a href="" ng-click="eventCtrl.deleteEvent('Closed', event.id)">Delete</a></li>
                                 </span>
-                                </div>
-                                </ul>
-
-                                </span>
-                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
                             </div>
-                            <table class="bordered" style="font-size: 12px; color:grey;">
-                                <tr>
-                                    <td>By <a href="">{{event.userName}}</a></td>
-                                    <td> <span>On: {{event.postDate}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Joined: {{event.noOfApplied}}
-                                    </td>
-                                    <td>Status: {{event.eventStatus}}</td>
-                                </tr>
-                                <div ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                    <tr>
-                                        <td>Report: {{event.reported}}
-                                        </td>
-                                        <td>Status: {{event.status}}</td>
-                                    </tr>
-                                </div>
-                            </table>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                            </ul>
+
+                            </span>
+                            <p style="font-size: 18px;"><a class="black-text" href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
                         </div>
+                        <table class="bordered" style="font-size: 12px; color:grey;">
+                            <tr>
+                                <td>By <a href="">{{event.userName}}</a></td>
+                                <td> <span>On: {{event.postDate}}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Joined: {{event.noOfApplied}}
+                                </td>
+                                <td>Status: {{event.eventStatus}}</td>
+                            </tr>
+                            <div ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                <tr>
+                                    <td>Report: {{event.reported}}
+                                    </td>
+                                    <td>Status: {{event.status}}</td>
+                                </tr>
+                            </div>
+                        </table>
+                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                     </div>
                 </div>
             </div>
-            <div class="right-align"><a href="#!/user/events">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
         </div>
+        <div class="right-align"><a href="#!/user/events">View All Events <i class="material-icons" style="font-size: 18px;">trending_flat</i></a></div>
     </div>
+</div>
 </div>
 </div>

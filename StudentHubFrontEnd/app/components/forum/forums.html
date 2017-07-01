@@ -7,8 +7,6 @@
 
                         <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <span class="right"><a href = "#!/user/forum/create" class="btn light-blue waves-effect waves-light">+ Create Forum</a></span>
-
                         <a href="#!/user/forums" class="breadcrumb">Forums</a>
 
                     </div>
@@ -16,14 +14,160 @@
             </nav>
         </div>
 
+
+        <div class="card-panel nopadding">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab col s3"><a class="active" href="#forums">Forums</a></li>
+                        <li class="tab col s3"><a href="#joinedForums">Joined Forums</a></li>
+                        <li class="tab col s3"><a href="#createdForums">Created Forums</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--Forum Section Starts Here-->
+        <div id="forums">
+            <div class="card-panel row" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">Forums</strong>
+                </div>
+
+                <div class="right">
+                    <span class="right"><a href = "#!/user/forum/create" class="btn light-blue waves-effect waves-light">+ Create Forum</a></span>
+                </div>
+            </div>
+
+            <div class="card-panel">
+
+                <div class="row nomargin">
+                    <div class="col m8">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Forums</label>
+                        </div>
+                    </div>
+
+                    <div class="col m4">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                        <label>Materialize Select</label>
+                    </div>
+                </div>
+
+                <div ng-show="!pagedItems[currentPage]">
+                    <h4 class="center">No Forum(s) Available</h4>
+                </div>
+                <div ng-hide="!pagedItems[currentPage]">
+                    <div class="center">
+                        <ul class="pagination nomargin">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                    <div ng-hide="forum.status != 'APPROVED'">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='forumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='forumOption_{{forum.id}}' class='dropdown-content'>
+                                <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
+                                    <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
+                                    <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/forum/edit/{{forum.id}}">Edit</a></li>
+                                        <li><a href="" ng-click="forumCtrl.deleteForum('Closed', forum.id)">Delete</a></li>
+                                    </span>
+                                    </div>
+                                    </ul>
+
+                                    </span>
+                                    <p style="font-size: 18px;"><a href="#!/user/forum/view/{{forum.id}}" class="black-text">{{forum.forumName}}</a></p>
+                                </div>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>Created By <a href="">{{forum.userName}}</a></td>
+                                        <td>On: <span>{{forum.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">comment</i>&nbsp;{{forum.noOfTopics}}
+                                            Topics
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 14px;">group</i>&nbsp;{{forum.noOfMembers}}
+                                            Members
+                                        </td>
+                                    </tr>
+                                    <div ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <tr>
+                                            <td>Report: {{forum.report}}
+                                            </td>
+                                            <td>Status: {{forum.status}}</td>
+                                        </tr>
+                                    </div>
+                                </table>
+
+                                <a ng-click="forumCtrl.joinForum(forum.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                <div ng-repeat="member in forum['members']">
+                                    <a ng-show="member.userId == user.id && member.role != 'ADMIN' && forum.status == 'APPROVED'" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)"
+                                        class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                                    <a ng-show="member.userId == user.id && member.role == 'ADMIN'" ng-click="forumCtrl.performActionOnForum('Closed', forumCtrl.forum.id)"
+                                        class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div><br>
+                </div>
+            </div>
+
+
+
+            <div ng-hide="!pagedItems[currentPage]">
+                <div class="center">
+                    <ul class="pagination nomargin">
+                        <li ng-class="{disabled: currentPage == 0}">
+                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Forum Section Ends Here-->
+
+    <!--Joined Forum Section Starts Here-->
+    <div id="joinedForums">
         <div class="card-panel row" style="padding:10px;">
             <div class="left">
-                <strong class="black-text" style="font-size:24px;">Forums</strong>
+                <strong class="black-text" style="font-size:24px;">Joined Forums</strong>
             </div>
 
             <div class="right">
-                <a href="#!/user/event/appliedEvents" class="btn light-blue waves-effect waves-light">Joined Forums</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#!/user/event/createdEvents" class="btn light-blue waves-effect waves-light">Created Forums</a>
+                <span class="right"><a href = "#!/user/forum/create" class="btn light-blue waves-effect waves-light">+ Create Forum</a></span>
             </div>
         </div>
 
@@ -45,11 +189,11 @@
             </div>
 
             <div ng-show="!pagedItems[currentPage]">
-                <h4 class="center">No Events Or No Search Match Available</h4>
+                <h4 class="center">No Forum(s) Available</h4>
             </div>
             <div ng-hide="!pagedItems[currentPage]">
                 <div class="center">
-                    <ul class="pagination">
+                    <ul class="pagination nomargin">
                         <li ng-class="{disabled: currentPage == 0}">
                             <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
                         </li>
@@ -64,6 +208,140 @@
             </div>
 
             <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                <div ng-repeat="member in forum['members']">
+                    <div ng-show="member.userId == user.id && member.role == 'USER' && forum.status == 'APPROVED'">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='joinedForumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='joinedForumOption_{{forum.id}}' class='dropdown-content'>
+                                <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
+                                    <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
+                                    <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/forum/edit/{{forum.id}}">Edit</a></li>
+                                        <li><a href="" ng-click="forumCtrl.deleteForum('Closed', forum.id)">Delete</a></li>
+                                    </span>
+                                    </div>
+                                    </ul>
+
+                                    </span>
+                                    <p style="font-size: 18px;"><a href="#!/user/forum/view/{{forum.id}}" class="black-text">{{forum.forumName}}</a></p>
+                                </div>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>Created By <a href="">{{forum.userName}}</a></td>
+                                        <td>On: <span>{{forum.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">comment</i>&nbsp;{{forum.noOfTopics}}
+                                            Topics
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 14px;">group</i>&nbsp;{{forum.noOfMembers}}
+                                            Members
+                                        </td>
+                                    </tr>
+                                    <div ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <tr>
+                                            <td>Report: {{forum.report}}
+                                            </td>
+                                            <td>Status: {{forum.status}}</td>
+                                        </tr>
+                                    </div>
+                                </table>
+
+                                <a ng-click="forumCtrl.joinForum(forum.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+
+                                <a ng-show="member.userId == user.id && member.role != 'ADMIN' && forum.status == 'APPROVED'" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)"
+                                    class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                                <a ng-show="member.userId == user.id && member.role == 'ADMIN'" ng-click="forumCtrl.performActionOnForum('Closed', forumCtrl.forum.id)"
+                                    class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
+                            </div>
+                        </div>
+                    </div><br>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div ng-hide="!pagedItems[currentPage]">
+            <div class="center">
+                <ul class="pagination nomargin">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Joined Forum Section Ends Here-->
+
+<!--Created Forum Section Starts Here-->
+<div id="createdForums">
+    <div class="card-panel row" style="padding:10px;">
+        <div class="left">
+            <strong class="black-text" style="font-size:24px;">Created Forums</strong>
+        </div>
+
+        <div class="right">
+            <span class="right"><a href = "#!/user/forum/create" class="btn light-blue waves-effect waves-light">+ Create Forum</a></span>
+        </div>
+    </div>
+
+    <div class="card-panel">
+
+        <div class="row nomargin">
+            <div class="col m8">
+                <div class="input-field nomargin">
+                    <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                    <label for="searchKeyword">Search For Forums</label>
+                </div>
+            </div>
+
+            <div class="col m4">
+                <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                <label>Materialize Select</label>
+            </div>
+        </div>
+
+        <div ng-show="!pagedItems[currentPage]">
+            <h4 class="center">No Forum(s) Available</h4>
+        </div>
+        <div ng-hide="!pagedItems[currentPage]">
+            <div class="center">
+                <ul class="pagination nomargin">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+            <div ng-show="forum.userId == user.id">
                 <div class="card horizontal">
                     <div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -112,30 +390,39 @@
 
                         <a ng-click="forumCtrl.joinForum(forum.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
                         <div ng-repeat="member in forum['members']">
-                            <a ng-show="member.userId == user.id" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            <a ng-show="member.userId == user.id && member.role != 'ADMIN' && forum.status == 'APPROVED'" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)"
+                                class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            <a ng-show="member.userId == user.id && member.role == 'ADMIN'" ng-click="forumCtrl.performActionOnForum('Closed', forumCtrl.forum.id)"
+                                class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
                         </div>
                     </div>
                 </div>
             </div><br>
         </div>
+    </div>
 
 
 
-        <div ng-hide="!pagedItems[currentPage]">
-            <div class="center">
-                <ul class="pagination">
-                    <li ng-class="{disabled: currentPage == 0}">
-                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                    </li>
-                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                        <a href="javascript:;" ng-bind="n + 1">1</a>
-                    </li>
-                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                    </li>
-                </ul>
-            </div>
+    <div ng-hide="!pagedItems[currentPage]">
+        <div class="center">
+            <ul class="pagination nomargin">
+                <li ng-class="{disabled: currentPage == 0}">
+                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                </li>
+                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                </li>
+                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
+</div>
+<!--Created Forum Section Ends Here-->
+
+
 </div>
 </div>

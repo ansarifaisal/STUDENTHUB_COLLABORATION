@@ -12,8 +12,8 @@ BlogModule.factory('BlogFactory', [
             createEditBlog: createEditBlog,
             deleteBlog: deleteBlog,
             getBlog: getBlog,
-            getMyBlogs: getMyBlogs,
             likeBlog: likeBlog,
+            disLikeBlog: disLikeBlog,
             blogReport: blogReport,
             getComments: getComments,
             getComment: getComment,
@@ -95,6 +95,21 @@ BlogModule.factory('BlogFactory', [
             return deferred.promise;
         }
 
+        //function to dislike blog
+
+        function disLikeBlog(id) {
+            var deferred = $q.defer();
+            $http.get(REST_API_URI + "blog/dislike/" + id).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log("Error Fetching Your Blogs");
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
         //function to report blog
         function blogReport(report) {
             var deferred = $q.defer();
@@ -117,20 +132,6 @@ BlogModule.factory('BlogFactory', [
             },
                 function (errorResponse) {
                     console.log("Error Reporting Blog");
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
-        }
-
-        //get all my blog
-        function getMyBlogs(id) {
-            var deferred = $q.defer();
-            $http.get(REST_API_URI + "blog/myblog/" + id).then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log("Error Fetching Your Blogs");
                     deferred.reject(errorResponse);
                 }
             );

@@ -6,7 +6,7 @@ import com.studenthub.entity.BlogLikes;
 
 public interface BlogLikesDAO {
 
-	BlogLikes getBlogLikes(int id, int userId);
+	BlogLikes getBlogLikes(int id);
 
 	List<BlogLikes> list(int id);
 

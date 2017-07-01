@@ -17,7 +17,6 @@ import com.studenthub.dao.TopicCommentDAO;
 import com.studenthub.dao.TopicDAO;
 import com.studenthub.dao.TopicLikesDAO;
 import com.studenthub.entity.Forum;
-import com.studenthub.entity.ForumComment;
 import com.studenthub.entity.Report;
 import com.studenthub.entity.Topic;
 import com.studenthub.entity.TopicComment;
@@ -226,31 +225,88 @@ public class TopicController {
 	}
 
 	// <!---------------------------Create Edit Comment-----------------------!>
-	
+
 	@RequestMapping(value = "/forum/topic/comment/createEditComment", method = RequestMethod.POST)
 	public ResponseEntity<TopicComment> createEditComment(@RequestBody TopicComment topicComment) {
 		if (topicComment != null) {
 			if (topicComment.getId() == 0) {
-				topicCommentDAO.addTopicComment(topicComment);
-				return new ResponseEntity<TopicComment>(HttpStatus.OK);
+				boolean flag = topicCommentDAO.addTopicComment(topicComment);
+				topic = topicComment.getTopic();
+				if (flag != false) {
+					int noOfComments = topicCommentDAO.topicComments(topic.getId()).size();
+					topic.setNoOfComments(noOfComments);
+					topicDAO.updateTopic(topic);
+					return new ResponseEntity<TopicComment>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
+				}
+
 			} else {
-				TopicComment tempTopicComment = topicCommentDAO.getTopicComment(topicComment.getId());
-				topic = tempTopicComment.getTopic();
-				topicComment.setTopic(topic);
 				topicCommentDAO.updateTopicComment(topicComment);
-				return new ResponseEntity<TopicComment>(topicComment, HttpStatus.OK);
+				return new ResponseEntity<TopicComment>(HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
 		}
 	}
 
-	// <!--------------------------Get Forum Comment ------------------------!>
+	// <!--------------------------Get Topic Comments ------------------------!>
 
+	@RequestMapping(value = "/forum/topic/comments/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<TopicComment>> getTopicComments(@PathVariable("id") int id) {
+		List<TopicComment> topicComments = topicCommentDAO.topicComments(id);
+		if (topicComment != null) {
+			return new ResponseEntity<List<TopicComment>>(topicComments, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<TopicComment>>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!--------------------Get Topic Comment-------------------------------!>
+	@RequestMapping(value = "/forum/topic/comment/{id}", method = RequestMethod.GET)
 	public ResponseEntity<TopicComment> getTopicComment(@PathVariable("id") int id) {
 		topicComment = topicCommentDAO.getTopicComment(id);
 		if (topicComment != null) {
 			return new ResponseEntity<TopicComment>(topicComment, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-------------------------Report Topic Comment------------------------!>
+	@RequestMapping(value = "/forum/topic/comment/report", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportTopicComment(@RequestBody Report report) {
+		topicComment = topicCommentDAO.getTopicComment(report.getCommentId());
+
+		if (topicComment != null) {
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				topicComment.setReport("YES");
+				topicCommentDAO.updateTopicComment(topicComment);
+				return new ResponseEntity<Report>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-----------------------Delete Topic Comment-----------------------!>
+	@RequestMapping(value = "/forum/topic/comment/delete/{id}", method = RequestMethod.GET)
+	public ResponseEntity<TopicComment> deleteTopicComment(@PathVariable("id") int id) {
+		topicComment = topicCommentDAO.getTopicComment(id);
+		topic = topicComment.getTopic();
+		if (topicComment != null) {
+			boolean flag = topicCommentDAO.deleteTopicComment(topicComment);
+			if (flag != false) {
+				int noOfComments = topicCommentDAO.topicComments(topic.getId()).size();
+				topic.setNoOfComments(noOfComments);
+				topicDAO.updateTopic(topic);
+				return new ResponseEntity<TopicComment>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
+			}
 		} else {
 			return new ResponseEntity<TopicComment>(HttpStatus.NO_CONTENT);
 		}

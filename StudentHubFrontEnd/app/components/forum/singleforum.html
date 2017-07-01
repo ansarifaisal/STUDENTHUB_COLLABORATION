@@ -17,8 +17,6 @@
                 </div>
             </nav>
         </div>
-
-
         <div class="card">
             <div class="card-image">
                 <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
@@ -30,7 +28,7 @@
                 <i class="material-icons" style="font-size: 14px;">chat_bubble_outline</i> {{forumCtrl.topic.noOfComments}}
                 Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <i class="material-icons" style="font-size: 16px;">thumb_up</i>{{forumCtrl.topic.noOfLikes}}
-                <span ng-hide = "forumCtrl.topic.status != 'OPEN' || forumCtrl.topic.report == 'YES'">
+                <span ng-hide="forumCtrl.topic.status != 'OPEN' || forumCtrl.topic.report == 'YES'">
                     <a href="" ng-show="forumCtrl.topic.likes.length == 0" ng-click="forumCtrl.likeTopic();">Like</a>
 
                     <span ng-repeat="like in forumCtrl.topic.likes">
@@ -43,20 +41,20 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"> <strong>This Topic Is Reported</strong></span>
                 </span>
                 <span ng-show="forumCtrl.topic.status == 'PENDING'">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"> <strong>This Topic Is In Pending State, It Will Be Visible After Our Admin Approval</strong></span>
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"> <strong>This Topic Is In Pending State, It Will Be Visible After Our Admin Approval</strong></span>
                 </span>
                 <span ng-show="forumCtrl.topic.status == 'CLOSED'">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="red-text"><strong>This Topic Is Closed</strong></span>
                 </span>
 
-                <span class="right" ng-hide = "forumCtrl.topic.status != 'OPEN' || forumCtrl.topic.report == 'YES'"> 
+                <span class="right" ng-hide="forumCtrl.topic.status != 'OPEN' || forumCtrl.topic.report == 'YES'"> 
                                 <!-- Dropdown Trigger -->
                      <a class='dropdown-button' href='#' data-activates='{{forumCtrl.topic.id}}'><i class="material-icons">more_vert</i></a>
                                 <!-- Dropdown Structure -->
                         <ul id='{{forumCtrl.topic.id}}' class='dropdown-content'>
                             <li><a href = "#!/user/forum/topic/report/{{forumCtrl.topic.id}}">Report</a></li>
                             
-                            <span ng-if="forumCtrl.topic.userId == user.id">
+                            <span ng-if="forumCtrl.topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                             <li class="divider"></li>
                             <li><a href="#!/user/forum/topic/edit/{{forumCtrl.topic.id}}">Edit</a></li>
                             <li><a href="" ng-click="forumCtrl.performActionOnTopic('Closed', forumCtrl.topic.id);">Delete</a></li>
@@ -97,55 +95,80 @@
 
                     </form>
                 </div>
-
-
-                <div class="center">
-                    <ul class="pagination nomargin">
-                        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                        <li class="active"><a href="#!">1</a></li>
-                        <li class="waves-effect"><a href="#!">2</a></li>
-                        <li class="waves-effect"><a href="#!">3</a></li>
-                        <li class="waves-effect"><a href="#!">4</a></li>
-                        <li class="waves-effect"><a href="#!">5</a></li>
-                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                    </ul>
-                </div>
-
-                <div class="card-panel">
-
-                    <div class="row nopadding nomargin">
-                        <div class=" col m0">
-                            <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                <div class="row nomargin nopadding">
+                    <div ng-show="!pagedItems[currentPage]">
+                        <h4 class="center">There Are No Comment(s) Yet</h4>
+                    </div>
+                    <div ng-hide="!pagedItems[currentPage]">
+                        <div class="center col offset-m4 m3 ">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
                         </div>
-                        <a href="">{{user.firstName}} {{user.lastName}}</a> slkfkhdlkfdlkjfldsjfdslkfkjsdl <span class="right">
+
+                        <div class="col m4 offset-m1">
+                            <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                                </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="comment in pagedItems[currentPage]">
+                    <div class="card-panel">
+
+                        <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                            <div class=" col m0">
+                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                            </div>
+                            <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.topicComment}}</span>
+                            <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.topicComment}}</span>
+                            <span class="right">
+                            <span ng-show="comment.report =='YES'"><i class="material-icons"><a href = "" class="red-text">report_problem</a></i></span>
+                            </span>
+                            <span class="right" ng-hide="comment.report == 'YES'">
                                <!-- Dropdown Trigger -->
-                               <a class='dropdown-button' href='#' data-activates='op'><i class="material-icons">more_vert</i></a>
+                               <a class='dropdown-button' href='#!' data-activates='{{comment.id}}_TEST'><i class="material-icons">more_vert</i></a>
 
                                 <!-- Dropdown Structure -->
-                                <ul id='op' class='dropdown-content'>
-                                    <li><a href="#!">Report</a></li>
+                                <ul id='{{comment.id}}_TEST' class='dropdown-content'>
+                                    <li><a href="#!/user/forum/topic/comment/report/{{comment.id}}">Report</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#!">Edit</a></li>
-                                    <li><a href="#!">Delete</a></li>
+                                    <li><a href="#!/user/forum/topic/comment/edit/{{comment.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="forumCtrl.deleteTopicComment(comment.id)">Delete</a></li>
                                 </ul>
                             </span><br/>
-                        <span class="grey-text" style="font-size: 12px;">3 month(s) ago</span>
+                            <span class="grey-text" style="font-size: 12px;">{{comment.commentDate}}</span>
+                        </div>
+                        <div ng-show="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                            <h6 class="center red-text">This Comment Is Reported</h6>
+                        </div>
                     </div>
-
                 </div>
-
-                <div class="center">
-                    <ul class="pagination nomargin">
-                        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                        <li class="active"><a href="#!">1</a></li>
-                        <li class="waves-effect"><a href="#!">2</a></li>
-                        <li class="waves-effect"><a href="#!">3</a></li>
-                        <li class="waves-effect"><a href="#!">4</a></li>
-                        <li class="waves-effect"><a href="#!">5</a></li>
-                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                    </ul>
+                <div ng-hide="!pagedItems[currentPage]">
+                    <div class="row nomargin nopadding">
+                        <div class="center col offset-m4 m3 ">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>

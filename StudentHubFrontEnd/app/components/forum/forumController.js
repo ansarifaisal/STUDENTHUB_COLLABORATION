@@ -13,7 +13,7 @@ ForumModule.controller('ForumController', [
         $timeout(function () {
             //this method is declared in the myScript file to this is use to instantiate the methods
             settings();
-        }, 100);
+        }, 200);
 
         var me = this;
 
@@ -55,8 +55,6 @@ ForumModule.controller('ForumController', [
             userName: '',
             imageURL: '',
             forum: '',
-            forumId: null,
-            forumName: '',
             requestDate: '',
             role: '',
             status: ''
@@ -133,6 +131,21 @@ ForumModule.controller('ForumController', [
             noOfLikes: null,
             report: '',
         }
+
+        me.topicComment = {};
+
+        me.reportTopicComment = {
+            id: null,
+            userName: '',
+            userId: '',
+            title: '',
+            typeOfReport: '',
+            dateTime: '',
+            details: '',
+            reportId: null,
+            commentId: '',
+            status: ''
+        };
 
         //function to fetch all forums
 
@@ -248,7 +261,6 @@ ForumModule.controller('ForumController', [
             me.newForum.status = 'PENDING';
 
             ForumFactory.createForum(me.newForum).then(function (forum) {
-                console.log(forum);
                 me.forumMember.userId = user.id;
                 me.forumMember.userName = user.userName;
                 me.forumMember.forum = forum;
@@ -258,7 +270,6 @@ ForumModule.controller('ForumController', [
                 me.forumMember.role = 'ADMIN';
                 me.forumMember.status = 'APPROVED';
                 ForumFactory.joinForum(me.forumMember).then(function () {
-                    console.log(me.forumMember);
                     $location.path('/user/forums');
                     Materialize.toast('<strong>Forum Created Successfully!</strong>', 6000);
                 },
@@ -539,94 +550,100 @@ ForumModule.controller('ForumController', [
         //function to sort comments
 
         me.getComments = function () {
+            var forumID = $routeParams.id;
+            ForumFactory.getForumComments(forumID).then(function (comments) {
 
-            var comments = me.forum.comments;
+                var sortingOrder = 'id'; //default sort
 
-            var sortingOrder = 'id'; //default sort
-
-            $scope.sortingOrder = sortingOrder;
-            $scope.pageSizes = [5, 10, 25, 50];
-            $scope.reverse = true;
-            $scope.filteredItems = [];
-            $scope.groupedItems = [];
-            $scope.itemsPerPage = 10;
-            $scope.pagedItems = [];
-            $scope.currentPage = 0;
-            $scope.items = comments;
-
-            var searchMatch = function (haystack, needle) {
-                if (!needle) {
-
-                    return true;
-                }
-                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-            };
-
-            // init the filtered items
-            $scope.search = function () {
-                $scope.filteredItems = $filter('filter')($scope.items, function (item) {
-                    for (var attr in item) {
-                        if (searchMatch(item['userName'], $scope.query))
-                            return true;
-                    }
-                    return false;
-                });
-
-                //take care of the sorting order
-                if ($scope.sortingOrder !== '') {
-                    $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
-                }
-
-                $scope.currentPage = 0;
-                // now group by pages
-                $scope.groupToPages();
-            };
-
-            // show items per page
-            $scope.perPage = function () {
-                $scope.groupToPages();
-            };
-
-            // calculate page in place
-            $scope.groupToPages = function () {
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = true;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 10;
                 $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = comments;
 
-                for (var i = 0; i < $scope.filteredItems.length; i++) {
-                    if (i % $scope.itemsPerPage === 0) {
-                        $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
-                    } else {
-                        $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                var searchMatch = function (haystack, needle) {
+                    if (!needle) {
+
+                        return true;
                     }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['userName'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+            },
+                function (errorResponse) {
+
                 }
-            };
+            );
 
-            $scope.prevPage = function () {
-                if ($scope.currentPage > 0) {
-                    $scope.currentPage--;
-                }
-            };
-
-            $scope.nextPage = function () {
-                if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                    $scope.currentPage++;
-                }
-            };
-
-            $scope.setPage = function () {
-                $scope.currentPage = this.n;
-            };
-
-            // functions have been describe process the data for display
-            $scope.search();
-
-
-            // change sorting order
-            $scope.sort_by = function (newSortingOrder) {
-                if ($scope.sortingOrder == newSortingOrder)
-                    $scope.reverse = !$scope.reverse;
-
-                $scope.sortingOrder = newSortingOrder;
-            };
 
         }
 
@@ -646,7 +663,7 @@ ForumModule.controller('ForumController', [
         //function to edit comment
         me.editComment = function () {
             ForumFactory.createForumComment(me.forumComment).then(function (comment) {
-                $location.path('/user/forums');
+                $location.path('/user/forum/view/' + me.forumComment.forum.id);
                 Materialize.toast('Comment Edited Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -839,6 +856,7 @@ ForumModule.controller('ForumController', [
             var topicId = $routeParams.id;
             ForumFactory.getTopic(topicId).then(function (topic) {
                 me.topic = topic;
+                me.getTopicComments();
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Topic', 6000);
@@ -846,6 +864,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //function to report the topic
         me.topicReport = function () {
             me.reportTopic.typeOfReport = 'TOPIC';
             me.reportTopic.userName = user.userName;
@@ -867,6 +886,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //function to edit the topic
         me.editTopic = function () {
 
             ForumFactory.createEditTopic(me.topic).then(function () {
@@ -880,6 +900,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //function to like the topic
         me.likeTopic = function () {
             me.topicLikes.topic = me.topic;
             me.topicLikes.userId = user.id;
@@ -897,6 +918,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        // function to dislike the topic
         me.disLikeTopic = function (id) {
             ForumFactory.disLikeTopic(id).then(function () {
                 $route.reload();
@@ -908,7 +930,8 @@ ForumModule.controller('ForumController', [
             );
         }
 
-        me.createTopicComment = function (){
+        //function to create topic comment
+        me.createTopicComment = function () {
 
             me.newTopicComment.topic = me.topic;
             me.newTopicComment.userId = user.id;
@@ -920,6 +943,169 @@ ForumModule.controller('ForumController', [
 
             console.log(me.newTopicComment);
 
+            ForumFactory.createTopicComment(me.newTopicComment).then(function () {
+                $route.reload();
+                Materialize.toast('Comment Posted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Posting Comment', 6000);
+                });
+
+        }
+
+        //function to get topic comments
+        me.getTopicComments = function () {
+            var topicId = $routeParams.id;
+            ForumFactory.fetchTopicComments(topicId).then(function (topicComments) {
+
+                var sortingOrder = 'id'; //default sort
+
+                $scope.sortingOrder = sortingOrder;
+                $scope.pageSizes = [5, 10, 25, 50];
+                $scope.reverse = true;
+                $scope.filteredItems = [];
+                $scope.groupedItems = [];
+                $scope.itemsPerPage = 5;
+                $scope.pagedItems = [];
+                $scope.currentPage = 0;
+                $scope.items = topicComments;
+
+                var searchMatch = function (haystack, needle) {
+                    if (!needle) {
+
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search = function () {
+                    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch(item['forumName'], $scope.query))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder !== '') {
+                        $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+                    }
+
+                    $scope.currentPage = 0;
+                    // now group by pages
+                    $scope.groupToPages();
+                };
+
+                // show items per page
+                $scope.perPage = function () {
+                    $scope.groupToPages();
+                };
+
+                // calculate page in place
+                $scope.groupToPages = function () {
+                    $scope.pagedItems = [];
+
+                    for (var i = 0; i < $scope.filteredItems.length; i++) {
+                        if (i % $scope.itemsPerPage === 0) {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                        } else {
+                            $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                $scope.setPage = function () {
+                    $scope.currentPage = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search();
+
+
+                // change sorting order
+                $scope.sort_by = function (newSortingOrder) {
+                    if ($scope.sortingOrder == newSortingOrder)
+                        $scope.reverse = !$scope.reverse;
+
+                    $scope.sortingOrder = newSortingOrder;
+                };
+
+
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Comments', 6000);
+                }
+            );
+        }
+
+        //function to get topic comment
+        me.getTopicComment = function () {
+            var commentID = $routeParams.id;
+            ForumFactory.getTopicComment(commentID).then(function (topicComment) {
+                me.topicComment = topicComment;
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Comment', 6000);
+                }
+            );
+        }
+
+        me.topicCommentReport = function () {
+            me.reportTopicComment.userName = user.userName;
+            me.reportTopicComment.userId = user.id;
+            me.reportTopicComment.title = me.topicComment.topicComment;
+            me.reportTopicComment.typeOfReport = "TOPIC COMMENT";
+            var now = new Date();
+            me.reportTopicComment.dateTime = dateTimeFormat(now);
+            me.reportTopicComment.reportId = me.topicComment.topic.id;
+            var commentID = $routeParams.id;
+            me.reportTopicComment.commentId = commentID;
+            me.reportTopicComment.status = "UNREAD";
+
+            ForumFactory.reportTopicComment(me.reportTopicComment).then(function () {
+                $location.path('/user/forum/topic/view/' + me.reportTopicComment.reportId);
+                Materialize.toast('Topic Reported Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Reporting Comment', 6000);
+                }
+            );
+
+        }
+
+        me.editTopicComment = function () {
+            ForumFactory.editTopicComment(me.topicComment).then(function () {
+                $location.path('/user/forum/topic/view/' + me.topicComment.topic.id);
+                Materialize.toast('Comment Editing Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Editing Comment', 6000);
+                }
+            );
+        }
+
+        me.deleteTopicComment = function (id) {
+            ForumFactory.deleteTopicComment(id).then(function () {
+                $route.reload();
+                Materialize.toast('Comment Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Comment', 6000);
+                });
         }
     }
 ]);

@@ -90,89 +90,109 @@
 
                     <div class="col m5">
                         <div class="card-panel">
+                            <div class="row nomargin nopadding">
+                                <div class="col m10" style="padding:0px;">
+                                    <span class="grey-text" style="font-size: 12px;">Name</span><br>
+                                    <div class="truncate">{{forumCtrl.forum.forumName}}</div>
+                                </div>
+                                <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='forumOption_{{forumCtrl.forum.id}}'><i class="material-icons">more_vert</i></a>
 
-                            <span class="grey-text" style="font-size: 12px;">Name</span><br>
-                            <div class="truncate">{{forumCtrl.forum.forumName}}</div>
+                                <!-- Dropdown Structure -->
+                            <ul id='forumOption_{{forumCtrl.forum.id}}' class='dropdown-content'>
+                                <div ng-hide="forumCtrl.forum.report != 'NO' || forumCtrl.forum.status != 'APPROVED'">
+                                    <li><a href="#!/user/forum/report/{{forumCtrl.forum.id}}">Report</a></li>
+                                    <span ng-show="forumCtrl.forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <li class="divider"></li>
+                                        <li><a href="#!/user/forum/edit/{{forumCtrl.forum.id}}">Edit</a></li>
+                                        <li><a href="" ng-click="forumCtrl.deleteForum('Closed', forumCtrl.forum.id)">Delete</a></li>
+                                    </span>
+                            </div>
+                            </ul>
 
-                            <span class="grey-text" style="font-size: 12px;">Created On:</span><br>
-                            <div class="truncate">{{forumCtrl.forum.createdDate}}</div>
-
-                            <span class="grey-text" style="font-size: 12px;">Status</span><br>
-                            <div class="truncate">{{forumCtrl.forum.status}}</div>
-
-                            <span class="grey-text" style="font-size: 12px;">Description</span><br>
-                            <div class="truncate">{{forumCtrl.forum.forumDescription}} </div>
-                            <a href="" style="font-size: 14px;" class="right">See More</a>
+                            </span>
                         </div>
+                        <span class="grey-text" style="font-size: 12px;">Created By:</span><br>
+                        <div class="truncate">{{forumCtrl.forum.userName}}</div>
+                        <span class="grey-text" style="font-size: 12px;">Created On:</span><br>
+                        <div class="truncate">{{forumCtrl.forum.createdDate}}</div>
+
+                        <span class="grey-text" style="font-size: 12px;">Status</span><br>
+                        <div class="truncate">{{forumCtrl.forum.status}}</div>
+
+                        <span class="grey-text" style="font-size: 12px;">Description</span><br>
+                        <div class="truncate">{{forumCtrl.forum.forumDescription}} </div>
+                        <a href="" style="font-size: 14px;" class="right">See More</a>
                     </div>
                 </div>
             </div>
-            <div ng-show="forumCtrl.forum.status == 'PENDING'">
-                <h5 class="red-text center"> Your Forum Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
-            </div>
-            <div ng-show="forumCtrl.forum.status == 'CLOSED'">
-                <h5 class="red-text center"> Your Forum Is Closed</h5>
-            </div>
         </div>
-        <!--Details Section Ends here-->
+        <div ng-show="forumCtrl.forum.status == 'PENDING'">
+            <h5 class="red-text center"> Your Forum Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
+        </div>
+        <div ng-show="forumCtrl.forum.status == 'CLOSED'">
+            <h5 class="red-text center"> Your Forum Is Closed</h5>
+        </div>
+    </div>
+    <!--Details Section Ends here-->
 
-        <!--Discussion Section Starts here-->
-        <div id="discussion" class="col s12">
+    <!--Discussion Section Starts here-->
+    <div id="discussion" class="col s12">
 
-            <div class="row">
-                <div class="card-panel">
-                    <div class="card-panel row">
-                        <form ng-submit="forumCtrl.createForumComment()" class="col s12" name="comments">
-                            <div class="row nomargin">
-                                <div class="input-field col s12">
-                                    <textarea id="discussion" ng-model="forumCtrl.newForumComment.comment" class="materialize-textarea nopadding nomargin" minimum="2"
-                                        ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" maxlength="500" data-length="500" placeholder="Write Something..."
-                                        style="margin-bottom:0px;"></textarea>
-                                </div>
-                            </div>
-                            <input type="submit" ng-disabled="comments.$invalid" class="btn waves-effect waves-light" value="Post">
-                        </form>
-                    </div>
-
-                    <div ng-show="!pagedItems[currentPage]">
-                        <h4 class="center">There Are No Comments</h4>
-                    </div>
-                    <div ng-hide="!pagedItems[currentPage]">
-                        <div class="row">
-                            <div class="center col offset-m4 m3">
-                                <ul class="pagination">
-                                    <li ng-class="{disabled: currentPage == 0}">
-                                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                                    </li>
-                                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                        <a href="javascript:;" ng-bind="n + 1">1</a>
-                                    </li>
-                                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col m4 offset-m1">
-                                <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
-                                </select>
-                                <label>Materialize Select</label>
+        <div class="row">
+            <div class="card-panel">
+                <div class="card-panel row">
+                    <form ng-submit="forumCtrl.createForumComment()" class="col s12" name="comments">
+                        <div class="row nomargin">
+                            <div class="input-field col s12">
+                                <textarea id="discussion" ng-model="forumCtrl.newForumComment.comment" class="materialize-textarea nopadding nomargin" minimum="2"
+                                    ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" maxlength="500" data-length="500" placeholder="Write Something..."
+                                    style="margin-bottom:0px;"></textarea>
                             </div>
                         </div>
-                    </div>
-                    <div ng-repeat="comment in pagedItems[currentPage]">
+                        <input type="submit" ng-disabled="comments.$invalid" class="btn waves-effect waves-light" value="Post">
+                    </form>
+                </div>
 
-                        <div class="card-panel">
-                            <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
-                                </div>
-                                <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.comment}}</span>
-                                <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.comment}}</span>
-                                <span class="right">
+                <div ng-show="!pagedItems[currentPage]">
+                    <h4 class="center">There Are No Comments</h4>
+                </div>
+                <div ng-hide="!pagedItems[currentPage]">
+                    <div class="row">
+                        <div class="center col offset-m4 m3">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col m4 offset-m1">
+                            <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                                </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="comment in pagedItems[currentPage]">
+
+                    <div class="card-panel">
+                        <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                            <div class=" col m0">
+                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                            </div>
+                            <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.comment}}</span>
+                            <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.comment}}</span>
+                            <span class="right">
                                     <span ng-show="comment.report =='YES'"><i class="material-icons"><a href = "" class="red-text">report_problem</a></i></span>
-                                </span>
-                                <span class="right" ng-hide="comment.report == 'YES'">
+                            </span>
+                            <span class="right" ng-hide="comment.report == 'YES'">
                                 <a class='dropdown-button' href='#' data-activates='commentOption_{{comment.id}}'><i class="material-icons">more_vert</i></a>
 
                                 <!-- Dropdown Structure -->
@@ -187,100 +207,100 @@
                                 </ul>
                                 </span>
 
-                                <br/>
-                                <span class="grey-text" style="font-size: 12px;">{{comment.commentDate}}</span>
-                            </div>
-
-                            <div ng-show="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
-                                <h6 class="center red-text">This Comment Is Reported</h6>
-                            </div>
-
+                            <br/>
+                            <span class="grey-text" style="font-size: 12px;">{{comment.commentDate}}</span>
                         </div>
-                    </div>
-                    <div ng-hide="!pagedItems[currentPage]">
-                        <div class="center">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
+                        <div ng-show="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
+                            <h6 class="center red-text">This Comment Is Reported</h6>
+                        </div>
+
+                    </div>
                 </div>
+                <div ng-hide="!pagedItems[currentPage]">
+                    <div class="center">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </div>
 
-        <!--Discussion Section Ends here-->
+    <!--Discussion Section Ends here-->
 
-        <!--Topics Section Starts here-->
-        <div id="topics" class="col s12">
-            <div class="card-panel row nomargin" style="padding:10px;">
-                <div class="left">
-                    <strong class="black-text" style="font-size:24px;">Topics</strong>
-                </div>
-
-                <div class="right"><a data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Topic</a></div>
+    <!--Topics Section Starts here-->
+    <div id="topics" class="col s12">
+        <div class="card-panel row nomargin" style="padding:10px;">
+            <div class="left">
+                <strong class="black-text" style="font-size:24px;">Topics</strong>
             </div>
 
-            <div class="card-panel">
+            <div class="right"><a data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Topic</a></div>
+        </div>
 
-                <div class="row nomargin">
-                    <div class="col m8">
-                        <div class="input-field nomargin">
-                            <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
-                            <label for="searchKeyword">Search For Topic</label>
-                        </div>
+        <div class="card-panel">
+
+            <div class="row nomargin">
+                <div class="col m8">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
+                        <label for="searchKeyword">Search For Topic</label>
                     </div>
+                </div>
 
-                    <div class="col m4">
-                        <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
+                <div class="col m4">
+                    <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
                     </select>
-                        <label>Materialize Select</label>
+                    <label>Materialize Select</label>
+                </div>
+            </div>
+
+            <div ng-show="!pagedTopics[topicPage]">
+                <h4 class="center">There Are Topic(s) Yet</h4>
+            </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <div ng-show="!pagedTopics[topicPage]">
-                    <h4 class="center">There Are Topic(s) Yet</h4>
-                </div>
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
+            <div ng-repeat="topic in pagedTopics[topicPage]">
+                <div ng-hide="topic.status != 'OPEN'">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div>
+                        <div class="card-stacked">
+                            <div class="card-content">
 
-                <div ng-repeat="topic in pagedTopics[topicPage]">
-                    <div ng-hide="topic.status != 'OPEN'">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-
-                                    <div class="row nomargin">
-                                        <div class="col m10">
-                                            <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
-                                        </div>
-                                        <span class="right">
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
+                                    </div>
+                                    <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='TOP_{{topic.id}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
@@ -293,115 +313,115 @@
                                         </div>
                                         </ul>
                                         </span>
-                                    </div>
-
-                                    <table class="bordered" style="font-size: 12px; color:grey;">
-                                        <tr>
-                                            <td>By <a href="">{{topic.userName}}</a></td>
-                                            <td> <span>{{topic.createdDate}}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                                {{topic.noOfComments}}
-                                            </td>
-                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
-                                        </tr>
-                                        <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                            <td>Report: {{topic.report}}
-                                            </td>
-                                            <td>Status: {{topic.status}}</td>
-                                        </tr>
-                                    </table>
                                 </div>
+
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{topic.userName}}</a></td>
+                                        <td> <span>{{topic.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{topic.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
+                                    </tr>
+                                    <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <td>Report: {{topic.report}}
+                                        </td>
+                                        <td>Status: {{topic.status}}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-        <!--Topics Section Ends here-->
+    </div>
+    <!--Topics Section Ends here-->
 
 
-        <!--My Topics Section Starts here-->
-        <div id="myTopics" class="col s12">
-            <div class="card-panel row nomargin" style="padding:10px;">
-                <div class="left">
-                    <strong class="black-text" style="font-size:24px;">My Topics</strong>
-                </div>
-
-                <div class="right"><a data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Topic</a></div>
+    <!--My Topics Section Starts here-->
+    <div id="myTopics" class="col s12">
+        <div class="card-panel row nomargin" style="padding:10px;">
+            <div class="left">
+                <strong class="black-text" style="font-size:24px;">My Topics</strong>
             </div>
 
-            <div class="card-panel">
+            <div class="right"><a data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Topic</a></div>
+        </div>
 
-                <div class="row nomargin">
-                    <div class="col m8">
-                        <div class="input-field nomargin">
-                            <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
-                            <label for="searchKeyword">Search For Topic</label>
-                        </div>
+        <div class="card-panel">
+
+            <div class="row nomargin">
+                <div class="col m8">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
+                        <label for="searchKeyword">Search For Topic</label>
                     </div>
+                </div>
 
-                    <div class="col m4">
-                        <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
+                <div class="col m4">
+                    <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
                     </select>
-                        <label>Materialize Select</label>
+                    <label>Materialize Select</label>
+                </div>
+            </div>
+
+            <div ng-show="!pagedTopics[topicPage]">
+                <h4 class="center">There Are Topic(s) Yet</h4>
+            </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <div ng-show="!pagedTopics[topicPage]">
-                    <h4 class="center">There Are Topic(s) Yet</h4>
-                </div>
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
+            <div ng-repeat="topic in pagedTopics[topicPage]">
+                <div ng-show="topic.userId == user.id">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div>
-
-                <div ng-repeat="topic in pagedTopics[topicPage]">
-                    <div ng-show="topic.userId == user.id">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-                                    <div class="row nomargin">
-                                        <div class="col m10">
-                                            <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
-                                        </div>
-                                        <span class="right">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
+                                    </div>
+                                    <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='MOP_{{topic.id}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
@@ -414,119 +434,119 @@
                                         </div>
                                         </ul>
                                         </span>
-                                    </div>
-
-                                    <table class="bordered" style="font-size: 12px; color:grey;">
-                                        <tr>
-                                            <td>By <a href="">{{topic.userName}}</a></td>
-                                            <td> <span>{{topic.createdDate}}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                                {{topic.noOfComments}}
-                                            </td>
-                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
-                                        </tr>
-                                        <div>
-                                            <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                                <td>Report: {{topic.report}}
-                                                </td>
-                                                <td>Status: {{topic.status}}</td>
-                                            </tr>
-                                        </div>
-                                    </table>
                                 </div>
+
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{topic.userName}}</a></td>
+                                        <td> <span>{{topic.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{topic.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
+                                    </tr>
+                                    <div>
+                                        <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                            <td>Report: {{topic.report}}
+                                            </td>
+                                            <td>Status: {{topic.status}}</td>
+                                        </tr>
+                                    </div>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-        <!--My Topics Section Ends here-->
+    </div>
+    <!--My Topics Section Ends here-->
 
 
-        <!--Pending Topics Section Starts here-->
-        <div id="pendingTopics" class="col s12">
+    <!--Pending Topics Section Starts here-->
+    <div id="pendingTopics" class="col s12">
 
-            <div class="card-panel row nomargin" style="padding:10px;">
-                <div class="left">
-                    <strong class="black-text" style="font-size:24px;">Pending Topics</strong>
-                </div>
-
-                <div class="right"><a ng-click="forumCtrl.approveAllTopics();" class="btn light-blue waves-effect waves-light">Approve All Topic</a></div>
+        <div class="card-panel row nomargin" style="padding:10px;">
+            <div class="left">
+                <strong class="black-text" style="font-size:24px;">Pending Topics</strong>
             </div>
 
-            <div class="card-panel">
+            <div class="right"><a ng-click="forumCtrl.approveAllTopics();" class="btn light-blue waves-effect waves-light">Approve All Topic</a></div>
+        </div>
 
-                <div class="row nomargin">
-                    <div class="col m8">
-                        <div class="input-field nomargin">
-                            <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
-                            <label for="searchKeyword">Search For Topic</label>
-                        </div>
+        <div class="card-panel">
+
+            <div class="row nomargin">
+                <div class="col m8">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
+                        <label for="searchKeyword">Search For Topic</label>
                     </div>
+                </div>
 
-                    <div class="col m4">
-                        <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
+                <div class="col m4">
+                    <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
                     </select>
-                        <label>Materialize Select</label>
+                    <label>Materialize Select</label>
+                </div>
+            </div>
+
+            <div ng-show="!pagedTopics[topicPage]">
+                <h4 class="center">There Are No Pending Topic(s)</h4>
+            </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <div ng-show="!pagedTopics[topicPage]">
-                    <h4 class="center">There Are No Pending Topic(s)</h4>
-                </div>
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
+            <div ng-repeat="topic in pagedTopics[topicPage]">
+
+                <div ng-show="topic.status == 'PENDING'">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div>
-
-                <div ng-repeat="topic in pagedTopics[topicPage]">
-
-                    <div ng-show="topic.status == 'PENDING'">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-                                    <div class="row nomargin">
-                                        <div class="col m10">
-                                            <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
-                                        </div>
-                                        <span class="right">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
+                                    </div>
+                                    <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='POP_{{topic.id}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
@@ -535,116 +555,116 @@
                                         <li><a ng-click="forumCtrl.performActionOnTopic('Rejected', topic.id);">Reject</a></li>
                                         </ul>
                                         </span>
-                                    </div>
-
-                                    <table class="bordered" style="font-size: 12px; color:grey;">
-                                        <tr>
-                                            <td>By <a href="">{{topic.userName}}</a></td>
-                                            <td> <span>{{topic.createdDate}}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                                {{topic.noOfComments}}
-                                            </td>
-                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
-                                        </tr>
-                                        <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                            <td>Report: {{topic.report}}
-                                            </td>
-                                            <td>Status: {{topic.status}}</td>
-                                        </tr>
-                                    </table>
                                 </div>
+
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{topic.userName}}</a></td>
+                                        <td> <span>{{topic.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{topic.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
+                                    </tr>
+                                    <tr ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <td>Report: {{topic.report}}
+                                        </td>
+                                        <td>Status: {{topic.status}}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
-        <!--Pending Topics Section Ends here-->
+    </div>
+    <!--Pending Topics Section Ends here-->
 
-        <!--Rejected Topics Section Starts here-->
-        <div id="rejectedTopics" class="col s12">
+    <!--Rejected Topics Section Starts here-->
+    <div id="rejectedTopics" class="col s12">
 
-            <div class="card-panel row nomargin" style="padding:10px;">
-                <div class="left">
-                    <strong class="black-text" style="font-size:24px;">Rejected Topics</strong>
-                </div>
-
-                <!--<div class="right"><a ng-click="forumCtrl.approveAllTopics();" class="btn light-blue waves-effect waves-light">Approve All Topic</a></div>-->
+        <div class="card-panel row nomargin" style="padding:10px;">
+            <div class="left">
+                <strong class="black-text" style="font-size:24px;">Rejected Topics</strong>
             </div>
 
-            <div class="card-panel">
+            <!--<div class="right"><a ng-click="forumCtrl.approveAllTopics();" class="btn light-blue waves-effect waves-light">Approve All Topic</a></div>-->
+        </div>
 
-                <div class="row nomargin">
-                    <div class="col m8">
-                        <div class="input-field nomargin">
-                            <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
-                            <label for="searchKeyword">Search For Topic</label>
-                        </div>
+        <div class="card-panel">
+
+            <div class="row nomargin">
+                <div class="col m8">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="queried" ng-change="searched()" required="required">
+                        <label for="searchKeyword">Search For Topic</label>
                     </div>
+                </div>
 
-                    <div class="col m4">
-                        <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
+                <div class="col m4">
+                    <select ng-model="topicPerPage" ng-change="perPageTopic()" ng-options="('Show '+size+' Per Page') for size in topicPageSizes">
                     </select>
-                        <label>Materialize Select</label>
+                    <label>Materialize Select</label>
+                </div>
+            </div>
+
+            <div ng-show="!pagedTopics[topicPage]">
+                <h4 class="center">There Are No Pending Topic(s)</h4>
+            </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </div>
 
-                <div ng-show="!pagedTopics[topicPage]">
-                    <h4 class="center">There Are No Pending Topic(s)</h4>
-                </div>
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
+            <div ng-repeat="topic in pagedTopics[topicPage]">
+
+                <div ng-show="topic.status == 'REJECTED'">
+                    <div class="card horizontal">
+                        <div class="card-image">
+                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                         </div>
-                    </div>
-                </div>
-
-                <div ng-repeat="topic in pagedTopics[topicPage]">
-
-                    <div ng-show="topic.status == 'REJECTED'">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-                                    <div class="row nomargin">
-                                        <div class="col m10">
-                                            <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
-                                        </div>
-                                        <span class="right">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                                <div class="row nomargin">
+                                    <div class="col m10">
+                                        <p style="font-size: 18px;"><a href="#!/user/forum/topic/view/{{topic.id}}" class="black-text">{{topic.title}}</a></p>
+                                    </div>
+                                    <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='ROP_{{topic.id}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
@@ -653,57 +673,57 @@
                                         <!--<li><a ng-click="forumCtrl.performActionOnTopic('Rejected', topic.id);">Reject</a></li>-->
                                         </ul>
                                         </span>
-                                    </div>
-
-                                    <table class="bordered" style="font-size: 12px; color:grey;">
-                                        <tr>
-                                            <td>By <a href="">{{topic.userName}}</a></td>
-                                            <td> <span>{{topic.createdDate}}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                                {{topic.noOfComments}}
-                                            </td>
-                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
-                                        </tr>
-                                        <div ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                                            <tr>
-                                                <td>Report: {{topic.report}}
-                                                </td>
-                                                <td>Status: {{topic.status}}</td>
-                                            </tr>
-                                        </div>
-                                    </table>
                                 </div>
+
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{topic.userName}}</a></td>
+                                        <td> <span>{{topic.createdDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                            {{topic.noOfComments}}
+                                        </td>
+                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{topic.noOfLikes}}</td>
+                                    </tr>
+                                    <div ng-show="topic.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <tr>
+                                            <td>Report: {{topic.report}}
+                                            </td>
+                                            <td>Status: {{topic.status}}</td>
+                                        </tr>
+                                    </div>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-hide="!pagedTopics[topicPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="center col offset-m4 m3">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: topicPage == 0}">
-                                    <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
-                                </li>
-                                <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
-                                    <a href="javascript:;" ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
-                                    <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
-                                </li>
-                            </ul>
-                        </div>
+            <div ng-hide="!pagedTopics[topicPage]">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="center col offset-m4 m3">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: topicPage == 0}">
+                                <a href="javascript:;" ng-click="prevTopicPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedTopics.length)" ng-class="{active: n == topicPage}" ng-click="setTopicPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: topicPage == pagedTopics.length - 1}">
+                                <a href="javascript:;" ng-click="nextTopicPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
-        </div>
-        <!--Rejected Topics Section Ends here-->
 
-        <!--Topics Section Ends here-->
+        </div>
     </div>
+    <!--Rejected Topics Section Ends here-->
+
+    <!--Topics Section Ends here-->
+</div>
 </div>
 
 <!-- Modal Structure -->

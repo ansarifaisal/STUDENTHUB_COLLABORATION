@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+                        <span class="right"><button data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Blogs</button></span>
+                        <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="card-panel">
+            <h5>Create Blog</h5>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <form name="createForm" ng-submit="blogCtrl.createEditBlog()" novalidate>
+
+                        <!--title field starts here-->
+                        <div class="input-field nomargin">
+                            <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                data-length="50" ng-model="blogCtrl.createBlog.title" placeholder="Title" required="required">
+                            <div class="invalid-data center-align" ng-show="createForm.title.$dirty">
+                                <span ng-show="createForm.title.$dirty && createForm.title.$error.required">Please, Provide Title</span>
+                                <span ng-show="createForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="createForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="createForm.title.$error.pattern">This field cannot contain special charachters</span>
+                            </div>
+                        </div>
+                        <!--title field ends here-->
+
+                        <!--description field starts here-->
+                        <div class="input-field nomargin">
+                            <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Description" data-length="4000"
+                                ng-model="blogCtrl.createBlog.description" placeholder="description" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
+                                <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide description</span>
+                                <span ng-show="createForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="createForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                            </div>
+                        </div>
+                        <!--description field ends here-->
+
+                        <div class="file-field input-field">
+                            <div class="btn light-blue waves-effect waves-light">
+                                <span>File</span>
+                                <input type="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="createForm.$invalid" value="Create Blog">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

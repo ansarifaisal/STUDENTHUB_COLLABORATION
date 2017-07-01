@@ -5,7 +5,7 @@
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
-                        <span class="right"><button data-target="creationForm" class="btn light-blue waves-effect waves-light">+ Create Blogs</button></span>
+
                         <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
                     </div>
                 </div>
@@ -23,102 +23,151 @@
                 </div>
             </div>
         </div>
-        <div class="card-panel">
 
-            <div id="blogs">
-                <div class="row">
-                    <div class="col m6">
+
+
+
+        <div id="blogs">
+
+            <div class="card-panel row" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">Blogs</strong>
+                </div>
+
+                <div class="right">
+                    <span class="right"><a href = "#!/user/blog/createBlog" class="btn light-blue waves-effect waves-light">+ Create Blogs</a></span>
+                </div>
+            </div>
+
+            <div class="card-panel">
+                <div class="row nomargin">
+                    <div class="col m8">
                         <div class="input-field nomargin">
                             <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
                             <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
 
-                    <div class="col m6">
+                    <div class="col m4">
                         <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
                     </select>
                         <label>Materialize Select</label>
                     </div>
                 </div>
-                <div class="row nomargin" ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                    <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <div class="row nomargin">
-                                    <div class="col m10">
-                                        <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
-                                    </div>
 
-                                    <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
+                <div ng-show="!pagedItems[currentPage]">
+                    <h5 class="center red-text">No Blog(s) Available</h5>
+                </div>
+                <div ng-hide="!pagedItems[currentPage]">
+
+                    <div class="row nomargin">
+                        <div class="col offset-m5">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin" ng-repeat="blog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                        <div class="card horizontal" ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <div class="col m10">
+                                            <p style="font-size: 18px;"><a href="#!/user/blog/view/{{blog.blogId}}" class="black-text">{{blog.title}}</a></p>
+                                        </div>
+
+                                        <span ng-hide="blog.status != 'APPROVED' || blog.report != 'NO'">
                                 <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='OP_{{blog.blogId}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
                                     <ul id='OP_{{blog.blogId}}' class='dropdown-content'>
-                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                        <li><a href = "#!/user/blog/report/{{blog.blogId}}">Report</a></li>
                                         
                                         <span ng-if="blog.userId == user.id">
                                         <li class="divider"></li>
                                         <li><a href="#!/user/blog/edit/{{blog.blogId}}">Edit</a></li>
                                         <li><a href="" ng-click="blogCtrl.deleteBlog('Disabled', blog.blogId)">Delete</a></li>
                                         </span>
-                                    </ul>
-                                    </span>
-                                    </span>
-                                </div>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                        <td>On: <span>{{blog.postDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                            {{blog.noOfComments}}
-                                        </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
-                                    </tr>
-                                    <span ng-hide="blog.userId == user.id">
+                                        </ul>
+                                        </span>
+                                        </span>
+                                    </div>
+                                    <table class="bordered" style="font-size: 12px; color:grey;">
+                                        <tr>
+                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                            <td>On: <span>{{blog.postDate}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                                {{blog.noOfComments}}
+                                            </td>
+                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{blog.noOfLikes}}</td>
+                                        </tr>
+                                        <span ng-hide="blog.userId == user.id">
                                         <tr>
                                             <td>Status: {{blog.status}}
                                             </td>
                                             <td>Report: {{blog.report}}</td>
                                         </tr>
                                     </span>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row nomargin">
-                    <div class="col offset-m5">
-                        <ul class="pagination">
-                            <li ng-class="{disabled: currentPage == 0}">
-                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                            </li>
-                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                <a href="javascript:;" ng-bind="n + 1">1</a>
-                            </li>
-                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                            </li>
-                        </ul>
+                    <div class="row nomargin">
+                        <div class="col offset-m5">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="myBlogs">
+        <div id="myBlogs">
+
+            <div class="card-panel row" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">My Blogs</strong>
+                </div>
+
+                <div class="right">
+                    <span class="right"><a href = "#!/user/blog/createBlog" class="btn light-blue waves-effect waves-light">+ Create Blogs</a></span>
+                </div>
+            </div>
+            <div class="card-panel">
                 <div class="row">
-                    <div class="col m6">
+                    <div class="col m8">
                         <div class="input-field nomargin">
                             <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
                             <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
 
-                    <div class="col m6">
+                    <div class="col m4">
                         <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
                       
                     </select>
@@ -126,18 +175,19 @@
                     </div>
                 </div>
                 <div class="row nomargin" ng-repeat="myBlog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                    <div class="card horizontal">
-                        <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <div class="row nomargin">
-                                    <div class="col m10">
-                                        <p style="font-size: 18px;"><a href="#!/user/blog/view/{{myBlog.blogId}}" class="black-text">{{myBlog.title}}</a></p>
-                                    </div>
+                    <div ng-show="myBlog.userId == user.id">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <div class="col m10">
+                                            <p style="font-size: 18px;"><a href="#!/user/blog/view/{{myBlog.blogId}}" class="black-text">{{myBlog.title}}</a></p>
+                                        </div>
 
-                                    <span ng-hide="myBlog.status != 'APPROVED' || myBlog.report != 'NO'">
+                                        <span ng-hide="myBlog.status != 'APPROVED' || myBlog.report != 'NO'">
                                 <span class="right">
                                             <!-- Dropdown Trigger -->
                                 <a class='dropdown-button' href='#' data-activates='{{myBlog.blogId}}'><i class="material-icons">more_vert</i></a>
@@ -150,34 +200,34 @@
                                         <li><a href="#!/user/blog/edit/{{myBlog.blogId}}">Edit</a></li>
                                         <li><a href="#!">Delete</a></li>
                                         </span>
-                                    </ul>
-                                    </span>
-                                    </span>
-                                </div>
-                                <table class="bordered" style="font-size: 12px; color:grey;">
-                                    <tr>
-                                        <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                        <td>On: <span>{{myBlog.postDate}}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
-                                            {{myBlog.noOfComments}}
-                                        </td>
-                                        <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{myBlog.noOfLikes}}</td>
-                                    </tr>
-                                    <span ng-hide="myBlog.userId == user.id">
+                                        </ul>
+                                        </span>
+                                        </span>
+                                    </div>
+                                    <table class="bordered" style="font-size: 12px; color:grey;">
+                                        <tr>
+                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                            <td>On: <span>{{myBlog.postDate}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="material-icons" style="font-size: 12px;">chat_bubble_outline</i>Comments:
+                                                {{myBlog.noOfComments}}
+                                            </td>
+                                            <td><i class="material-icons" style="font-size: 12px;">thumb_up</i>Likes: {{myBlog.noOfLikes}}</td>
+                                        </tr>
+                                        <span ng-hide="myBlog.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                         <tr>
                                             <td>Status: {{myBlog.status}}
                                             </td>
                                             <td>Report: {{myBlog.report}}</td>
                                         </tr>
                                     </span>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col offset-m5">
                         <ul class="pagination">
@@ -193,63 +243,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="creationForm" class="modal">
-    <div class="modal-content">
-        <h5>Create Blog</h5>
-        <hr/>
-        <div class="row">
-            <div class="col m6 offset-m3">
-                <form name="createForm" ng-submit="blogCtrl.createEditBlog()" novalidate>
-
-                    <!--title field starts here-->
-                    <div class="input-field nomargin">
-                        <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                            data-length="50" ng-model="blogCtrl.createBlog.title" placeholder="Title" required="required">
-                        <div class="invalid-data center-align" ng-show="createForm.title.$dirty">
-                            <span ng-show="createForm.title.$dirty && createForm.title.$error.required">Please, Provide Title</span>
-                            <span ng-show="createForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="createForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="createForm.title.$error.pattern">This field cannot contain special charachters</span>
-                        </div>
-                    </div>
-                    <!--title field ends here-->
-
-                    <!--description field starts here-->
-                    <div class="input-field nomargin">
-                        <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
-                            ng-minlength="20" maxlength="4000" ng-maxlength="4000" placeholder="Description" data-length="4000"
-                            ng-model="blogCtrl.createBlog.description" placeholder="description" required="required"></textarea>
-                        <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
-                            <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide description</span>
-                            <span ng-show="createForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="createForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
-                        </div>
-                    </div>
-                    <!--description field ends here-->
-
-                    <div class="file-field input-field">
-                        <div class="btn light-blue waves-effect waves-light">
-                            <span>File</span>
-                            <input type="file">
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
-
-                    <div class="input-field">
-                        <div class="hoverable">
-                            <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="createForm.$invalid" value="Create Blog">
-                        </div>
-                    </div>
-
-                </form>
             </div>
         </div>
     </div>

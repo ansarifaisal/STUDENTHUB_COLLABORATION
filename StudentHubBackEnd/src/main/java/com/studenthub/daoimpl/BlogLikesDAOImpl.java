@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.studenthub.dao.BlogLikesDAO;
 import com.studenthub.entity.BlogLikes;
+import com.studenthub.entity.Forum;
 
 @Repository("blogLikesDAO")
 public class BlogLikesDAOImpl implements BlogLikesDAO {
@@ -19,12 +20,8 @@ public class BlogLikesDAOImpl implements BlogLikesDAO {
 
 	@Override
 	@Transactional
-	public BlogLikes getBlogLikes(int id, int userId) {
-		String hql = "FROM BLOG_LIKES WHERE BLOG_ID = :blogID AND USER_ID = :userId";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("blogID", id);
-		query.setParameter("userId", userId);
-		return (BlogLikes) query.list();
+	public BlogLikes getBlogLikes(int id) {
+		return (BlogLikes) sessionFactory.getCurrentSession().get(BlogLikes.class, id);
 	}
 
 	@Override
@@ -56,9 +53,9 @@ public class BlogLikesDAOImpl implements BlogLikesDAO {
 		query.setParameter("blogID", id);
 		query.setParameter("userId", userId);
 		System.out.println(query.list().isEmpty());
-		if(query.list().isEmpty()){
+		if (query.list().isEmpty()) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}

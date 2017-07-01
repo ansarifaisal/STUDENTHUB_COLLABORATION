@@ -31,6 +31,11 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         topicLike: topicLike,
         disLikeTopic: disLikeTopic,
         createTopicComment: createTopicComment,
+        fetchTopicComments: fetchTopicComments,
+        getTopicComment: getTopicComment,
+        reportTopicComment: reportTopicComment,
+        editTopicComment: editTopicComment,
+        deleteTopicComment: deleteTopicComment,
         // fetchCreatedForums: fetchCreatedForums,
         // fetchJoinForums: fetchJoinForums,
         // fetchAllMembers: fetchAllMembers,
@@ -441,7 +446,7 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     //function to create topic comment
     function createTopicComment(comment) {
         var deferred = $q.defer();
-        $http.post(REST_API_URI + "/forum/topic/comment/createEditComment", comment).then(function (response) {
+        $http.post(REST_API_URI + "forum/topic/comment/createEditComment", comment).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
@@ -450,6 +455,83 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
             }
         );
         return deferred.promise;
+    }
+
+    //funciton to get topic Comments
+    function fetchTopicComments(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + "forum/topic/comments/" + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Fetching Topic Comments");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to get topic comment
+    function getTopicComment(id) {
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + "forum/topic/comment/" + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Fetching Topic Comment");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    //function to report topic comment
+    function reportTopicComment(report) {
+        var deferred = $q.defer();
+        $http.post(REST_API_URI + "forum/topic/comment/report", report).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Liking Topic");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
+
+    //function to edit topic comment
+    function editTopicComment(topicComment) {
+        var deferred = $q.defer();
+        $http.post(REST_API_URI + "forum/topic/comment/createEditComment", topicComment).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Liking Topic");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
+
+    function deleteTopicComment(id) {
+
+        var deferred = $q.defer();
+        $http.get(REST_API_URI + "forum/topic/comment/delete/" + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Deleting Topic Comment");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
     }
 
 }]);

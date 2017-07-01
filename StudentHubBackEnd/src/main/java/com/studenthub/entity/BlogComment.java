@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
@@ -30,8 +32,9 @@ public class BlogComment implements Serializable {
 	@Column(name = "BLOG_COMMENT_ID", nullable = false)
 	private int id;
 
-	@Column(name = "BLOG_ID", nullable = false)
-	private int blog;
+	@ManyToOne
+	@JoinColumn(name = "BLOG_ID", nullable = false)
+	private Blog blog;
 
 	@Column(name = "USER_ID", nullable = false)
 	private int userId;
@@ -50,7 +53,7 @@ public class BlogComment implements Serializable {
 
 	@Column(name = "REPORT", nullable = false)
 	private String report;
-	
+
 	/*
 	 * Getters and Setters or Accessors and Mutators
 	 */
@@ -63,11 +66,11 @@ public class BlogComment implements Serializable {
 		this.id = id;
 	}
 
-	public int getBlog() {
+	public Blog getBlog() {
 		return blog;
 	}
 
-	public void setBlog(int blog) {
+	public void setBlog(Blog blog) {
 		this.blog = blog;
 	}
 
@@ -118,5 +121,18 @@ public class BlogComment implements Serializable {
 	public void setReport(String report) {
 		this.report = report;
 	}
+	
+	/*
+	 * Overriding toString Method For Debugging
+	 */
+
+	@Override
+	public String toString() {
+		return "BlogComment [id=" + id + ", blog=" + blog + ", userId=" + userId + ", userName=" + userName
+				+ ", blogComment=" + blogComment + ", commentDate=" + commentDate + ", noOfLikes=" + noOfLikes
+				+ ", report=" + report + "]";
+	}
+	
+	
 
 }

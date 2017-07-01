@@ -29,7 +29,7 @@ public class TopicComment extends Domain implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	@SequenceGenerator(name = "generator", sequenceName = "TOPIC_COMMENT_SEQ", allocationSize = 1)
-	@Column(name = "FORUM_COMMENT_ID", nullable = false)
+	@Column(name = "TOPIC_COMMENT_ID", nullable = false)
 	private int id;
 
 	@ManyToOne
@@ -40,7 +40,7 @@ public class TopicComment extends Domain implements Serializable {
 	private int userId;
 
 	@Column(name = "USER_NAME", nullable = false)
-	private int userName;
+	private String userName;
 
 	@Column(name = "TOPIC_COMMENT", nullable = false)
 	private String topicComment;
@@ -82,11 +82,11 @@ public class TopicComment extends Domain implements Serializable {
 		this.userId = userId;
 	}
 
-	public int getUserName() {
+	public String getUserName() {
 		return userName;
 	}
 
-	public void setUserName(int userName) {
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 

@@ -72,7 +72,7 @@ public class BlogDAOImpl implements BlogDAO {
 	@Override
 	@Transactional
 	public List<Blog> getAllPendingBlogs() {
-		String hql = "FROM BLOGS WHERE STATUS = 'PENDING'";
+		String hql = "FROM BLOGS WHERE STATUS = 'PENDING' ORDER BY BLOG_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}

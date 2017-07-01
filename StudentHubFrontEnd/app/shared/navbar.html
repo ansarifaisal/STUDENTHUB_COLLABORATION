@@ -19,31 +19,31 @@
 
                     <li>
                         <a href="javascript:void(0)" class="dropdown-button" data-activates="manage-list" data-position="bottom" data-href="#" data-delay="50"
-                            data-tooltip="Manage"><sup><i class="material-icons">settings</i></sup></a>
+                            data-tooltip="Manage"><span class="material-icons">settings</span><sup><span ng-show="rootNotification.totalPendingRequest != 0" class="new badge red">{{rootNotification.totalPendingRequest}}</span></sup></a>
                         <ul id='manage-list' class='dropdown-content'>
-                            <li><a href="#!/admin/manageuser">Users</a></li>
-                            <li><a href="#!/admin/manageblogs">Blogs</a></li>
-                            <li><a href="#!/admin/manageforums">Forums</a></li>
-                            <li><a href="#!/admin/managejobs">Jobs</a></li>
-                            <li><a href="#!/admin/manageevents">Events</a></li>
-                            <li><a href="#!/admin/managetopics">Topics</a></li>
+                            <li><a href="#!/admin/manageuser">Users <span ng-show="rootNotification.noOfPendingUser != 0" class="new badge red">{{rootNotification.noOfPendingUser}}</span></a></li>
+                            <li><a href="#!/admin/manageblogs">Blogs <span ng-show="rootNotification.noOfPendingBlogs != 0" class="new badge red">{{rootNotification.noOfPendingBlogs}}</span></a></li>
+                            <li><a href="#!/admin/manageforums">Forums <span ng-show="rootNotification.noOfPendingForums != 0" class="new badge red">{{rootNotification.noOfPendingForums}}</span></a></li>
+                            <li><a href="#!/admin/managejobs">Jobs <span ng-show="rootNotification.noOfPendingJobs != 0" class="new badge red">{{rootNotification.noOfPendingJobs}}</span></a></li>
+                            <li><a href="#!/admin/manageevents">Events <span ng-show="rootNotification.noOfPendingEvents != 0" class="new badge red">{{rootNotification.noOfPendingEvents}}</span></a></li>
+                            <li><a href="#!/admin/managetopics">Topics <span ng-show="rootNotification.noOfPendingTopics != 0" class="new badge red">{{rootNotification.noOfPendingTopics}}</span></a></li>
                         </ul>
                     </li>
 
                     <li>
                         <a href="javascript:void(0)" class="dropdown-button" data-activates="notification-list" data-position="bottom" data-href="#"
-                            data-delay="50" data-tooltip="Notification"><span class="material-icons">notifications</span><sup><span class="new badge red">4</span></sup></a>
+                            data-delay="50" data-tooltip="Notification"><span class="material-icons">notifications</span><sup><span ng-show="rootNotification.totalReportedRequest != 0" class="new badge red">{{rootNotification.totalReportedRequest}}</span></sup></a>
 
                         <ul id='notification-list' class='dropdown-content'>
-                            <li><a href="#!">Users <span class="new badge red">4</span> </a></li>
-                            <li><a href="#!/admin/report/blogs">Blogs</a></li>
-                            <li><a href="#!/admin/report/blogcomments">Blog Comments</a></li>
-                            <li><a href="#!/admin/report/forums">Forums</a></li>
-                            <li><a href="#!/admin/report/forumcomments">Forum Comments</a></li>
-                            <li><a href="#!/admin/report/topics">Topics</a></li>
-                            <li><a href="#!/admin/report/forumcomments">Topic Comments</a></li>
-                            <li><a href="#!/admin/report/job">Jobs</a></li>
-                            <li><a href="#!/admin/report/events">Events</a></li>
+                            <li><a href="#!">Users <span ng-show="rootNotification.noOfUserReported != 0" class="new badge red">{{rootNotification.noOfUserReported}}</span> </a></li>
+                            <li><a href="#!/admin/report/blogs">Blogs <span ng-show="rootNotification.noOfBlogReported != 0" class="new badge red">{{rootNotification.noOfBlogReported}}</span></a></li>
+                            <li><a href="#!/admin/report/blogcomments">Blog Comments <span ng-show="rootNotification.noOfBlogCommentReported != 0" class="new badge red">{{rootNotification.noOfBlogCommentReported}}</span></a></li>
+                            <li><a href="#!/admin/report/forums">Forums <span ng-show="rootNotification.noOfForumReported != 0" class="new badge red">{{rootNotification.noOfForumReported}}</span></a></li>
+                            <li><a href="#!/admin/report/forumcomments">Forum Comments <span ng-show="rootNotification.noOfForumCommentReported != 0" class="new badge red">{{rootNotification.noOfForumCommentReported}}</span></a></li>
+                            <li><a href="#!/admin/report/topics">Topics <span ng-show="rootNotification.noOfTopicReported != 0" class="new badge red">{{rootNotification.noOfTopicReported}}</span></a></li>
+                            <li><a href="#!/admin/report/topicComments">Topic Comments <span ng-show="rootNotification.noOfTopicCommentReported != 0" class="new badge red">{{rootNotification.noOfTopicCommentReported}}</span></a></li>
+                            <li><a href="#!/admin/report/job">Jobs <span ng-show="rootNotification.noOfJobReported != 0" class="new badge red">{{rootNotification.noOfJobReported}}</span></a></li>
+                            <li><a href="#!/admin/report/events">Events <span ng-show="rootNotification.noOfEventReported != 0" class="new badge red">{{rootNotification.noOfEventReported}}</span></a></li>
                             <li class="divider"></li>
                             <li><a href="#!/employer/appliedjob">Jobs</a></li>
                         </ul>

@@ -47,12 +47,6 @@ public class ForumMember implements Serializable {
 	@JsonBackReference
 	@JoinColumn(name = "FORUM_ID", nullable = false)
 	private Forum forum;
-	
-	@Column(name = "TEMP_ID", nullable = false)
-	private int forumId;
-	
-	@Column(name = "TEMP_NAME", nullable = false)
-	private String forumName;
 
 	@Column(name = "REQUEST_DATE", nullable = false)
 	private String requestDate;
@@ -101,22 +95,6 @@ public class ForumMember implements Serializable {
 
 	public String getRequestDate() {
 		return requestDate;
-	}
-	
-	public int getForumId() {
-		return forumId;
-	}
-
-	public void setForumId(int forumId) {
-		this.forumId = forumId;
-	}
-
-	public String getForumName() {
-		return forumName;
-	}
-
-	public void setForumName(String forumName) {
-		this.forumName = forumName;
 	}
 
 	public void setRequestDate(String requestDate) {

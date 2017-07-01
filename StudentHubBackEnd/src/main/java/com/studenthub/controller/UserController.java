@@ -15,13 +15,16 @@ import com.studenthub.dao.BlogDAO;
 import com.studenthub.dao.EventDAO;
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.JobDAO;
+import com.studenthub.dao.ReportDAO;
 import com.studenthub.dao.TopicDAO;
 import com.studenthub.dao.UserDAO;
 import com.studenthub.entity.Blog;
 import com.studenthub.entity.Event;
 import com.studenthub.entity.Forum;
 import com.studenthub.entity.Job;
+import com.studenthub.entity.NotificationModel;
 import com.studenthub.entity.ProfileModel;
+import com.studenthub.entity.Report;
 import com.studenthub.entity.Topic;
 import com.studenthub.entity.User;
 import com.studenthub.entity.UserModel;
@@ -38,37 +41,44 @@ public class UserController {
 
 	@Autowired
 	User user;
-	
+
 	@Autowired
 	Forum forum;
-	
+
 	@Autowired
 	ForumDAO forumDAO;
-	
+
 	@Autowired
 	Topic topic;
-	
+
 	@Autowired
 	TopicDAO topicDAO;
-	
+
 	@Autowired
 	Event event;
-	
+
 	@Autowired
 	EventDAO eventDAO;
-	
+
 	@Autowired
 	Job job;
-	
+
 	@Autowired
 	JobDAO jobDAO;
-	
+
 	@Autowired
 	Blog blog;
-	
+
 	@Autowired
 	BlogDAO blogDAO;
 
+	@Autowired
+	Report report;
+
+	@Autowired
+	ReportDAO reportDAO;
+
+	// <!---------------------------Register User--------------------------!>
 	@RequestMapping(value = { "/register" }, method = RequestMethod.POST)
 	public ResponseEntity<Void> registerUser(@RequestBody User user) {
 
@@ -92,6 +102,7 @@ public class UserController {
 		}
 	}
 
+	// <!----------------------Check Existing User---------------------!>
 	@RequestMapping(value = { "/existingUser" }, method = RequestMethod.POST)
 	public ResponseEntity<Void> existingUser(@RequestBody String userName) {
 		User existingUser = userDAO.getByUserName(userName);
@@ -102,12 +113,14 @@ public class UserController {
 		}
 	}
 
+	// <!---------------------------Logout User--------------------------!>
 	@RequestMapping(value = { "/logout" }, method = RequestMethod.POST)
 	public ResponseEntity<Void> logoutUser(@RequestBody User user) {
 		user.setIsOnline("false");
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
+	// <!---------------------------Get User--------------------------!>
 	@RequestMapping(value = { "/admin/get" }, method = RequestMethod.GET)
 	public ResponseEntity<List<User>> getUser() {
 
@@ -120,6 +133,7 @@ public class UserController {
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
+	// <!---------------------------Login User--------------------------!>
 	@RequestMapping(value = { "/login" }, method = RequestMethod.POST)
 	public ResponseEntity<User> login(@RequestBody User user) {
 		if (user.getUserName() != null && user.getPassword() != null) {
@@ -143,6 +157,7 @@ public class UserController {
 		}
 	}
 
+	// <!---------------------------Edit User--------------------------!>
 	@RequestMapping(value = "/admin/edit/{id}", method = RequestMethod.GET)
 	public ResponseEntity<User> edit(@PathVariable("id") int id) {
 		user = userDAO.get(id);
@@ -157,6 +172,7 @@ public class UserController {
 
 	}
 
+	// <!-----------------------Perform action on User---------------------!>
 	@RequestMapping(value = "/admin/{action}/{id}", method = RequestMethod.GET)
 	public ResponseEntity<User> validateUser(@PathVariable("action") String action, @PathVariable("id") int id) {
 		user = userDAO.get(id);
@@ -184,6 +200,7 @@ public class UserController {
 		}
 	}
 
+	// <!----------------------Validate All Users----------------------!>
 	@RequestMapping(value = "/admin/validateallusers")
 	public ResponseEntity<User> validateAllUser() {
 		List<User> pendingUsers = userDAO.getAllPendingUsers();
@@ -193,46 +210,115 @@ public class UserController {
 		}
 		return new ResponseEntity<User>(HttpStatus.OK);
 	}
-	
+
+	// <!---------------------Load User Content--------------------!>
 	@RequestMapping(value = "/content", method = RequestMethod.GET)
-	public ResponseEntity<UserModel> fetchContents(){
-		
+	public ResponseEntity<UserModel> fetchContents() {
+
 		UserModel userModel = new UserModel();
-		
-		
+
 		List<Topic> latestTopics = topicDAO.getLatestTopics();
 		userModel.setlatestTopics(latestTopics);
-		
+
 		List<Blog> latestBlogs = blogDAO.getLatestBlogs();
 		userModel.setlatestBlogs(latestBlogs);
-		
+
 		List<Job> latestJobs = jobDAO.getLatestJobs();
 		userModel.setlatestJobs(latestJobs);
-		
+
 		List<Event> latestEvents = eventDAO.getLatestEvents();
 		userModel.setlatestEvents(latestEvents);
-		
+
 		List<Forum> latestForums = forumDAO.getLatestForums();
 		userModel.setlatestForums(latestForums);
-		
+
 		return new ResponseEntity<UserModel>(userModel, HttpStatus.OK);
 	}
-	
+
+	// <!--------------------Loading User Profile--------------------!>
 	@RequestMapping(value = "/user/profile/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ProfileModel> profileContents(@PathVariable("id") int id){
-		
+	public ResponseEntity<ProfileModel> profileContents(@PathVariable("id") int id) {
+
 		ProfileModel profileModel = new ProfileModel();
-		
+
 		user = userDAO.get(id);
-		
+
 		List<Forum> createdForums = profileModel.getCreatedForums();
 		profileModel.setCreatedForums(createdForums);
-		
+
 		List<Event> appliedEvents = profileModel.getCreatedEvents();
 		profileModel.setCreatedEvents(appliedEvents);
-		
+
 		return new ResponseEntity<ProfileModel>(profileModel, HttpStatus.OK);
-		
+
+	}
+
+	// <!---------------------Loading Notification Module------------------!>
+
+	@RequestMapping(value = "/notification", method = RequestMethod.GET)
+	public ResponseEntity<NotificationModel> notificationModel() {
+
+		NotificationModel notificationModel = new NotificationModel();
+
+		int noOfPendingForums = forumDAO.getAllPendingForums().size();
+
+		int noOfPendingJobs = jobDAO.listAllPendingJobs().size();
+
+		int noOfPendingEvents = eventDAO.listAllPendingEvents().size();
+
+		int noOfPendingTopics = topicDAO.getAllPendingTopics().size();
+
+		int noOfPendingBlogs = blogDAO.getAllPendingBlogs().size();
+
+		int noOfPendingUsers = userDAO.getAllPendingUsers().size();
+
+		// Reported Section
+
+		int noOfForumReported = reportDAO.getByCategory("FORUM").size();
+
+		int noOfForumCommentReported = reportDAO.getByCategory("FORUM COMMENT").size();
+
+		int noOfBlogCommentReported = reportDAO.getByCategory("BLOG COMMENT").size();
+
+		int noOfTopicReported = reportDAO.getByCategory("TOPIC").size();
+
+		int noOfTopicCommentReported = reportDAO.getByCategory("TOPIC COMMENT").size();
+
+		int noOfUserReported = reportDAO.getByCategory("USER").size();
+
+		int noOfEventReported = reportDAO.getByCategory("EVENT").size();
+
+		int noOfJobReported = reportDAO.getByCategory("JOB").size();
+
+		int noOfBlogReported = reportDAO.getByCategory("BLOG").size();
+
+		int totalPendingRequest = noOfPendingForums + noOfPendingJobs + noOfPendingEvents + noOfPendingBlogs
+				+ noOfPendingUsers + noOfPendingTopics;
+
+		int totalReportedRequest = noOfForumReported + noOfEventReported + noOfJobReported + noOfBlogReported
+				+ noOfTopicReported + noOfTopicCommentReported + noOfBlogCommentReported + noOfForumCommentReported
+				+ noOfUserReported;
+
+		notificationModel.setNoOfPendingBlogs(noOfPendingBlogs);
+		notificationModel.setNoOfPendingEvents(noOfPendingEvents);
+		notificationModel.setNoOfPendingForums(noOfPendingForums);
+		notificationModel.setNoOfPendingJobs(noOfPendingJobs);
+		notificationModel.setNoOfPendingUser(noOfPendingUsers);
+		notificationModel.setNoOfPendingTopics(noOfPendingTopics);
+		notificationModel.setTotalPendingRequest(totalPendingRequest);
+
+		notificationModel.setNoOfBlogReported(noOfBlogReported);
+		notificationModel.setNoOfEventReported(noOfEventReported);
+		notificationModel.setNoOfForumReported(noOfForumReported);
+		notificationModel.setNoOfJobReported(noOfJobReported);
+		notificationModel.setNoOfBlogCommentReported(noOfBlogCommentReported);
+		notificationModel.setNoOfForumCommentReported(noOfForumCommentReported);
+		notificationModel.setNoOfTopicReported(noOfTopicReported);
+		notificationModel.setNoOfTopicCommentReported(noOfTopicCommentReported);
+		notificationModel.setNoOfUserReported(noOfUserReported);
+		notificationModel.setTotalReportedRequest(totalReportedRequest);
+
+		return new ResponseEntity<NotificationModel>(notificationModel, HttpStatus.OK);
 	}
 
 }

@@ -69,20 +69,6 @@ public class BlogController {
 		}
 	}
 
-	// <-----------------Fetch All My Blogs--------------------------->
-
-	@RequestMapping(value = "/blog/myblog/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<Blog>> getCreatedBlogs(@PathVariable("id") int userID) {
-		List<Blog> myBlogs = blogDAO.getCreatedBlogs(userID);
-		if (myBlogs.isEmpty()) {
-			blog.setCode(404);
-			blog.setMessage("No Blogs Found!");
-			return new ResponseEntity<List<Blog>>(HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<Blog>>(myBlogs, HttpStatus.OK);
-		}
-	}
-
 	// <-----------------------Get Single Blog------------------------------>
 	@RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Blog> getBlog(@PathVariable("id") int id) {
@@ -100,12 +86,7 @@ public class BlogController {
 	// <---------------------Create Edit Blog--------------------------->
 	@RequestMapping(value = "/blog/createEditBlog", method = RequestMethod.POST)
 	public ResponseEntity<Void> createEditBlog(@RequestBody Blog blog) {
-		System.out.println(blog);
 		if (blog.getBlogId() == 0) {
-			blog.setStatus("PENDING");
-			blog.setNoOfComments(0);
-			blog.setNoOfLikes(0);
-			blog.setReport("NO");
 			blogDAO.addBlog(blog);
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
@@ -113,24 +94,6 @@ public class BlogController {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 	}
-
-	// <------------------------Delete/Disable For User
-	// Blog----------------------------->
-	// @RequestMapping(value = "/blog/disable/{id}")
-	// public ResponseEntity<Blog> disableBlog(@PathVariable("id") int id) {
-	// blog = blogDAO.getBlog(id);
-	// if (blog != null) {
-	// blog.setStatus("DISABLED");
-	// boolean flag = blogDAO.updateBlog(blog);
-	// if (flag != false) {
-	// return new ResponseEntity<Blog>(HttpStatus.OK);
-	// } else {
-	// return new ResponseEntity<Blog>(HttpStatus.NO_CONTENT);
-	// }
-	// } else {
-	// return new ResponseEntity<Blog>(HttpStatus.NOT_FOUND);
-	// }
-	// }
 
 	// <------------------Perform Action------------------------------->
 	@RequestMapping(value = "/admin/blog/{action}/{id}", method = RequestMethod.GET)
@@ -174,21 +137,17 @@ public class BlogController {
 
 	@RequestMapping(value = "/blog/like", method = RequestMethod.POST)
 	public ResponseEntity<Void> likeBlog(@RequestBody BlogLikes blogLikes) {
-		boolean existingLike = blogLikesDAO.existingLikes(blogLikes.getBlogId(), blogLikes.getUserId());
-		if (existingLike != false) {
-			boolean flag = blogLikesDAO.addBlogLikes(blogLikes);
-			if (flag != false) {
-				List<BlogLikes> likes = blogLikesDAO.list(blogLikes.getBlogId());
-				blog = blogDAO.getBlog(blogLikes.getBlogId());
-				blog.setNoOfLikes(likes.size());
-				blogDAO.updateBlog(blog);
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
+		boolean flag = blogLikesDAO.addBlogLikes(blogLikes);
+		if (flag != false) {
+			int noOfLikes = blogLikesDAO.list(blogLikes.getBlog().getBlogId()).size();
+			blog = blogLikes.getBlog();
+			blog.setNoOfLikes(noOfLikes);
+			blogDAO.updateBlog(blog);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
+
 	}
 
 	// <---------------------Report Blog------------------------------->
@@ -252,7 +211,7 @@ public class BlogController {
 		if (blogComment.getId() == 0) {
 			boolean flag = blogCommentDAO.addBlogComment(blogComment);
 			if (flag != false) {
-				blog = blogDAO.getBlog(blogComment.getBlog());
+				blog = blogComment.getBlog();
 				int updateCount = blog.getNoOfComments() + 1;
 				blog.setNoOfComments(updateCount);
 				blogDAO.updateBlog(blog);
@@ -279,11 +238,8 @@ public class BlogController {
 
 	@RequestMapping(value = "/blog/report/comment", method = RequestMethod.POST)
 	public ResponseEntity<Report> reportComment(@RequestBody Report report) {
-		blogComment = blogCommentDAO.getBlogComment(report.getReportId());
+		blogComment = blogCommentDAO.getBlogComment(report.getCommentId());
 		if (blogComment != null) {
-			report.setCommentId(blogComment.getId());
-			report.setReportId(blogComment.getBlog());
-			report.setStatus("UNREAD");
 			boolean flag = reportDAO.addReport(report);
 			if (flag != false) {
 				blogComment.setReport("YES");
@@ -304,8 +260,8 @@ public class BlogController {
 		if (blogComment != null) {
 			boolean flag = blogCommentDAO.deleteBlogComment(blogComment);
 			if (flag != false) {
-				blog = blogDAO.getBlog(blogComment.getBlog());
-				List<BlogComment> list = blogCommentDAO.list(blogComment.getBlog());
+				blog = blogComment.getBlog();
+				List<BlogComment> list = blogCommentDAO.list(blogComment.getBlog().getBlogId());
 				blog.setNoOfComments(list.size());
 				blogDAO.updateBlog(blog);
 				return new ResponseEntity<BlogComment>(HttpStatus.OK);
@@ -314,6 +270,27 @@ public class BlogController {
 			}
 		} else {
 			return new ResponseEntity<BlogComment>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	// <!------------------------Dislike Blog------------------------!>
+	@RequestMapping(value = "/blog/dislike/{id}", method = RequestMethod.GET)
+	public ResponseEntity<BlogLikes> disLikeBlog(@PathVariable("id") int id) {
+		blogLikes = blogLikesDAO.getBlogLikes(id);
+		blog = blogLikes.getBlog();
+		if (blogLikes != null) {
+			boolean flag = blogLikesDAO.deleteLike(blogLikes);
+			if (flag != false) {
+				int noOfLikes = blogLikesDAO.list(blog.getBlogId()).size();
+				blog.setNoOfLikes(noOfLikes);
+				blogDAO.updateBlog(blog);
+				return new ResponseEntity<BlogLikes>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<BlogLikes>(HttpStatus.NOT_FOUND);
+			}
+
+		} else {
+			return new ResponseEntity<BlogLikes>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

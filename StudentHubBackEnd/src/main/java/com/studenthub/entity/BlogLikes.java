@@ -7,9 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity(name = "BLOG_LIKES")
 @Component
@@ -29,11 +33,10 @@ public class BlogLikes implements Serializable {
 	@Column(name = "ID", nullable = false)
 	private int id;
 
-	@Column(name = "BLOG_ID", nullable = false)
-	private int blogId;
-
-	@Column(name = "BLOG_NAME", nullable = false)
-	private String blogName;
+	@ManyToOne
+	@JoinColumn(name = "BLOG_ID", nullable = false)
+	@JsonBackReference
+	private Blog blog;
 
 	@Column(name = "USER_ID", nullable = false)
 	private int userId;
@@ -54,20 +57,12 @@ public class BlogLikes implements Serializable {
 		this.id = id;
 	}
 
-	public int getBlogId() {
-		return blogId;
+	public Blog getBlog() {
+		return blog;
 	}
 
-	public void setBlogId(int blogId) {
-		this.blogId = blogId;
-	}
-
-	public String getBlogName() {
-		return blogName;
-	}
-
-	public void setBlogName(String blogName) {
-		this.blogName = blogName;
+	public void setBlog(Blog blog) {
+		this.blog = blog;
 	}
 
 	public int getUserId() {
@@ -93,5 +88,17 @@ public class BlogLikes implements Serializable {
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
+
+	/*
+	 * Overriding toString Method For Debugging
+	 */
+	
+	@Override
+	public String toString() {
+		return "BlogLikes [id=" + id + ", blog=" + blog + ", userId=" + userId + ", userName=" + userName
+				+ ", dateTime=" + dateTime + "]";
+	}
+	
+	
 
 }

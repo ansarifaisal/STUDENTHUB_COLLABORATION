@@ -1,15 +1,21 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "BLOGS")
 @Component
@@ -59,6 +65,10 @@ public class Blog extends Domain implements Serializable {
 	@Column(name = "IMAGE_URL", nullable = false)
 	private String imageUrl;
 
+	@OneToMany(mappedBy = "blog")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonManagedReference
+	private List<BlogLikes> likes;
 
 	/*
 	 * Getters and Setters OR Accessors and Mutators
@@ -152,16 +162,24 @@ public class Blog extends Domain implements Serializable {
 		this.imageUrl = imageUrl;
 	}
 
+	public List<BlogLikes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<BlogLikes> likes) {
+		this.likes = likes;
+	}
+
 	/*
 	 * Overriding toString Method For Debugging
 	 */
-	
+
 	@Override
 	public String toString() {
 		return "Blog [blogId=" + blogId + ", title=" + title + ", userId=" + userId + ", userName=" + userName
 				+ ", description=" + description + ", postDate=" + postDate + ", noOfComments=" + noOfComments
 				+ ", noOfLikes=" + noOfLikes + ", status=" + status + ", report=" + report + ", imageUrl=" + imageUrl
-				+ "]";
+				+ ", likes=" + likes + "]";
 	}
 
 }

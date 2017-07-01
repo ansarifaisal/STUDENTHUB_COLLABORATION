@@ -70,7 +70,7 @@ public class EventDAOImpl implements EventDAO {
 	@Override
 	@Transactional
 	public List<Event> listAllPendingEvents() {
-		String hql = "FROM EVENTS WHERE STATUS = 'PENDING'";
+		String hql = "FROM EVENTS WHERE STATUS = 'PENDING' ORDER BY EVENT_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}

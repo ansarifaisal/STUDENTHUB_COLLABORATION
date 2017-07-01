@@ -70,7 +70,7 @@ public class ForumDAOImpl implements ForumDAO {
 	@Override
 	@Transactional
 	public List<Forum> getAllPendingForums() {
-		String hql = "FROM FORUMS WHERE STATUS = 'PENDING'";
+		String hql = "FROM FORUMS WHERE STATUS = 'PENDING' ORDER BY FORUM_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
@@ -78,7 +78,7 @@ public class ForumDAOImpl implements ForumDAO {
 	@Override
 	@Transactional
 	public List<Forum> getCreatedForums(int userID) {
-		String hql = "FROM FORUMS WHERE USER_ID = "+userID+" ORDER BY CREATED_DATE DESC";
+		String hql = "FROM FORUMS WHERE USER_ID = " + userID + " ORDER BY FORUM_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
@@ -86,7 +86,7 @@ public class ForumDAOImpl implements ForumDAO {
 	@Override
 	@Transactional
 	public List<Forum> getLatestForums() {
-		String hql = "FROM FORUMS WHERE STATUS = 'APPROVED' ORDER BY CREATED_DATE DESC";
+		String hql = "FROM FORUMS WHERE STATUS = 'APPROVED' ORDER BY FORUM_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(5);
 		return query.list();
