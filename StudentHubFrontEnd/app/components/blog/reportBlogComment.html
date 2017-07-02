@@ -9,26 +9,29 @@
 
                         <a href="#!/user/blogs" class="breadcrumb">Blogs</a>
 
+                        <a href="#!/user/blog/view/{{blogCtrl.blogComment.blog.blogId}}" class="breadcrumb">{{blogCtrl.blogComment.blog.title}}</a>
+
                         <a class="breadcrumb">Comments</a>
 
-                        <a href="#!" class="breadcrumb">Report</a>
+                        <a class="breadcrumb">Report</a>
 
                     </div>
                 </div>
             </nav>
         </div>
         <div class="card-panel">
-            <h5>Report Blog Comment</h5>
+            <h5><strong>Report Blog Comment</strong></h5>
             <hr/>
             <div class="row">
                 <div class="col m6 offset-m3">
-                     <form name="reportCommentForm" ng-submit="blogCtrl.blogReportComment()" novalidate>
+                    <form name="reportCommentForm" ng-submit="blogCtrl.blogReportComment()" novalidate>
 
                         <!--details field starts here-->
                         <div class="input-field nomargin">
-                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" ng-minlength="20"
-                                maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
-                                ng-model="blogCtrl.reportBlogComment.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
+                            <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/"
+                                ng-minlength="20" maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report"
+                                data-length="1000" ng-model="blogCtrl.reportBlogComment.details" placeholder="Provide Details Of Your Report"
+                                required="required"></textarea>
                             <div class="invalid-data center-align" ng-show="reportCommentForm.details.$dirty">
                                 <span ng-show="reportCommentForm.details.$dirty && reportCommentForm.details.$error.required">Please, Provide details</span>
                                 <span ng-show="reportCommentForm.details.$error.minlength">This field must contain atleast 2 charachters</span>

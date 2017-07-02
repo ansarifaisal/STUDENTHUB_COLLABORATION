@@ -115,18 +115,6 @@ public class JobController {
 		}
 	}
 
-	// <!-----------------Get Applied Job------------------------->
-
-	@RequestMapping(value = "job/{id}/appliedJobs", method = RequestMethod.GET)
-	public ResponseEntity<List<JobApplied>> getAppliedJob(@PathVariable("id") int id) {
-		List<JobApplied> appliedJobs = jobAppliedDAO.list(id);
-		if (appliedJobs.isEmpty()) {
-			return new ResponseEntity<List<JobApplied>>(HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<JobApplied>>(appliedJobs, HttpStatus.OK);
-		}
-	}
-
 	// <!------------------Apply Job------------------------------>
 
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
@@ -163,20 +151,6 @@ public class JobController {
 		}
 	}
 
-	// <!----------------------Created Job List---------------------------!>
-
-	@RequestMapping(value = "/job/jobCreatedList/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<Job>> createdJobList(@PathVariable("id") int id) {
-
-		List<Job> jobs = jobDAO.getCreatedJobs(id);
-		if (jobs.isEmpty()) {
-			return new ResponseEntity<List<Job>>(HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<Job>>(jobs, HttpStatus.OK);
-		}
-
-	}
-
 	// <!---------------------Report Job----------------------!>
 	@RequestMapping(value = "/job/report", method = RequestMethod.POST)
 	public ResponseEntity<Report> reportJob(@RequestBody Report report) {
@@ -195,19 +169,7 @@ public class JobController {
 			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
 		}
 	}
-
-	// <!----------------------Get Applied Job---------------------!>
-
-	@RequestMapping(value = "/job/appliedjobs", method = RequestMethod.GET)
-	public ResponseEntity<List<JobApplied>> getAppliedJobs() {
-		List<JobApplied> appliedJobs = jobAppliedDAO.listAppliedJob();
-		if (appliedJobs.isEmpty()) {
-			return new ResponseEntity<List<JobApplied>>(HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<List<JobApplied>>(appliedJobs, HttpStatus.OK);
-		}
-	}
-
+	
 	// <!--------------------Accept Job-----------------------------!>
 
 	@RequestMapping(value = "/employer/{action}/{id}", method = RequestMethod.GET)
@@ -230,6 +192,4 @@ public class JobController {
 		}
 	}
 
-	
-	
 }

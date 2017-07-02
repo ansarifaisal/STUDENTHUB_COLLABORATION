@@ -420,22 +420,9 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
-    '/user/event/appliedEvents': {
+    '/user/event/createEvent': {
         //page path
-        templateUrl: 'app/components/event/appliedEvent.html',
-        //controller that will handle this page
-        controller: 'EventController',
-        //nick name of the controller so that we dont have to declare the name in the HTML page
-        controllerAs: 'eventCtrl',
-        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
-        requireLogin: true,
-        //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
-    },
-
-    '/user/event/createdEvents': {
-        //page path
-        templateUrl: 'app/components/event/createdEvent.html',
+        templateUrl: 'app/components/event/createEvent.html',
         //controller that will handle this page
         controller: 'EventController',
         //nick name of the controller so that we dont have to declare the name in the HTML page
@@ -473,20 +460,7 @@ window.routes = {
     },
 
     //<=============Job Routing Module===========>
-
-    '/user/job/appliedjobs': {
-        //page path
-        templateUrl: 'app/components/job/appliedJobList.html',
-        //controller that will handle this page
-        controller: 'JobController',
-        //nick name of the controller so that we dont have to declare the name in the HTML page
-        controllerAs: 'jobCtrl',
-        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
-        requireLogin: true,
-        //roles is use to define which user can access this page
-        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
-    },
-
+    
     '/user/job/editJob/:id': {
         //page path
         templateUrl: 'app/components/job/editJob.html',
@@ -513,9 +487,9 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
-    '/user/job/createdJobs': {
+    '/user/job/createJob': {
         //page path
-        templateUrl: 'app/components/job/createJobList.html',
+        templateUrl: 'app/components/job/createJob.html',
         //controller that will handle this page
         controller: 'JobController',
         //nick name of the controller so that we dont have to declare the name in the HTML page

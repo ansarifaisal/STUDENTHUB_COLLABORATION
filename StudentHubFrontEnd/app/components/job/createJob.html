@@ -1,190 +1,157 @@
-<div class="row" ng-init="jobCtrl.appliedJob()">
-    <div class="card-panel">
+<div class="row">
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
 
-        <div class="center">
-            <ul class="pagination nomargin nopadding">
-                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <li class="active"><a href="#!">1</a></li>
-                <li class="waves-effect"><a href="#!">2</a></li>
-                <li class="waves-effect"><a href="#!">3</a></li>
-                <li class="waves-effect"><a href="#!">4</a></li>
-                <li class="waves-effect"><a href="#!">5</a></li>
-                <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-            </ul>
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+
+                        <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
+
+                        <a class="breadcrumb">Create Job</a>
+
+                    </div>
+                </div>
+            </nav>
         </div>
+        <div class="card-panel">
+            <h5><strong>Create Job</strong></h5>
+            <hr/>
+            <div class="row">
+                <div class="col m6 offset-m3">
+                    <form name="creationForm" ng-submit="jobCtrl.jobCreate()" novalidate>
 
-        <div class="card horizontal">
-            <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-            <div class="card-stacked">
-                <div class="card-content">
-
-                    <div class="row nomargin">
-                        <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='jobOption'><i class="material-icons">more_vert</i></a>
-
-                            <!-- Dropdown Structure -->
-                            <ul id='jobOption' class='dropdown-content'>
-                                <li><a href="#!">Report</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#!">Edit</a></li>
-                                <li><a href="#!">Delete</a></li>
-                            </ul>
-
-                            </span>
-                        <div class="row nomargin" ng-repeat="myJob in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                            <p style="font-size: 18px;">{{}}</p>
-                            <p style="color: grey; font-size: 14px;">New Global Technologies</p>
+                        <!--title field starts here-->
+                        <div class="input-field nomargin">
+                            <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                data-length="50" ng-model="jobCtrl.createJob.title" placeholder="Job Name" required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.title.$dirty">
+                                <span ng-show="creationForm.title.$dirty && creationForm.title.$error.required">Please, Provide Title</span>
+                                <span ng-show="creationForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="creationForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="creationForm.title.$error.pattern">This field cannot contain special charachters</span>
+                            </div>
                         </div>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                            </tr>
-                            <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
-                                </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
-                            </tr>
-                        </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
-                    </div>
-                </div>
-            </div><br/>
-        </div>
-            <div class="card horizontal">
-                <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                        <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                            </tr>
-                            <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
-                                </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
-                            </tr>
-                        </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
-                    </div>
-                </div>
-            </div><br/>
+                        <!--title field ends here-->
 
-            <div class="card horizontal">
-                <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                        <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                            </tr>
-                            <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
-                                </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
-                            </tr>
-                        </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
-                    </div>
-                </div>
-            </div><br/>
+                        <!--company field starts here-->
+                        <div class="input-field nomargin">
+                            <input type="text" name="company" id="company" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                                data-length="50" ng-model="jobCtrl.createJob.company" placeholder="Company Name" required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.company.$dirty">
+                                <span ng-show="creationForm.company.$dirty && creationForm.company.$error.required">Please, Provide company</span>
+                                <span ng-show="creationForm.company.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="creationForm.company.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="creationForm.company.$error.pattern">This field cannot contain special charachters</span>
+                            </div>
+                        </div>
+                        <!--company field ends here-->
 
-            <div class="card horizontal">
-                <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                        <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                            </tr>
-                            <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
-                                </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
-                            </tr>
-                        </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
-                    </div>
-                </div>
-            </div><br/>
+                        <!--description field starts here-->
+                        <div class="input-field nomargin">
 
-            <div class="card horizontal">
-                <!--<div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
-                    </div>-->
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                        <p style="color: grey; font-size: 14px;">New Global Technologies</p>
-                        <table class="bordered" style="font-size: 12px; color:grey;">
-                            <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
-                            </tr>
-                            <tr>
-                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> 0-4 yrs
-                                </td>
-                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> Mumbai</td>
-                            </tr>
-                            <tr>
-                                <td>&#8377; 3,75,000-7,50,000 P.A.
-                                </td>
-                                <td>Key Skills: Java, Hibernate, Spring</td>
-                            </tr>
-                        </table>
-                        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
-                    </div>
-                </div>
-            </div><br/>
+                            <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Job Description" data-length="500"
+                                ng-model="jobCtrl.createJob.description" placeholder="description" required="required"></textarea>
+                            <div class="invalid-data center-align" ng-show="creationForm.description.$dirty">
+                                <span ng-show="creationForm.description.$dirty && creationForm.description.$error.required">Please, Provide Description</span>
+                                <span ng-show="creationForm.description.$error.minlength">This field must contain atleast 20 charachters</span>
+                                <span ng-show="creationForm.description.$error.maxlength">This field can contain maximum 500 charachters</span>
+                                <span ng-show="creationForm.description.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                            </div>
 
-            <div class="center">
-                <ul class="pagination nomargin nopadding">
-                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                    <li class="active"><a href="#!">1</a></li>
-                    <li class="waves-effect"><a href="#!">2</a></li>
-                    <li class="waves-effect"><a href="#!">3</a></li>
-                    <li class="waves-effect"><a href="#!">4</a></li>
-                    <li class="waves-effect"><a href="#!">5</a></li>
-                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                </ul>
+                        </div>
+                        <!--description field ends here-->
+
+                        <!--qualification field starts here-->
+                        <div class="input-field nomargin">
+
+                            <input type="text" name="qualification" id="qualification" ng-pattern="/^[a-zA-z0-9\,\.\-\s]+$/" ng-minlength="1" maxlength="20"
+                                ng-maxlength="20" data-length="20" ng-model="jobCtrl.createJob.qualification" placeholder="Qualification"
+                                required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.qualification.$dirty">
+                                <span ng-show="creationForm.qualification.$dirty && creationForm.qualification.$error.required">Please, Provide qualification</span>
+                                <span ng-show="creationForm.qualification.$error.minlength">This field must contain atleast 1 charachters</span>
+                                <span ng-show="creationForm.qualification.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                <span ng-show="creationForm.qualification.$error.pattern">This field can contain these special charachters ',.-'</span>
+                            </div>
+
+                        </div>
+                        <!--qualification field ends here-->
+
+                        <!--Key Skills field starts here-->
+                        <div class="input-field nomargin">
+
+                            <input type="text" name="keySkills" id="keySkills" ng-pattern="/^[a-zA-z0-9\,\.\-\s]+$/" ng-minlength="2" maxlength="100"
+                                ng-maxlength="100" data-length="100" ng-model="jobCtrl.createJob.keySkills" placeholder="Enter Key Skills"
+                                required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.keySkills.$dirty">
+                                <span ng-show="creationForm.keySkills.$dirty && creationForm.keySkills.$error.required">Please, Provide keySkills</span>
+                                <span ng-show="creationForm.keySkills.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="creationForm.keySkills.$error.maxlength">This field can contain maximum 100 charachters</span>
+                                <span ng-show="creationForm.keySkills.$error.pattern">This field can contain these special charachters ',.-'</span>
+                            </div>
+
+                        </div>
+                        <!--Key Skills field ends here-->
+
+                        <!--Experience field starts here-->
+                        <div class="input-field nomargin">
+
+                            <input type="text" name="experience" id="experience" ng-pattern="/^[0-9]+$/" ng-minlength="1" maxlength="2" ng-maxlength="2"
+                                data-length="2" ng-model="jobCtrl.createJob.experience" placeholder="Experience Name" required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.experience.$dirty">
+                                <span ng-show="creationForm.experience.$dirty && creationForm.experience.$error.required">Please, Provide Experience</span>
+                                <span ng-show="creationForm.experience.$error.minlength">This field must contain atleast 1 number</span>
+                                <span ng-show="creationForm.experience.$error.maxlength">This field can contain maximum 2 numbers</span>
+                                <span ng-show="creationForm.experience.$error.pattern">This field can contain only numbers</span>
+                            </div>
+
+                        </div>
+                        <!--Experience field ends here-->
+
+                        <!--Salary field starts here-->
+                        <div class="input-field nomargin">
+
+                            <input type="text" name="salary" id="salary" ng-pattern="/^[0-9]+$/" ng-minlength="4" maxlength="9" ng-maxlength="9" data-length="9"
+                                ng-model="jobCtrl.createJob.salary" placeholder="Salary" required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.salary.$dirty">
+                                <span ng-show="creationForm.salary.$dirty && creationForm.salary.$error.required">Please, Provide Salary</span>
+                                <span ng-show="creationForm.salary.$error.minlength">This field must contain atleast 4 numbers</span>
+                                <span ng-show="creationForm.salary.$error.maxlength">This field can contain maximum 9 numbers</span>
+                                <span ng-show="creationForm.salary.$error.pattern">This field can contain only numbers</span>
+                            </div>
+
+                        </div>
+                        <!--salary field ends here-->
+
+                        <!--Location field starts here-->
+                        <div class="input-field nomargin">
+
+                            <input type="text" name="location" id="location" ng-pattern="/^[A-Za-z\s\-]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                data-length="20" ng-model="jobCtrl.createJob.location" placeholder="Location Name" required="required">
+                            <div class="invalid-data center-align" ng-show="creationForm.location.$dirty">
+                                <span ng-show="creationForm.location.$dirty && creationForm.location.$error.required">Please, Provide Location</span>
+                                <span ng-show="creationForm.location.$error.minlength">This field must contain atleast 2 charachters</span>
+                                <span ng-show="creationForm.location.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                <span ng-show="creationForm.location.$error.pattern">This field can contain only charachters</span>
+                            </div>
+
+                        </div>
+                        <!--location field ends here-->
+
+
+                        <div class="input-field">
+                            <div class="hoverable">
+                                <input type="submit" class="btn light-blue waves-effect modal-close waves-light full-width" ng-disabled="creationForm.$invalid"
+                                    value="Save Changes">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
-
         </div>
     </div>
+</div>

@@ -10,13 +10,13 @@ public interface JobDAO {
 
 	List<Job> list();
 
-	List<Job> getCreatedJobs(int userID);
+	// List<Job> getCreatedJobs(int userID);
 
 	List<Job> getLatestJobs();
 
 	List<Job> listAllPendingJobs();
-	
-	List<Job> createdJobList(int userID);
+
+	// List<Job> createdJobList(int userID);
 
 	boolean addJob(Job job);
 

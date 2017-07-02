@@ -10,14 +10,11 @@ JobModule.factory('JobFactory', [
         var jobFactory = {
 
             fetchAllJobs: fetchAllJobs,
-            fetchAppliedJobs: fetchAppliedJobs,
             getJob: getJob,
-            createEditJob: createEditJob,
             applyJob: applyJob,
             disableJob: disableJob,
             reportJob: reportJob,
             delAppliedJob: delAppliedJob,
-            fetchCreateJobList: fetchCreateJobList,
             createJob: createJob,
             deleteJob: deleteJob,
             editJob: editJob
@@ -41,22 +38,6 @@ JobModule.factory('JobFactory', [
             );
             return deferred.promise;
 
-        }
-
-        //function to fetch all Applied jobs
-        function fetchAppliedJobs(id) {
-
-            var deferred = $q.defer();
-
-            $http.get(REST_API_URI + 'job/' + id + '/appliedJobs').then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log('Error While Fetching Jobs');
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
         }
 
         //function to get job
@@ -152,23 +133,6 @@ JobModule.factory('JobFactory', [
                 }
             );
             return deferred.promise;
-        }
-
-        //function to fetch created jobs
-        function fetchCreateJobList(id) {
-
-            var deferred = $q.defer();
-
-            $http.get(REST_API_URI + 'job/jobCreatedList/' + id).then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log('Error While Fetching Job');
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
-
         }
 
         //function to create job

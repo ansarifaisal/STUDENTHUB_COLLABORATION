@@ -1,15 +1,21 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "JOBS")
 @Component
@@ -62,7 +68,7 @@ public class Job implements Serializable {
 
 	@Column(name = "LOCATION", nullable = false)
 	private String location;
-	
+
 	@Column(name = "NO_OF_APPLIED", nullable = false)
 	private int noOfApplied;
 
@@ -71,6 +77,11 @@ public class Job implements Serializable {
 
 	@Column(name = "STATUS", nullable = false)
 	private String status;
+
+	@OneToMany(mappedBy = "job")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonManagedReference
+	private List<JobApplied> jobApplied;
 
 	/*
 	 * Getters and Setters

@@ -239,11 +239,213 @@ ForumModule.controller('ForumController', [
                     $scope.sortingOrder = newSortingOrder;
                 };
 
+                me.fetchJoinedForums(forums);
+                me.fetchCreatedForums(forums);
+
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching Forums</strong>', 6000);
                 }
             );
+        }
+
+        //function to fetch Joined forums
+
+        me.fetchJoinedForums = function (forums) {
+            me.joinedForums = [];
+
+            for (var i = 0; i < forums.length; i++) {
+                for (var j = 0; j < forums[i].members.length; j++) {
+                    if (forums[i].members[j].userId == user.id && forums[i].members[j].role != 'ADMIN') {
+                        me.joinedForums.push(forums[i]);
+                    }
+                }
+            }
+
+            var sortingOrder_ONE = 'id'; //default sort
+
+            $scope.sortingOrder_ONE = sortingOrder_ONE;
+            $scope.pageSizes_ONE = [5, 10, 25, 50];
+            $scope.reverse_ONE = true;
+            $scope.filteredItems_ONE = [];
+            $scope.groupedItems_ONE = [];
+            $scope.itemsPerPage_ONE = 10;
+            $scope.pagedItems_ONE = [];
+            $scope.currentPage_ONE = 0;
+            $scope.items_ONE = me.joinedForums;
+
+            var searchMatch_ONE = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_ONE = function () {
+                $scope.filteredItems_ONE = $filter('filter')($scope.items_ONE, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_ONE(item['forumName'], $scope.query_ONE))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_ONE !== '') {
+                    $scope.filteredItems_ONE = $filter('orderBy')($scope.filteredItems_ONE, $scope.sortingOrder_ONE, $scope.reverse_ONE);
+                }
+
+                $scope.currentPage_ONE = 0;
+                // now group by pages
+                $scope.groupToPages_ONE();
+            };
+
+            // show items per page
+            $scope.perPage_ONE = function () {
+                $scope.groupToPages_ONE();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_ONE = function () {
+                $scope.pagedItems_ONE = [];
+
+                for (var i = 0; i < $scope.filteredItems_ONE.length; i++) {
+                    if (i % $scope.itemsPerPage_ONE === 0) {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)] = [$scope.filteredItems_ONE[i]];
+                    } else {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)].push($scope.filteredItems_ONE[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_ONE = function () {
+                if ($scope.currentPage_ONE > 0) {
+                    $scope.currentPage_ONE--;
+                }
+            };
+
+            $scope.nextPage_ONE = function () {
+                if ($scope.currentPage_ONE < $scope.pagedItems_ONE.length - 1) {
+                    $scope.currentPage_ONE++;
+                }
+            };
+
+            $scope.setPage_ONE = function () {
+                $scope.currentPage_ONE = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_ONE();
+
+
+            // change sorting order
+            $scope.sort_by_ONE = function (newSortingOrder) {
+                if ($scope.sortingOrder_ONE == newSortingOrder)
+                    $scope.reverse_ONE = !$scope.reverse_ONE;
+
+                $scope.sortingOrder_ONE = newSortingOrder;
+            };
+
+        }
+
+        //function to fetch created forums
+        me.fetchCreatedForums = function (forums) {
+
+            me.createdForums = [];
+
+            for (var i = 0; i < forums.length; i++) {
+                if (forums[i].userId == user.id) {
+                    me.createdForums.push(forums[i]);
+                }
+            }
+
+
+            var sortingOrder_TWO = 'id'; //default sort
+
+            $scope.sortingOrder_TWO = sortingOrder_TWO;
+            $scope.pageSizes_TWO = [5, 10, 25, 50];
+            $scope.reverse_TWO = true;
+            $scope.filteredItems_TWO = [];
+            $scope.groupedItems_TWO = [];
+            $scope.itemsPerPage_TWO = 10;
+            $scope.pagedItems_TWO = [];
+            $scope.currentPage_TWO = 0;
+            $scope.items_TWO = me.createdForums;
+
+            var searchMatch_TWO = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_TWO = function () {
+                $scope.filteredItems_TWO = $filter('filter')($scope.items_TWO, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_TWO(item['forumName'], $scope.query_TWO))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_TWO !== '') {
+                    $scope.filteredItems_TWO = $filter('orderBy')($scope.filteredItems_TWO, $scope.sortingOrder_TWO, $scope.reverse_TWO);
+                }
+
+                $scope.currentPage_TWO = 0;
+                // now group by pages
+                $scope.groupToPages_TWO();
+            };
+
+            // show items per page
+            $scope.perPage_TWO = function () {
+                $scope.groupToPages_TWO();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_TWO = function () {
+                $scope.pagedItems_TWO = [];
+
+                for (var i = 0; i < $scope.filteredItems_TWO.length; i++) {
+                    if (i % $scope.itemsPerPage_TWO === 0) {
+                        $scope.pagedItems_TWO[Math.floor(i / $scope.itemsPerPage_TWO)] = [$scope.filteredItems_TWO[i]];
+                    } else {
+                        $scope.pagedItems_TWO[Math.floor(i / $scope.itemsPerPage_TWO)].push($scope.filteredItems_TWO[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_TWO = function () {
+                if ($scope.currentPage_TWO > 0) {
+                    $scope.currentPage_TWO--;
+                }
+            };
+
+            $scope.nextPage_TWO = function () {
+                if ($scope.currentPage_TWO < $scope.pagedItems_TWO.length - 1) {
+                    $scope.currentPage_TWO++;
+                }
+            };
+
+            $scope.setPage_TWO = function () {
+                $scope.currentPage_TWO = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_TWO();
+
+
+            // change sorting order
+            $scope.sort_by_TWO = function (newSortingOrder) {
+                if ($scope.sortingOrder_TWO == newSortingOrder)
+                    $scope.reverse_TWO = !$scope.reverse_TWO;
+
+                $scope.sortingOrder_TWO = newSortingOrder;
+            };
+
         }
 
         //function to create forum

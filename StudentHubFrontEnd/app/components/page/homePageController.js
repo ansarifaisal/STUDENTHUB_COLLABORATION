@@ -3,12 +3,14 @@ HomePageModule.controller('HomePageController', [
     'HomePageFactory',
     'ForumFactory',
     'BlogFactory',
+    'JobFactory',
+    'EventFactory',
     '$scope',
     '$location',
     '$timeout',
     '$route',
     '$rootScope',
-    function (HomePageFactory, ForumFactory, BlogFactory, $scope, $location, $timeout, $route, $rootScope) {
+    function (HomePageFactory, ForumFactory, BlogFactory, JobFactory, EventFactory, $scope, $location, $timeout, $route, $rootScope) {
 
         var me = this;
 
@@ -27,6 +29,25 @@ HomePageModule.controller('HomePageController', [
             requestDate: '',
             role: '',
             status: ''
+        }
+
+        me.jobApplied = {
+            id: null,
+            userId: null,
+            job: '',
+            userName: '',
+            appliedDate: '',
+            status: ''
+        }
+
+        me.joinEvent = {
+
+            id: null,
+            event: '',
+            userId: null,
+            userName: '',
+            status: ''
+
         }
 
         //load jquery
@@ -202,5 +223,121 @@ HomePageModule.controller('HomePageController', [
                 });
         }
 
+
+        //function to delete or disable job
+        me.deleteJob = function (action, id) {
+            JobFactory.deleteJob(action, id).then(function () {
+                $route.reload();
+                Materialize.toast('Job Delete Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error While Deleting Job', 6000);
+                });
+        }
+
+        //function to apply job
+        me.applyJob = function (id) {
+
+            JobFactory.getJob(id).then(function (job) {
+                me.jobApplied.userId = user.id;
+                me.jobApplied.job = job;
+                me.jobApplied.userName = user.userName;
+                var now = new Date();
+                me.jobApplied.appliedDate = dateTimeFormat(now);
+                me.jobApplied.status = 'PENDING';
+
+                JobFactory.applyJob(me.jobApplied).then(function () {
+                    $route.reload();
+                    Materialize.toast('Job Applied Successfully!', 6000);
+                },
+                    function (errorResponse) {
+                        Materialize.toast('Error Applying Job', 6000);
+                    }
+                );
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Fetching Job', 6000);
+                }
+            );
+        }
+
+
+        //function to del applied job
+        me.delAppliedJob = function (id) {
+            JobFactory.delAppliedJob(id).then(function () {
+                $route.reload();
+                Materialize.toast('Job Removed From Your List Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error While Deleting', 6000);
+                });
+        }
+
+        //function to delete event
+        me.deleteEvent = function (action, id) {
+            console.log(action);
+            EventFactory.deleteEvent(action, id).then(function () {
+                $route.reload();
+                Materialize.toast('Event Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Event', 6000);
+                }
+            );
+        }
+
+        //function join event
+        me.eventJoin = function (id) {
+            EventFactory.getEvent(id).then(function (event) {
+                me.joinEvent.event = event;
+                me.joinEvent.userId = user.id;
+                me.joinEvent.userName = user.userName;
+                me.joinEvent.status = "APPLIED";
+                EventFactory.applyEvent(me.joinEvent).then(function () {
+                    $route.reload();
+                    Materialize.toast('Event Joined Successfully!', 6000);
+                },
+                    function (errorResponse) {
+                        console.log(errorResponse);
+                        if (errorResponse.status == 302) {
+                            Materialize.toast('You Already Applied For This Event', 6000);
+                        } else {
+                            Materialize.toast('Error Joining Event', 6000);
+                        }
+                    }
+                );
+            },
+                function (errorResponse) {
+
+                    Materialize.toast('Error Joining Event', 6000);
+                }
+            );
+        }
+
+        //function to delete Event
+        me.deleteEvent = function (action, id) {
+            EventFactory.deleteEvent(action, id).then(function () {
+                $route.reload();
+                Materialize.toast('Event Deleted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Deleting Event', 6000);
+                }
+            );
+        }
+
+        //function to leave event
+        me.leaveEvent = function (id) {
+            EventFactory.leaveEvent(id).then(function () {
+                $route.reload();
+                Materialize.toast('Event Left Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('<strong>Error Leaving Event</strong>', 6000);
+                }
+            );
+        }
+
     }
+
 ]);

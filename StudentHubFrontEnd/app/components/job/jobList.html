@@ -7,8 +7,6 @@
 
                         <a href="#!user/home" class="breadcrumb">Home</a>
 
-                        <span ng-show="user.role != 'USER'" class="right"><button class="btn light-blue waves-effect waves-light" data-target="creationForm">+ Create Job</button></span>
-
                         <a href="#!" class="breadcrumb">Jobs</a>
 
                     </div>
@@ -16,20 +14,30 @@
             </nav>
         </div>
 
-        <div class="card-panel row">
-            <div class="left">
-                <strong class="black-text" style="font-size:24px;">Jobs</strong>
-            </div>
-
-            <div class="right">
-                <a href="#!/user/job/appliedjobs" class="btn light-blue waves-effect waves-light">Applied Jobs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                <a ng-show="user.role != 'USER'" href="#!/user/job/createdJobs" class="btn light-blue waves-effect waves-light">Created Job</a>
-
+        <div class="card-panel nopadding">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab col s3"><a class="active" href="#jobs">Jobs</a></li>
+                        <li class="tab col s3"><a href="#appliedJobs">Applied Jobs</a></li>
+                        <li class="tab col s3"><a href="#createdJobs">Created Jobs</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <div id="allJobs">
+        <div id="jobs">
+            <div class="card-panel row" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">Jobs</strong>
+                </div>
+
+                <div class="right">
+                    <span ng-show="user.role != 'USER'" class="right"><a class="btn light-blue waves-effect waves-light" href = "#!/user/job/createJob">+ Create Job</a></span>
+                </div>
+            </div>
+
+
             <div class="card-panel">
                 <div class="row">
                     <div class="col m8">
@@ -46,7 +54,7 @@
                     </div>
                 </div>
                 <div ng-show="!pagedItems[currentPage]">
-                    <h4 class="center">No Jobs Or No Search Match Available</h4>
+                    <h4 class="center red-text">No Jobs Or No Search Match Available</h4>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
                     <div class="center">
@@ -78,14 +86,6 @@
 
                             <!-- Dropdown Structure -->
                             <ul id='jobOption_{{job.id}}' class='dropdown-content'>
-                              <div ng-show="job.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                                <li><a href="" ng-click="jobCtrl.approveJob( job.id, 'Approved')">Approve Job</a></li>  
-                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
-                                            </div>
-                                            <!--<div ng-show="job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                                <li><a href="#!/user/job/report/{{job.id}}">Handle Report</a></li>  
-                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
-                                            </div>-->
                                             <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
                                             <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
                                             <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
@@ -126,6 +126,11 @@
                                     </div>
                                 </table>
                                 <a ng-click="jobCtrl.applyJob(job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                <div ng-repeat="jobApplied in job['jobApplied']">
+                                    <a ng-show="jobApplied.userId == user.id" ng-click="jobCtrl.delAppliedJob(jobApplied.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                                </div>
+                                <a ng-show="job.userId == user.id" ng-click="jobCtrl.deleteJob('Closed', job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
                             </div>
                         </div>
                     </div><br/>
@@ -148,148 +153,262 @@
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
 
 
-<div id="creationForm" class="modal">
-    <div class="modal-content">
-        <h5>Create Job</h5>
-        <hr/>
-        <div class="row">
-            <div class="col m6 offset-m3">
-                <form name="creationForm" ng-submit="jobCtrl.jobCreate()" novalidate>
+    <div id="appliedJobs">
+        <div class="card-panel row" style="padding:10px;">
+            <div class="left">
+                <strong class="black-text" style="font-size:24px;">Applied Jobs</strong>
+            </div>
 
-                    <!--title field starts here-->
-                    <div class="input-field nomargin">
-                        <input type="text" name="title" id="title" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                            data-length="50" ng-model="jobCtrl.createJob.title" placeholder="Job Name" required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.title.$dirty">
-                            <span ng-show="creationForm.title.$dirty && creationForm.title.$error.required">Please, Provide Title</span>
-                            <span ng-show="creationForm.title.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="creationForm.title.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="creationForm.title.$error.pattern">This field cannot contain special charachters</span>
-                        </div>
-                    </div>
-                    <!--title field ends here-->
-
-                    <!--company field starts here-->
-                    <div class="input-field nomargin">
-                        <input type="text" name="company" id="company" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                            data-length="50" ng-model="jobCtrl.createJob.company" placeholder="Company Name" required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.company.$dirty">
-                            <span ng-show="creationForm.company.$dirty && creationForm.company.$error.required">Please, Provide company</span>
-                            <span ng-show="creationForm.company.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="creationForm.company.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="creationForm.company.$error.pattern">This field cannot contain special charachters</span>
-                        </div>
-                    </div>
-                    <!--company field ends here-->
-
-                    <!--description field starts here-->
-                    <div class="input-field nomargin">
-
-                        <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
-                            ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Job Description" data-length="500"
-                            ng-model="jobCtrl.createJob.description" placeholder="description" required="required"></textarea>
-                        <div class="invalid-data center-align" ng-show="creationForm.description.$dirty">
-                            <span ng-show="creationForm.description.$dirty && creationForm.description.$error.required">Please, Provide Description</span>
-                            <span ng-show="creationForm.description.$error.minlength">This field must contain atleast 20 charachters</span>
-                            <span ng-show="creationForm.description.$error.maxlength">This field can contain maximum 500 charachters</span>
-                            <span ng-show="creationForm.description.$error.pattern">This field can contain only '-,_;' these special charachters</span>
-                        </div>
-
-                    </div>
-                    <!--description field ends here-->
-
-                    <!--qualification field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="qualification" id="qualification" ng-pattern="/^[a-zA-z0-9\,\.\-\s]+$/" ng-minlength="1" maxlength="20"
-                            ng-maxlength="20" data-length="20" ng-model="jobCtrl.createJob.qualification" placeholder="Qualification"
-                            required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.qualification.$dirty">
-                            <span ng-show="creationForm.qualification.$dirty && creationForm.qualification.$error.required">Please, Provide qualification</span>
-                            <span ng-show="creationForm.qualification.$error.minlength">This field must contain atleast 1 charachters</span>
-                            <span ng-show="creationForm.qualification.$error.maxlength">This field can contain maximum 20 charachters</span>
-                            <span ng-show="creationForm.qualification.$error.pattern">This field can contain these special charachters ',.-'</span>
-                        </div>
-
-                    </div>
-                    <!--qualification field ends here-->
-
-                    <!--Key Skills field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="keySkills" id="keySkills" ng-pattern="/^[a-zA-z0-9\,\.\-\s]+$/" ng-minlength="2" maxlength="100"
-                            ng-maxlength="100" data-length="100" ng-model="jobCtrl.createJob.keySkills" placeholder="Enter Key Skills"
-                            required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.keySkills.$dirty">
-                            <span ng-show="creationForm.keySkills.$dirty && creationForm.keySkills.$error.required">Please, Provide keySkills</span>
-                            <span ng-show="creationForm.keySkills.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="creationForm.keySkills.$error.maxlength">This field can contain maximum 100 charachters</span>
-                            <span ng-show="creationForm.keySkills.$error.pattern">This field can contain these special charachters ',.-'</span>
-                        </div>
-
-                    </div>
-                    <!--Key Skills field ends here-->
-
-                    <!--Experience field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="experience" id="experience" ng-pattern="/^[0-9]+$/" ng-minlength="1" maxlength="2" ng-maxlength="2"
-                            data-length="2" ng-model="jobCtrl.createJob.experience" placeholder="Experience Name" required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.experience.$dirty">
-                            <span ng-show="creationForm.experience.$dirty && creationForm.experience.$error.required">Please, Provide Experience</span>
-                            <span ng-show="creationForm.experience.$error.minlength">This field must contain atleast 1 number</span>
-                            <span ng-show="creationForm.experience.$error.maxlength">This field can contain maximum 2 numbers</span>
-                            <span ng-show="creationForm.experience.$error.pattern">This field can contain only numbers</span>
-                        </div>
-
-                    </div>
-                    <!--Experience field ends here-->
-
-                    <!--Salary field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="salary" id="salary" ng-pattern="/^[0-9]+$/" ng-minlength="4" maxlength="9" ng-maxlength="9" data-length="9"
-                            ng-model="jobCtrl.createJob.salary" placeholder="Salary" required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.salary.$dirty">
-                            <span ng-show="creationForm.salary.$dirty && creationForm.salary.$error.required">Please, Provide Salary</span>
-                            <span ng-show="creationForm.salary.$error.minlength">This field must contain atleast 4 numbers</span>
-                            <span ng-show="creationForm.salary.$error.maxlength">This field can contain maximum 9 numbers</span>
-                            <span ng-show="creationForm.salary.$error.pattern">This field can contain only numbers</span>
-                        </div>
-
-                    </div>
-                    <!--salary field ends here-->
-
-                    <!--Location field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="location" id="location" ng-pattern="/^[A-Za-z\s\-]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
-                            data-length="20" ng-model="jobCtrl.createJob.location" placeholder="Location Name" required="required">
-                        <div class="invalid-data center-align" ng-show="creationForm.location.$dirty">
-                            <span ng-show="creationForm.location.$dirty && creationForm.location.$error.required">Please, Provide Location</span>
-                            <span ng-show="creationForm.location.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="creationForm.location.$error.maxlength">This field can contain maximum 20 charachters</span>
-                            <span ng-show="creationForm.location.$error.pattern">This field can contain only charachters</span>
-                        </div>
-
-                    </div>
-                    <!--location field ends here-->
-
-
-                    <div class="input-field">
-                        <div class="hoverable">
-                            <input type="submit" class="btn light-blue waves-effect modal-close waves-light full-width" ng-disabled="creationForm.$invalid"
-                                value="Save Changes">
-                        </div>
-                    </div>
-
-                </form>
+            <div class="right">
+                <span ng-show="user.role != 'USER'" class="right"><a class="btn light-blue waves-effect waves-light" href = "#!/user/job/createJob">+ Create Job</a></span>
             </div>
         </div>
+
+
+        <div class="card-panel">
+            <div class="row">
+                <div class="col m8">
+                    <div class="input-field nomargin">
+                        <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
+                        <label for="searchKeyword">Search For Job</label>
+                    </div>
+                </div>
+
+                <div class="col m4">
+                    <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
+                    </select>
+                    <label>Materialize Select</label>
+                </div>
+            </div>
+            <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                <h4 class="center red-text">You Have Not Applied For Any Job(s) Yet Or No Search Match Available</h4>
+            </div>
+            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                <div class="center">
+                    <ul class="pagination">
+                        <li ng-class="{disabled: currentPage_ONE == 0}">
+                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row nomargin" ng-repeat="job in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
+                <div ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
+                    <div class="card horizontal">
+                        <!--<div class="card-image">
+                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                    </div>-->
+                        <div class="card-stacked">
+                            <div class="card-content">
+
+                                <div class="row nomargin">
+                                    <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='myJobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='myJobOption_{{job.id}}' class='dropdown-content'>
+                                            <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
+                                            <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
+                                            <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                                <li class="divider"></li>
+                                                <li><a href="#!/user/job/editJob/{{job.id}}">Edit</a></li>
+                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
+                                            </span>
+                                </div>
+                                </ul>
+
+                                </span>
+                                <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
+                                <p style="color: grey; font-size: 14px;">{{job.company}}</p>
+                            </div>
+                            <table class="bordered" style="font-size: 12px; color:grey;">
+                                <tr>
+                                    <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                    <td>On: <span>{{job.postDate}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                        yrs
+                                    </td>
+                                    <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                                </tr>
+                                <tr>
+                                    <td>&#8377; {{job.salary}} P.A.
+                                    </td>
+                                    <td>Key Skills: {{job.keySkills}}</td>
+                                </tr>
+
+                                <div ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <tr>
+                                        <td>Report: {{job.report}}
+                                        </td>
+                                        <td>Status: {{job.status}}</td>
+                                    </tr>
+                                </div>
+                            </table>
+                            <a ng-click="jobCtrl.applyJob(job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                            <div ng-repeat="jobApplied in job['jobApplied']">
+                                <a ng-show="jobApplied.userId == user.id" ng-click="jobCtrl.delAppliedJob(jobApplied.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            </div>
+                            <a ng-show="job.userId == user.id" ng-click="jobCtrl.deleteJob('Closed', job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
+                        </div>
+                    </div>
+                </div><br/>
+            </div>
+        </div>
+
+
+        <div class="center" ng-hide="!pagedItems_ONE[currentPage_ONE]">
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage_ONE == 0}">.
+                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                </li>
+                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                </li>
+                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                </li>
+            </ul>
+        </div>
     </div>
+</div>
+
+<div id="createdJobs">
+    <div class="card-panel row" style="padding:10px;">
+        <div class="left">
+            <strong class="black-text" style="font-size:24px;">Created Jobs</strong>
+        </div>
+
+        <div class="right">
+            <span ng-show="user.role != 'USER'" class="right"><a class="btn light-blue waves-effect waves-light" href = "#!/user/job/createJob">+ Create Job</a></span>
+        </div>
+    </div>
+
+
+    <div class="card-panel">
+        <div class="row">
+            <div class="col m8">
+                <div class="input-field nomargin">
+                    <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                    <label for="searchKeyword">Search For Job</label>
+                </div>
+            </div>
+
+            <div class="col m4">
+                <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
+                    </select>
+                <label>Materialize Select</label>
+            </div>
+        </div>
+        <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+            <h4 class="center red-text">You Haven't Created Any Job(s) Yet Or No Search Match Available</h4>
+        </div>
+        <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+            <div class="center">
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage_TWO == 0}">
+                        <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row nomargin" ng-repeat="job in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
+            <div ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
+                <div class="card horizontal">
+                    <!--<div class="card-image">
+                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                    </div>-->
+                    <div class="card-stacked">
+                        <div class="card-content">
+
+                            <div class="row nomargin">
+                                <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='myJobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='myJobOption_{{job.id}}' class='dropdown-content'>
+                                            <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
+                                            <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
+                                            <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                                <li class="divider"></li>
+                                                <li><a href="#!/user/job/editJob/{{job.id}}">Edit</a></li>
+                                                <li><a href="" ng-click="jobCtrl.deleteJob('Closed', job.id)">Delete</a></li>
+                                            </span>
+                            </div>
+                            </ul>
+
+                            </span>
+                            <p style="font-size: 18px;"><a class="black-text" href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
+                            <p style="color: grey; font-size: 14px;">{{job.company}}</p>
+                        </div>
+                        <table class="bordered" style="font-size: 12px; color:grey;">
+                            <tr>
+                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                <td>On: <span>{{job.postDate}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{job.experience}}
+                                    yrs
+                                </td>
+                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{job.location}}</td>
+                            </tr>
+                            <tr>
+                                <td>&#8377; {{job.salary}} P.A.
+                                </td>
+                                <td>Key Skills: {{job.keySkills}}</td>
+                            </tr>
+
+                            <div ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                <tr>
+                                    <td>Report: {{job.report}}
+                                    </td>
+                                    <td>Status: {{job.status}}</td>
+                                </tr>
+                            </div>
+                        </table>
+                        <a ng-click="jobCtrl.applyJob(job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <div ng-repeat="jobApplied in job['jobApplied']">
+                            <a ng-show="jobApplied.userId == user.id" ng-click="jobCtrl.delAppliedJob(jobApplied.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                        </div>
+                        <a ng-show="job.userId == user.id" ng-click="jobCtrl.deleteJob('Closed', job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+
+                    </div>
+                </div>
+            </div><br/>
+        </div>
+    </div>
+
+
+    <div class="center" ng-hide="!pagedItems_TWO[currentPage_TWO]">
+        <ul class="pagination">
+            <li ng-class="{disabled: currentPage_TWO == 0}">.
+                <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+            </li>
+            <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                <a href="javascript:;" ng-bind="n + 1">1</a>
+            </li>
+            <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+</div>
 </div>

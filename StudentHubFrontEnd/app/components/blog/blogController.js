@@ -86,9 +86,8 @@ BlogModule.controller('BlogController', [
         }
 
         me.fetchAllBlogs = function () {
-            BlogFactory.fetchAllBlogs().then(function (blogs) {
 
-                console.log(blogs);
+            BlogFactory.fetchAllBlogs().then(function (blogs) {
 
                 var sortingOrder = 'blogId'; //default sort
 
@@ -175,11 +174,108 @@ BlogModule.controller('BlogController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
+
+                me.fetchMyBlogs(blogs);
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching The Blogs</strong>', 6000);
                 }
             );
+        }
+
+        me.fetchMyBlogs = function (blogs) {
+            me.myBlogs = [];
+
+            for (var i = 0; i < blogs.length; i++) {
+                if (blogs[i].userId == user.id) {
+                    me.myBlogs.push(blogs[i]);
+                }
+            }
+            var sortingOrder_ONE = 'blogId'; //default sort
+
+            $scope.sortingOrder_ONE = sortingOrder_ONE;
+            $scope.pageSizes_ONE = [5, 10, 25, 50];
+            $scope.reverse_ONE = true;
+            $scope.filteredItems_ONE = [];
+            $scope.groupedItems_ONE = [];
+            $scope.itemsPerPage_ONE = 10;
+            $scope.pagedItems_ONE = [];
+            $scope.currentPage_ONE = 0;
+            $scope.items_ONE = me.myBlogs;
+
+            var searchMatch_ONE = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_ONE = function () {
+                $scope.filteredItems_ONE = $filter('filter')($scope.items_ONE, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_ONE(item['title'], $scope.query_ONE))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_ONE !== '') {
+                    $scope.filteredItems_ONE = $filter('orderBy')($scope.filteredItems_ONE, $scope.sortingOrder_ONE, $scope.reverse_ONE);
+                }
+
+                $scope.currentPage_ONE = 0;
+                // now group by pages
+                $scope.groupToPages_ONE();
+            };
+
+            // show items per page
+            $scope.perPage_ONE = function () {
+                $scope.groupToPages_ONE();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_ONE = function () {
+                $scope.pagedItems_ONE = [];
+
+                for (var i = 0; i < $scope.filteredItems_ONE.length; i++) {
+                    if (i % $scope.itemsPerPage_ONE === 0) {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)] = [$scope.filteredItems_ONE[i]];
+                    } else {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)].push($scope.filteredItems_ONE[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_ONE = function () {
+                if ($scope.currentPage_ONE > 0) {
+                    $scope.currentPage_ONE--;
+                }
+            };
+
+            $scope.nextPage_ONE = function () {
+                if ($scope.currentPage_ONE < $scope.pagedItems_ONE.length - 1) {
+                    $scope.currentPage_ONE++;
+                }
+            };
+
+            $scope.setPage_ONE = function () {
+                $scope.currentPage_ONE = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_ONE();
+
+
+            // change sorting order
+            $scope.sort_by_ONE = function (newSortingOrder) {
+                if ($scope.sortingOrder_ONE == newSortingOrder)
+                    $scope.reverse_ONE = !$scope.reverse_ONE;
+
+                $scope.sortingOrder_ONE = newSortingOrder;
+            };
+
         }
 
         me.getBlog = function () {
@@ -323,7 +419,7 @@ BlogModule.controller('BlogController', [
         me.editBlog = function () {
 
             BlogFactory.createEditBlog(me.blog).then(function () {
-                $location.path("/user/blogs");
+                $location.path("/user/blog/view/" + me.blog.blogId);
                 Materialize.toast('<strong>Blog Successfully Updated!</strong>', 6000);
             },
                 function (errorResponse) {

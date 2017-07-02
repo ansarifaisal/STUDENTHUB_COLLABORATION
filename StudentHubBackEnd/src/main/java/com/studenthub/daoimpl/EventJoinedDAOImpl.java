@@ -73,33 +73,4 @@ public class EventJoinedDAOImpl implements EventJoinedDAO {
 		return query.list();
 	}
 
-	@Override
-	@Transactional
-	public boolean checkExisiting(int eventID, int userID) {
-		String hql = "FROM EVENT_JOINED WHERE USER_ID = :userID AND EVENT_ID = :eventID";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("userID", userID);
-		query.setParameter("eventID", eventID);
-		if (query.list().isEmpty()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	@Transactional
-	public EventJoined getByUserID(int userID, int eventID) {
-		String hql = "FROM EVENT_JOINED WHERE USER_ID = :userID AND EVENT_ID = :eventID";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("userID", userID);
-		query.setParameter("eventID", eventID);
-		if (query.list().isEmpty()) {
-			EventJoined eventJoined = new EventJoined();
-			return eventJoined;
-		} else {
-			return (EventJoined) query.getSingleResult();
-		}
-	}
-
 }

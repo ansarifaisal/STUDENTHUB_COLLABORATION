@@ -16,10 +16,7 @@ EventModule.factory('EventFactory', [
             createEvent: createEvent,
             editEvent: editEvent,
             deleteEvent: deleteEvent,
-            fetchAppliedEvents: fetchAppliedEvents,
             leaveEvent: leaveEvent,
-            fetchCreatedEvents: fetchCreatedEvents
-
         };
 
         return eventFactory;
@@ -118,7 +115,7 @@ EventModule.factory('EventFactory', [
 
         //function to delete event
         function deleteEvent(action, id) {
-            
+
             var deferred = $q.defer();
             $http.get(REST_API_URI + 'admin/event/' + action + '/' + id).then(function (response) {
                 deferred.resolve(response.data);
@@ -132,24 +129,10 @@ EventModule.factory('EventFactory', [
 
         }
 
-        //function to fetch applied event
-        function fetchAppliedEvents(id) {
-            var deferred = $q.defer();
-            $http.get(REST_API_URI + '/' + id + '/events').then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log('Error While Fetching Events');
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
-        }
-
         //function to delete applied event
-        function leaveEvent(id, userId) {
+        function leaveEvent(id) {
             var deferred = $q.defer();
-            $http.get(REST_API_URI + 'event/leave/' + userId + '/' + id).then(function (response) {
+            $http.get(REST_API_URI + 'event/leave/' + id).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
@@ -160,18 +143,6 @@ EventModule.factory('EventFactory', [
             return deferred.promise;
         }
 
-        //function to fetch created Events
-        function fetchCreatedEvents(id) {
-            var deferred = $q.defer();
-            $http.get(REST_API_URI + 'event/created/' + id).then(function (response) {
-                deferred.resolve(response.data);
-            },
-                function (errorResponse) {
-                    console.log('Error While Leaving Event!');
-                    deferred.reject(errorResponse);
-                }
-            );
-            return deferred.promise;
-        }
 
-    }]);
+    }
+]);

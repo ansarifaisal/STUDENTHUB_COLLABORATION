@@ -13,6 +13,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity(name = "JOB_APPLIED")
 @Component
 public class JobApplied implements Serializable {
@@ -34,6 +36,7 @@ public class JobApplied implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "JOB_ID", nullable = false)
+	@JsonBackReference
 	private Job job;
 
 	@Column(name = "USER_ID", nullable = false)

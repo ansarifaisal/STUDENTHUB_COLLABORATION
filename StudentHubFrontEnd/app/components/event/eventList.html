@@ -6,59 +6,199 @@
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
 
-                        <span class="right"><button class="btn light-blue waves-effect waves-light" data-target = "creationForm">+ Create Event</button></span>
-
                         <a href="#!" class="breadcrumb">Events</a>
                     </div>
                 </div>
             </nav>
         </div>
+
+        <div class="card-panel nopadding">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab col s3"><a class="active" href="#events">Events</a></li>
+                        <li class="tab col s3"><a href="#appliedEvents">Applied Events</a></li>
+                        <li class="tab col s3"><a href="#createdEvents">Created Events</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--Event Section Starts Here-->
+
+        <div id="events">
+            <div class="card-panel row" style="padding:10px;">
+                <div class="left">
+                    <strong class="black-text" style="font-size:24px;">Events</strong>
+                </div>
+
+                <div class="right">
+                    <!--<a href="#!/user/event/appliedEvents" class="btn light-blue waves-effect waves-light">Applied Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#!/user/event/createdEvents" class="btn light-blue waves-effect waves-light">Created Events</a>-->
+                    <span class="right"><a class="btn light-blue waves-effect waves-light" href="#!/user/event/createEvent">+ Create Event</a></span>
+                </div>
+            </div>
+            <div class="card-panel">
+                <div class="row">
+                    <div class="col m8">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Event</label>
+                        </div>
+                    </div>
+
+                    <div class="col m4">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                        <label>Materialize Select</label>
+                    </div>
+                </div>
+                <div ng-show="!pagedItems[currentPage]">
+                    <h4 class="center red-text">No Events Or No Search Match Available</h4>
+                </div>
+                <div ng-hide="!pagedItems[currentPage]">
+                    <div class="center">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row nomargin" ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+
+                    <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='eventOption_{{event.id}}'><i class="material-icons">more_vert</i></a>
+
+                            <!-- Dropdown Structure -->
+                            <ul id='eventOption_{{event.id}}' class='dropdown-content'>
+                                <div ng-hide="event.report == 'YES' || event.status != 'APPROVED'">
+                                <li><a href="#!/user/event/report/{{event.id}}">Report</a></li>
+                                <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                </span>
+                                    </div>
+                                    </ul>
+
+                                    </span>
+                                    <p style="font-size: 18px;"><a class="black-text" href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
+                                </div>
+                                <table class="bordered" style="font-size: 12px; color:grey;">
+                                    <tr>
+                                        <td>By <a href="">{{event.userName}}</a></td>
+                                        <td> <span>On: {{event.postDate}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Joined: {{event.noOfApplied}}
+                                        </td>
+                                        <td>Start Date: {{event.startDate}}</td>
+                                    </tr>
+                                    <div ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                        <tr>
+                                            <td>Report: {{event.reported}}
+                                            </td>
+                                            <td>Status: {{event.status}}</td>
+                                        </tr>
+                                    </div>
+                                </table>
+                                <a ng-click="eventCtrl.eventJoin(event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                                <div ng-repeat="eventJoined in event['eventJoined']">
+                                    <a ng-show="eventJoined.userId == user.id" ng-click="eventCtrl.leaveEvent(eventJoined.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                                </div>
+                                <a ng-show="event.userId == user.id" ng-click="eventCtrl.deleteEvent('Disabled', event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-hide="!pagedItems[currentPage]">
+            <div class="center">
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--Event Section Ends Here-->
+
+    <!--Applied Event Section Starts Here-->
+    <div id="appliedEvents">
+
         <div class="card-panel row" style="padding:10px;">
             <div class="left">
-                <strong class="black-text" style="font-size:24px;">Events</strong>
+                <strong class="black-text" style="font-size:24px;">Applied Events</strong>
             </div>
 
             <div class="right">
-                <a href="#!/user/event/appliedEvents" class="btn light-blue waves-effect waves-light">Applied Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#!/user/event/createdEvents" class="btn light-blue waves-effect waves-light">Created Events</a>
+                <!--<a href="#!/user/event/appliedEvents" class="btn light-blue waves-effect waves-light">Applied Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#!/user/event/createdEvents" class="btn light-blue waves-effect waves-light">Created Events</a>-->
+                <span class="right"><a class="btn light-blue waves-effect waves-light" href="#!/user/event/createEvent">+ Create Event</a></span>
             </div>
         </div>
         <div class="card-panel">
             <div class="row">
                 <div class="col m8">
                     <div class="input-field nomargin">
-                        <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                        <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
                         <label for="searchKeyword">Search For Event</label>
                     </div>
                 </div>
 
                 <div class="col m4">
-                    <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
                     </select>
                     <label>Materialize Select</label>
                 </div>
             </div>
-            <div ng-show="!pagedItems[currentPage]">
-                <h4 class="center">No Events Or No Search Match Available</h4>
+            <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                <h4 class="center red-text">Not Applied For Any Events Yet Or No Search Match Available</h4>
             </div>
-            <div ng-hide="!pagedItems[currentPage]">
+            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
                 <div class="center">
                     <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                        <li ng-class="{disabled: currentPage_ONE == 0}">
+                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
                         </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
                             <a href="javascript:;" ng-bind="n + 1">1</a>
                         </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="row nomargin" ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                
+            <div class="row nomargin" ng-repeat="event in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
+
                 <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
                     <div class="card horizontal">
                         <div class="card-image">
@@ -105,6 +245,10 @@
                             </table>
 
                             <a ng-click="eventCtrl.eventJoin(event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                            <div ng-repeat="eventJoined in event['eventJoined']">
+                                <a ng-show="eventJoined.userId == user.id" ng-click="eventCtrl.leaveEvent(eventJoined.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                            </div>
+                            <a ng-show="event.userId == user.id" ng-click="eventCtrl.deleteEvent('Disabled', event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
 
                             <!--<div ng-repeat="eventJoined in event['eventJoined']">
                             <a ng-show="eventJoined.userId == user.id" ng-click="eventCtrl.leaveEvent(eventJoined.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
@@ -116,130 +260,152 @@
             </div>
         </div>
 
-        <div ng-hide="!pagedItems[currentPage]">
+        <div class="center" ng-hide="!pagedItems_ONE[currentPage_ONE]">
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage_ONE == 0}">.
+                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                </li>
+                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                </li>
+                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<!--Applied Event Section Starts Here-->
+
+<!--Created Event Section Starts Here-->
+<div id="createdEvents">
+
+    <div class="card-panel row" style="padding:10px;">
+        <div class="left">
+            <strong class="black-text" style="font-size:24px;">Created Events</strong>
+        </div>
+
+        <div class="right">
+            <!--<a href="#!/user/event/appliedEvents" class="btn light-blue waves-effect waves-light">Applied Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#!/user/event/createdEvents" class="btn light-blue waves-effect waves-light">Created Events</a>-->
+            <span class="right"><a class="btn light-blue waves-effect waves-light" href="#!/user/event/createEvent">+ Create Event</a></span>
+        </div>
+    </div>
+    <div class="card-panel">
+        <div class="row">
+            <div class="col m8">
+                <div class="input-field nomargin">
+                    <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                    <label for="searchKeyword">Search For Event</label>
+                </div>
+            </div>
+
+            <div class="col m4">
+                <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
+                    </select>
+                <label>Materialize Select</label>
+            </div>
+        </div>
+        <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+            <h4 class="center red-text">Not Created Any Events Yet Or No Search Match Available</h4>
+        </div>
+        <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
             <div class="center">
                 <ul class="pagination">
-                    <li ng-class="{disabled: currentPage == 0}">
-                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    <li ng-class="{disabled: currentPage_TWO == 0}">
+                        <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
                     </li>
-                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
                         <a href="javascript:;" ng-bind="n + 1">1</a>
                     </li>
-                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
                     </li>
                 </ul>
             </div>
         </div>
-    </div>
 
-</div>
-</div>
+        <div class="row nomargin" ng-repeat="event in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
 
-<div id="creationForm" class="modal">
-    <div class="modal-content">
-        <h5>Create Event</h5>
-        <hr/>
-        <div class="row">
-            <div class="col m6 offset-m3">
-                <form name="createForm" ng-submit="eventCtrl.createNewEvent()" novalidate>
-
-                    <!--eventTitle field starts here-->
-                    <div class="input-field nomargin">
-                        <input type="text" name="eventTitle" id="eventTitle" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                            data-length="50" ng-model="eventCtrl.createEvent.eventTitle" placeholder="Event Name" required="required">
-                        <div class="invalid-data center-align" ng-show="createForm.eventTitle.$dirty">
-                            <span ng-show="createForm.eventTitle.$dirty && createForm.eventTitle.$error.required">Please, Provide Event Title</span>
-                            <span ng-show="createForm.eventTitle.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="createForm.eventTitle.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="createForm.eventTitle.$error.pattern">This field cannot contain special charachters</span>
-                        </div>
+            <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
+                <div class="card horizontal">
+                    <div class="card-image">
+                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
                     </div>
-                    <!--eventTitle field ends here-->
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <div class="row nomargin">
+                                <span class="right">
+                                <a class='dropdown-button' href='#' data-activates='eventOption_{{event.id}}'><i class="material-icons">more_vert</i></a>
 
-                    <!--venue field starts here-->
-                    <div class="input-field nomargin">
-                        <input type="text" name="venue" id="venue" ng-pattern="/^[a-zA-Z0-9\s\-]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
-                            data-length="50" ng-model="eventCtrl.createEvent.venue" placeholder="Venue Name" required="required">
-                        <div class="invalid-data center-align" ng-show="createForm.venue.$dirty">
-                            <span ng-show="createForm.venue.$dirty && createForm.venue.$error.required">Please, Provide Venue</span>
-                            <span ng-show="createForm.venue.$error.minlength">This field must contain atleast 2 charachters</span>
-                            <span ng-show="createForm.venue.$error.maxlength">This field can contain maximum 50 charachters</span>
-                            <span ng-show="createForm.venue.$error.pattern">This field cannot contain special charachters</span>
+                            <!-- Dropdown Structure -->
+                            <ul id='eventOption_{{event.id}}' class='dropdown-content'>
+                                <div ng-hide="event.report == 'YES' || event.status != 'APPROVED'">
+                                <li><a href="#!/user/event/report/{{event.id}}">Report</a></li>
+                                <span ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                    <li class="divider"></li>
+                                    <li><a href="#!/user/event/edit/{{event.id}}">Edit</a></li>
+                                    <li><a href="" ng-click="eventCtrl.deleteevent('Closed', event.id)">Delete</a></li>
+                                </span>
+                            </div>
+                            </ul>
+
+                            </span>
+                            <p style="font-size: 18px;"><a class="black-text" href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
                         </div>
-                    </div>
-                    <!--company field ends here-->
+                        <table class="bordered" style="font-size: 12px; color:grey;">
+                            <tr>
+                                <td>By <a href="">{{event.userName}}</a></td>
+                                <td> <span>On: {{event.postDate}}</span></td>
+                            </tr>
+                            <tr>
+                                <td>Joined: {{event.noOfApplied}}
+                                </td>
+                                <td>Start Date: {{event.startDate}}</td>
+                            </tr>
+                            <div ng-show="event.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                <tr>
+                                    <td>Report: {{event.reported}}
+                                    </td>
+                                    <td>Status: {{event.status}}</td>
+                                </tr>
+                            </div>
+                        </table>
 
-                    <!--description field starts here-->
-                    <div class="input-field nomargin">
-
-                        <textarea id="description" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/"
-                            ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Event Description" data-length="500"
-                            ng-model="eventCtrl.createEvent.description" placeholder="description" required="required"></textarea>
-                        <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
-                            <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide Description</span>
-                            <span ng-show="createForm.description.$error.minlength">This field must contain atleast 20 charachters</span>
-                            <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 500 charachters</span>
-                            <span ng-show="createForm.description.$error.pattern">This field can contain only '-,_;' these special charachters</span>
+                        <a ng-click="eventCtrl.eventJoin(event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <div ng-repeat="eventJoined in event['eventJoined']">
+                            <a ng-show="eventJoined.userId == user.id" ng-click="eventCtrl.leaveEvent(eventJoined.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
                         </div>
+                        <a ng-show="event.userId == user.id" ng-click="eventCtrl.deleteEvent('Disabled', event.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
 
-                    </div>
-                    <!--description field ends here-->
-
-                    <!--Image Field Starts Here-->
-                    <div class="file-field input-field">
-                        <div class="btn light-blue waves-effect waves-light">
-                            <span>File</span>
-                            <input type="file">
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
-                    <!--Image Field Ends Here-->
-
-                    <!--startDate field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="startDate" class="datepicker" id="startDate" ng-pattern="/^[a-zA-z0-9\s\:\,]+$/" ng-minlength="5"
-                            maxlength="5" ng-maxlength="50" data-length="50" ng-model="eventCtrl.createEvent.startDate" placeholder="Start Date"
-                            required="required">
-                        <div class="invalid-data center-align" ng-show="createForm.startDate.$dirty">
-                            <span ng-show="createForm.startDate.$dirty && createForm.startDate.$error.required">Please, Provide Start Date</span>
-                            <span ng-show="createForm.startDate.$error.minlength">This field must contain atleast 5 number</span>
-                            <span ng-show="createForm.startDate.$error.maxlength">This field can contain maximum 50 numbers</span>
-                            <span ng-show="createForm.startDate.$error.pattern">This field can contain only numbers</span>
-                        </div>
+                        <!--<div ng-repeat="eventJoined in event['eventJoined']">
+                            <a ng-show="eventJoined.userId == user.id" ng-click="eventCtrl.leaveEvent(eventJoined.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                        </div>-->
 
                     </div>
-                    <!--startDate field ends here-->
-
-                    <!--endDate field starts here-->
-                    <div class="input-field nomargin">
-
-                        <input type="text" name="endDate" class="datepicker" id="endDate" ng-pattern="/^[a-zA-Z0-9\s\:\,]+$/" ng-minlength="5" maxlength="5"
-                            ng-maxlength="50" data-length="50" ng-model="eventCtrl.createEvent.endDate" placeholder="End Date"
-                            required="required">
-                        <div class="invalid-data center-align" ng-show="createForm.endDate.$dirty">
-                            <span ng-show="createForm.endDate.$dirty && createForm.endDate.$error.required">Please, Provide End Date</span>
-                            <span ng-show="createForm.endDate.$error.minlength">This field must contain atleast 5 number</span>
-                            <span ng-show="createForm.endDate.$error.maxlength">This field can contain maximum 50 numbers</span>
-                            <span ng-show="createForm.endDate.$error.pattern">This field can contain only numbers</span>
-                        </div>
-
-                    </div>
-                    <!--endDate field ends here-->
-
-
-                    <div class="input-field">
-                        <div class="hoverable">
-                            <input type="submit" class="btn light-blue waves-effect modal-close waves-light full-width" ng-disabled="createForm.$invalid"
-                                value="Save Changes">
-                        </div>
-                    </div>
-
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="center" ng-hide="!pagedItems_TWO[currentPage_TWO]">
+        <ul class="pagination">
+            <li ng-class="{disabled: currentPage_TWO == 0}">.
+                <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+            </li>
+            <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                <a href="javascript:;" ng-bind="n + 1">1</a>
+            </li>
+            <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</div>
+<!--Created Job Section Starts Here-->
+</div>
+
 </div>

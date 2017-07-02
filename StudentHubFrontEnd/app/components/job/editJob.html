@@ -6,14 +6,15 @@
                     <div class="col s12">
                         <a href="#!/user/home" class="breadcrumb">Home</a>
                         <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
-                        <a href="#!/user/job/editjob/{{jobCtrl.job.id}}" class="breadcrumb">Edit Job</a>
+                        <a href="#!/user/job/view/{{jobCtrl.job.id}}" class="breadcrumb">{{jobCtrl.job.title}}</a>
+                        <a class="breadcrumb">Edit Job</a>
                     </div>
                 </div>
             </nav>
         </div>
 
         <div class="card-panel">
-            <strong style="font-size:20px;" class="grey-text">Edit Job</strong>
+            <h5><strong class="grey-text">Edit Job</strong></h5>
             <hr/>
             <div class="row">
                 <div class="col offset-m3 m6">

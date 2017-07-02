@@ -19,9 +19,13 @@
             <div class="row">
                 <div class="col s12">
                     <ul class="tabs tabs-fixed-width">
+
                         <li class="tab col s3"><a class="active" href="#forums">Forums</a></li>
+
                         <li class="tab col s3"><a href="#joinedForums">Joined Forums</a></li>
+
                         <li class="tab col s3"><a href="#createdForums">Created Forums</a></li>
+
                     </ul>
                 </div>
             </div>
@@ -57,7 +61,7 @@
                 </div>
 
                 <div ng-show="!pagedItems[currentPage]">
-                    <h4 class="center">No Forum(s) Available</h4>
+                    <h5 class="center red-text"><strong>No Forum(s) Available OR Search Match Available</strong></h5>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
                     <div class="center">
@@ -76,7 +80,7 @@
                 </div>
 
                 <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                    <div ng-hide="forum.status != 'APPROVED'">
+                    <div ng-hide="forum.status != 'APPROVED' && forum.report == 'YES'">
                         <div class="card horizontal">
                             <div class="card-image">
                                 <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -176,40 +180,40 @@
             <div class="row nomargin">
                 <div class="col m8">
                     <div class="input-field nomargin">
-                        <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
-                        <label for="searchKeyword">Search For Forums</label>
+                        <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
+                        <label for="searchKeyword">Search For Forum</label>
                     </div>
                 </div>
 
                 <div class="col m4">
-                    <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
                     </select>
                     <label>Materialize Select</label>
                 </div>
             </div>
 
-            <div ng-show="!pagedItems[currentPage]">
-                <h4 class="center">No Forum(s) Available</h4>
+            <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                <h5 class="center red-text"><strong>No Forum(s) Available OR Search Match Available</strong></h5>
             </div>
-            <div ng-hide="!pagedItems[currentPage]">
+            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
                 <div class="center">
-                    <ul class="pagination nomargin">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                    <ul class="pagination">
+                        <li ng-class="{disabled: currentPage_ONE == 0}">
+                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
                         </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
                             <a href="javascript:;" ng-bind="n + 1">1</a>
                         </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+            <div class="row nomargin" ng-repeat="forum in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
                 <div ng-repeat="member in forum['members']">
-                    <div ng-show="member.userId == user.id && member.role == 'USER' && forum.status == 'APPROVED'">
+                    <div ng-show="member.userId == user.id && member.role == 'USER' && forum.status == 'APPROVED' && forum.report == 'NO'">
                         <div class="card horizontal">
                             <div class="card-image">
                                 <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -273,17 +277,17 @@
 
 
 
-        <div ng-hide="!pagedItems[currentPage]">
+        <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
             <div class="center">
-                <ul class="pagination nomargin">
-                    <li ng-class="{disabled: currentPage == 0}">
-                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage_ONE == 0}">
+                        <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
                     </li>
-                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
                         <a href="javascript:;" ng-bind="n + 1">1</a>
                     </li>
-                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
                     </li>
                 </ul>
             </div>
@@ -309,38 +313,38 @@
         <div class="row nomargin">
             <div class="col m8">
                 <div class="input-field nomargin">
-                    <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
-                    <label for="searchKeyword">Search For Forums</label>
+                    <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                    <label for="searchKeyword">Search For Job</label>
                 </div>
             </div>
 
             <div class="col m4">
-                <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
                     </select>
                 <label>Materialize Select</label>
             </div>
         </div>
 
-        <div ng-show="!pagedItems[currentPage]">
-            <h4 class="center">No Forum(s) Available</h4>
+        <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+            <h5 class="center red-text"><strong>No Forum(s) Available OR Search Match Available</strong></h5>
         </div>
-        <div ng-hide="!pagedItems[currentPage]">
+        <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
             <div class="center">
-                <ul class="pagination nomargin">
-                    <li ng-class="{disabled: currentPage == 0}">
-                        <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage_TWO == 0}">
+                        <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
                     </li>
-                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
                         <a href="javascript:;" ng-bind="n + 1">1</a>
                     </li>
-                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                    <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                        <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+        <div class="row nomargin" ng-repeat="forum in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
             <div ng-show="forum.userId == user.id">
                 <div class="card horizontal">
                     <div class="card-image">
@@ -404,17 +408,17 @@
 
 
 
-    <div ng-hide="!pagedItems[currentPage]">
+    <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
         <div class="center">
-            <ul class="pagination nomargin">
-                <li ng-class="{disabled: currentPage == 0}">
-                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage_TWO == 0}">.
+                    <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
                 </li>
-                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
                     <a href="javascript:;" ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                    <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
                 </li>
             </ul>
         </div>

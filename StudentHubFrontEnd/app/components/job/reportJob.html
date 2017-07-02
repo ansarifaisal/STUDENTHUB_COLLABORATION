@@ -9,6 +9,8 @@
 
                         <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
 
+                        <a href="#!/user/job/view/{{jobCtrl.job.id}}" class="breadcrumb">{{jobCtrl.job.title}}</a>
+
                         <a class="breadcrumb">Report</a>
 
                     </div>
@@ -17,7 +19,7 @@
         </div>
         <div id="reportJobForm">
             <div class="card-panel">
-                <h5><strong class="grey-text">Report <a class="grey-text" href="#!/user/job/view/{{jobCtrl.job.id}}">{{jobCtrl.job.title}}</a></strong></h5>
+                <h5><strong class="grey-text">Report Job</strong></h5>
                 <hr/>
                 <div class="row">
                     <div class="col m6 offset-m3">
@@ -40,7 +42,7 @@
 
                             <div class="input-field">
                                 <div class="hoverable">
-                                    <input type="submit" class="btn light-blue waves-effect waves-light modal-close full-width" ng-disabled="reportForm.$invalid"
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="reportForm.$invalid"
                                         value="Report Blog">
                                 </div>
                             </div>

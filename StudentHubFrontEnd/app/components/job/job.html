@@ -9,7 +9,7 @@
 
                         <a href="#!/user/jobs" class="breadcrumb">Jobs</a>
 
-                        <a href="#!" class="breadcrumb">{{jobCtrl.job.title}}</a>
+                        <a class="breadcrumb">{{jobCtrl.job.title}}</a>
 
                     </div>
                 </div>
@@ -18,89 +18,86 @@
 
         <div class="card-panel">
             <div ng-show="jobCtrl.job.report == 'YES'">
-                <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Reported</span></span>
+                <h5 class="red-text center"><strong>This Job is Reported</strong></h5>
             </div>
             <div ng-show="jobCtrl.job.status == 'PENDING'">
-                <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Pending</span></span>
+                <h5 class="red-text center"><strong>This Job is Pending</strong></h5>
             </div>
             <div ng-show="jobCtrl.job.status == 'CLOSED'">
-                <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Closed</span></span>
+                <h5 class="red-text center"><strong>This Job is Closed</strong></h5>
             </div>
             <div ng-show="jobCtrl.job.status == 'REJECTED'">
-                <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Disable</span></span>
+                <h5 class="red-text center"><strong>This Job is Disable</strong></h5>
             </div>
             <div class="card horizontal">
                 <div class="card-stacked">
                     <div class="card-content">
                         <div class="row">
-                            <span class="right">
+                            <span ng-hide="jobCtrl.job.report == 'YES' || jobCtrl.job.status != 'APPROVED'">
+                                <span class="right">
                                 <a class='dropdown-button' href='#' data-activates='jobOption_{{jobCtrl.job.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
                             <ul id='jobOption_{{jobCtrl.job.id}}' class='dropdown-content'>
-                                <div ng-show="jobCtrl.job.status != 'APPROVED' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                    <li><a href="" ng-click="jobCtrl.approveJob( jobCtrl.job.id, 'Approved')">Approve Job</a></li>  
-                                    <li><a href="" ng-click="jobCtrl.deleteJob('Closed', jobCtrl.job.id)">Delete</a></li>
-                                </div>
-                                <div ng-show="jobCtrl.job.report == 'YES' && user.role != 'USER' && user.role != 'EMPLOYER'">
-                                    <li><a href="#!/admin/report/job">Handle Report</a></li>  
-                                    <li><a href="" ng-click="jobCtrl.deleteJob('Closed', jobCtrl.job.id)">Delete</a></li>
-                                </div>
-                            <div ng-hide="jobCtrl.job.report == 'YES' || jobCtrl.job.status != 'APPROVED'">
                                 <li><a href="#!/user/job/report/{{jobCtrl.job.id}}">Report</a></li>
                                 <span ng-show="jobCtrl.job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
                                     <li class="divider"></li>
                                     <li><a href="#!/user/job/editJob/{{jobCtrl.job.id}}">Edit</a></li>
                                     <li><a href="" ng-click="jobCtrl.deleteJob('Closed', jobCtrl.job.id)">Delete</a></li>
                                 </span>
-                        </div>
-                        </ul>
+                            </ul>
 
-                        </span>
-                        <p style="font-size: 18px;">{{jobCtrl.job.title}}</p>
-                        <p style="color: grey; font-size: 14px;">{{jobCtrl.job.company}}</p>
-                    </div>
-                    <table class="bordered" style="font-size: 12px; color:grey;">
-                        <tr>
-                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                            <td> <span>On: April 4th, 2017</span></td>
-                        </tr>
-                        <tr>
-                            <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{jobCtrl.job.experience}}
-                                yrs
-                            </td>
-                            <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{jobCtrl.job.location}}</td>
-                        </tr>
-                        <tr>
-                            <td>&#8377; {{jobCtrl.job.salary}} P.A.
-                            </td>
-                            <td>Key Skills: {{jobCtrl.job.keySkills}}</td>
-                        </tr>
-                        <div ng-show="jobCtrl.job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
-                            <tr>
-                                <td>Report: {{jobCtrl.job.report}}
-                                </td>
-                                <td>Status: {{jobCtrl.job.status}}</td>
-                            </tr>
+                            </span>
+                            </span>
+                            <p style="font-size: 18px;">{{jobCtrl.job.title}}</p>
+                            <p style="color: grey; font-size: 14px;">{{jobCtrl.job.company}}</p>
                         </div>
-                    </table>
-                    <div ng-hide="jobCtrl.job.report == 'YES' || jobCtrl.job.status != 'APPROVED'">
-                        <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <table class="bordered" style="font-size: 12px; color:grey;">
+                            <tr>
+                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                <td> <span>On: April 4th, 2017</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{jobCtrl.job.experience}}
+                                    yrs
+                                </td>
+                                <td><i class="material-icons" style="font-size: 14px;">location_on</i> {{jobCtrl.job.location}}</td>
+                            </tr>
+                            <tr>
+                                <td>&#8377; {{jobCtrl.job.salary}} P.A.
+                                </td>
+                                <td>Key Skills: {{jobCtrl.job.keySkills}}</td>
+                            </tr>
+                            <div ng-show="jobCtrl.job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
+                                <tr>
+                                    <td>Report: {{jobCtrl.job.report}}
+                                    </td>
+                                    <td>Status: {{jobCtrl.job.status}}</td>
+                                </tr>
+                            </div>
+                        </table>
+                        <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" ng-show="jobCtrl.job.status == 'APPROVED' && jobCtrl.job.report != 'YES'"
+                            class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                        <div ng-repeat="jobApplied in jobCtrl.job.jobApplied">
+                            <a ng-show="jobApplied.userId == user.id && jobCtrl.job.status == 'APPROVED' && jobCtrl.job.report != 'YES'" ng-click="jobCtrl.delAppliedJob(jobApplied.id)"
+                                class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">close</i></a>
+                        </div>
+                        <a ng-show="jobCtrl.job.userId == user.id && jobCtrl.job.status == 'APPROVED' && jobCtrl.job.report != 'YES'" ng-click="jobCtrl.deleteJob('Closed', jobCtrl.job.id)"
+                            class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
                     </div>
                 </div>
+            </div><br/>
+
+            <div class="card-panel">
+                <strong style="font-size: 20px;" class="grey-text">Description</strong>
+                <hr/>{{jobCtrl.job.description}}
             </div>
-        </div><br/>
 
-        <div class="card-panel">
-            <strong style="font-size: 20px;" class="grey-text">Description</strong>
-            <hr/>{{jobCtrl.job.description}}
-        </div>
-
-        <div class="card-panel">
-            <strong style="font-size: 20px;" class="grey-text">Key Skills</strong>
-            <hr/> {{jobCtrl.job.keySkills}}
-        </div>
-        <!--
+            <div class="card-panel">
+                <strong style="font-size: 20px;" class="grey-text">Key Skills</strong>
+                <hr/> {{jobCtrl.job.keySkills}}
+            </div>
+            <!--
             <div class="card-panel">
                 <strong style="font-size: 20px;" class="grey-text">Desired Candidate Profile</strong>
                 <hr/> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
@@ -142,24 +139,32 @@
                 </table>
             </div>-->
 
-        <div ng-hide="jobCtrl.job.report == 'YES' || jobCtrl.job.status != 'APPROVED'">
-            <div class="card-panel">
-                <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" class="waves-effect waves-light btn">Apply</a>
+            <div ng-hide="jobCtrl.job.report == 'YES' || jobCtrl.job.status != 'APPROVED' || jobCtrl.job.userId == user.id">
+                <div class="card-panel">
+                    <a ng-click="jobCtrl.applyJob(jobCtrl.job.id)" class="btn light-blue waves-effect waves-light">Apply</a>
+                </div>
+            </div>
+            <div ng-show="jobCtrl.job.report == 'YES'">
+                <div class="card-panel">
+                    <h5 class="red-text center"><strong>This Job is Reported</strong></h5>
+                </div>
+            </div>
+            <div ng-show="jobCtrl.job.status == 'PENDING'">
+                <div class="card-panel">
+                    <h5 class="red-text center"><strong>This Job is Pending</strong></h5>
+                </div>
+            </div>
+            <div ng-show="jobCtrl.job.status == 'CLOSED'">
+                <div class="card-panel">
+                    <h5 class="red-text center"><strong>This Job is Closed</strong></h5>
+                </div>
+            </div>
+            <div ng-show="jobCtrl.job.status == 'REJECTED'">
+                <div class="card-panel">
+                    <h5 class="red-text center"><strong>This Job is Disable</strong></h5>
+                </div>
             </div>
         </div>
-        <div ng-hide="jobCtrl.job.report != 'YES'">
-            <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Reported</span></span>
-        </div>
-        <div ng-show="jobCtrl.job.status == 'PENDING'">
-            <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Pending</span></span>
-        </div>
-        <div ng-show="jobCtrl.job.status == 'CLOSED'">
-            <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Closed</span></span>
-        </div>
-        <div ng-show="jobCtrl.job.status == 'REJECTED'">
-            <span class="red-text"><i class="material-icons" style="font-size:40px;">report_problem</i><span style="font-size: 40px;">&nbsp;This Job is Disable</span></span>
-        </div>
-    </div>
 
-</div>
+    </div>
 </div>

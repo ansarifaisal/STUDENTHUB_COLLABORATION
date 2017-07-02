@@ -24,9 +24,6 @@
             </div>
         </div>
 
-
-
-
         <div id="blogs">
 
             <div class="card-panel row" style="padding:10px;">
@@ -56,7 +53,7 @@
                 </div>
 
                 <div ng-show="!pagedItems[currentPage]">
-                    <h5 class="center red-text">No Blog(s) Available</h5>
+                    <h5 class="center red-text">No Blog(s) Available OR No Search Match Available</h5>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
 
@@ -107,7 +104,7 @@
                                     </div>
                                     <table class="bordered" style="font-size: 12px; color:grey;">
                                         <tr>
-                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                            <td>By <a href="">{{blog.userName}}</a></td>
                                             <td>On: <span>{{blog.postDate}}</span></td>
                                         </tr>
                                         <tr>
@@ -162,19 +159,38 @@
                 <div class="row">
                     <div class="col m8">
                         <div class="input-field nomargin">
-                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
                             <label for="searchKeyword">Search For Blog</label>
                         </div>
                     </div>
 
                     <div class="col m4">
-                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
-                      
+                        <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
                     </select>
                         <label>Materialize Select</label>
                     </div>
                 </div>
-                <div class="row nomargin" ng-repeat="myBlog in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+
+                <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                    <h5 class="center red-text">You Have Not Created Any Blog(s) Yet OR No Search Match Available</h5>
+                </div>
+                <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                    <div class="center">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage_ONE == 0}">
+                                <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row nomargin" ng-repeat="myBlog in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
                     <div ng-show="myBlog.userId == user.id">
                         <div class="card horizontal">
                             <div class="card-image">
@@ -190,15 +206,15 @@
                                         <span ng-hide="myBlog.status != 'APPROVED' || myBlog.report != 'NO'">
                                 <span class="right">
                                             <!-- Dropdown Trigger -->
-                                <a class='dropdown-button' href='#' data-activates='{{myBlog.blogId}}'><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' href='#' data-activates='MOP_{{myBlog.blogId}}'><i class="material-icons">more_vert</i></a>
                                             <!-- Dropdown Structure -->
-                                    <ul id='{{myBlog.blogId}}' class='dropdown-content'>
-                                        <li><a data-target="reportBlogForm">Report</a></li>
+                                    <ul id='MOP_{{myBlog.blogId}}' class='dropdown-content'>
+                                        <li><a href = "#!/user/blog/report/{{myBlog.blogId}}">Report</a></li>
                                         
                                         <span ng-if="myBlog.userId == user.id">
                                         <li class="divider"></li>
                                         <li><a href="#!/user/blog/edit/{{myBlog.blogId}}">Edit</a></li>
-                                        <li><a href="#!">Delete</a></li>
+                                        <li><a href="" ng-click="blogCtrl.deleteBlog('Disabled', myBlog.blogId)">Delete</a></li>
                                         </span>
                                         </ul>
                                         </span>
@@ -206,7 +222,7 @@
                                     </div>
                                     <table class="bordered" style="font-size: 12px; color:grey;">
                                         <tr>
-                                            <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
+                                            <td>By <a href="">{{myBlog.userName}}</a></td>
                                             <td>On: <span>{{myBlog.postDate}}</span></td>
                                         </tr>
                                         <tr>
@@ -228,7 +244,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row nomargin" ng-hide="!pagedItems_ONE[currentPage_ONE]">
                     <div class="col offset-m5">
                         <ul class="pagination">
                             <li ng-class="{disabled: currentPage == 0}">

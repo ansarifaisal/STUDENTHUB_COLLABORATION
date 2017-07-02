@@ -2,8 +2,6 @@ package com.studenthub.daoimpl;
 
 import java.util.List;
 
-import javax.ejb.SessionSynchronization;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,27 +77,10 @@ public class JobDAOImpl implements JobDAO {
 
 	@Override
 	@Transactional
-	public List<Job> getCreatedJobs(int userID) {
-		String hql = "FROM JOBS WHERE USER_ID = " + userID + " ORDER BY POST_DATE DESC";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		return query.list();
-	}
-
-	@Override
-	@Transactional
 	public List<Job> getLatestJobs() {
 		String hql = "FROM JOBS WHERE STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(5);
-		return query.list();
-	}
-
-	@Override
-	@Transactional
-	public List<Job> createdJobList(int userID) {
-		String hql = "FROM JOBS WHERE USER_ID = :userID ORDER BY JOB_ID DESC";
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		query.setParameter("userID", userID);
 		return query.list();
 	}
 

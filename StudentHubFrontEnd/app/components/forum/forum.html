@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div ng-show="member.status == 'PENDING' && member.userId == user.id">
-                        <h5 class="red-text center"> Your Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
+                        <h5 class="red-text center"> <strong>Your Request Is Pending, You Will Get Full Access After Admin Approve Your Request </strong></h5>
                     </div>
                 </div>
                 <!--Details Section Starts here-->
@@ -128,10 +128,10 @@
             </div>
         </div>
         <div ng-show="forumCtrl.forum.status == 'PENDING'">
-            <h5 class="red-text center"> Your Forum Request Is Pending, You Will Get Full Access After Admin Approve Your Request</h5>
+            <h5 class="red-text center"> <strong>Your Forum Request Is Pending, You Will Get Full Access After Admin Approve Your Request</strong></h5>
         </div>
         <div ng-show="forumCtrl.forum.status == 'CLOSED'">
-            <h5 class="red-text center"> Your Forum Is Closed</h5>
+            <h5 class="red-text center"> <strong>Your Forum Is Closed</strong></h5>
         </div>
     </div>
     <!--Details Section Ends here-->
@@ -155,7 +155,7 @@
                 </div>
 
                 <div ng-show="!pagedItems[currentPage]">
-                    <h4 class="center">There Are No Comments</h4>
+                    <h5 class="center red-text"><strong>There Are No Comments</strong></h5>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
                     <div class="row">
@@ -212,7 +212,7 @@
                         </div>
 
                         <div ng-show="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
-                            <h6 class="center red-text">This Comment Is Reported</h6>
+                            <h6 class="center red-text"><strong>This Comment Is Reported</strong></h6>
                         </div>
 
                     </div>
@@ -267,7 +267,7 @@
             </div>
 
             <div ng-show="!pagedTopics[topicPage]">
-                <h4 class="center">There Are Topic(s) Yet</h4>
+                <h4 class="center"><strong>There Are Topic(s) Yet</strong></h4>
             </div>
             <div ng-hide="!pagedTopics[topicPage]">
                 <div class="row" style="margin-bottom:0px;">

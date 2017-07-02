@@ -13,6 +13,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity(name = "EVENT_JOINED")
 @Component
 public class EventJoined implements Serializable {
@@ -34,6 +36,7 @@ public class EventJoined implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "EVENT_ID", nullable = false)
+	@JsonBackReference
 	private Event event;
 
 	@Column(name = "USER_ID", nullable = false)
