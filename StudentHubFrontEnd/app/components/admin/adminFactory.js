@@ -578,7 +578,7 @@ AdminModule.factory('ManageTopicFactory', [
         function editTopic(topic) {
             var deferred = $q.defer();
 
-            $http.post(REST_API_URI + 'topic/createEditTopic', topic).then(function (response) {
+            $http.post(REST_API_URI + 'forum/topic/createEditTopic', topic).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {

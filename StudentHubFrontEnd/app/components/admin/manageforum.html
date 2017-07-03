@@ -38,63 +38,68 @@
             </div>
             <hr/>
 
-            <table class="highlight bordered">
-                <thead>
-                    <tr>
-                        <td><a href="" ng-click="sort_by('forumName')">Title</a></td>
-                        <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
-                        <td><a href="" ng-click="sort_by('createdDate')">Posted Date</a></td>
-                        <td><a href="" ng-click="sort_by('noOfTopics')">No Of Topic</a></td>
-                        <td><a href="" ng-click="sort_by('report')">Report</a></td>
-                        <td><a href="" ng-click="sort_by('status')">Status</a></td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                        <td>{{forum.forumName}}</td>
-                        <td>{{forum.userName}}</td>
-                        <td>{{forum.createdDate}}</td>
-                        <td>{{forum.noOfTopics}}</td>
-                        <td>{{forum.report}}</td>
-                        <td>{{forum.status}}</td>
-                        <td ng-if=" forum.status == 'APPROVED' ">
-                            <a href="#!/admin/editforum/{{forum.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
-                        </td>
+            <div ng-show="!pagedItems[currentPage]">
+                <h5 class="center red-text"><strong>There Are No Forum(s) Yet OR Search Match Available</strong></h5>
+            </div>
+            <div ng-hide="!pagedItems[currentPage]">
 
-                        <td ng-if=" forum.status == 'PENDING' ">
-                            <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#!" ng-click="manageForumCtrl.validateForum(forum.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
-                        </td>
+                <table class="highlight bordered">
+                    <thead>
+                        <tr>
+                            <td><a href="" ng-click="sort_by('forumName')">Title</a></td>
+                            <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
+                            <td><a href="" ng-click="sort_by('createdDate')">Posted Date</a></td>
+                            <td><a href="" ng-click="sort_by('noOfTopics')">No Of Topic</a></td>
+                            <td><a href="" ng-click="sort_by('report')">Report</a></td>
+                            <td><a href="" ng-click="sort_by('status')">Status</a></td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                            <td>{{forum.forumName}}</td>
+                            <td>{{forum.userName}}</td>
+                            <td>{{forum.createdDate}}</td>
+                            <td>{{forum.noOfTopics}}</td>
+                            <td>{{forum.report}}</td>
+                            <td>{{forum.status}}</td>
+                            <td ng-if=" forum.status == 'APPROVED' ">
+                                <a href="#!/admin/editforum/{{forum.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
+                            </td>
 
-                        <td ng-if=" forum.status == 'CLOSED' || forum.status == 'REJECTED' ">
-                            <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        </td>
+                            <td ng-if=" forum.status == 'PENDING' ">
+                                <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="#!" ng-click="manageForumCtrl.validateForum(forum.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                            </td>
+
+                            <td ng-if=" forum.status == 'CLOSED' || forum.status == 'REJECTED' ">
+                                <a href="" ng-click="manageForumCtrl.validateForum(forum.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
 
 
 
-                    </tr>
+                        </tr>
 
-                </tbody>
+                    </tbody>
 
-            </table>
-            <div class="row">
-                <div class="col offset-m5">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                        </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                        </li>
-                    </ul>
+                </table>
+                <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

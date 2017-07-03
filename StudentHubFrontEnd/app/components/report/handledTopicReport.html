@@ -14,33 +14,35 @@
         </div>
         <div class="card-panel">
             <div id="reported">
+                <div class="row" style="margin-bottom:0px;">
+                    <div class="col m2 nopadding nomargin">
+                        <strong style="font-size:20px;" class="grey-text">Handled Forums</strong>
+                    </div>
+                    <div class="col m4">
+                        <div class="input-field nomargin">
+                            <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                            <label for="searchKeyword">Search For Report</label>
+                        </div>
+                    </div>
+
+                    <div class="col m3">
+                        <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                        <label>Materialize Select</label>
+                    </div>
+
+                    <div class="col m2 offset-m1">
+                        <!--<a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
+                    </div>
+
+                </div>
+                <hr/>
+
+
                 <div ng-hide="pagedItems[currentPage]">
-                    <strong> <h3>There Are Handled Reports </h3> </strong>
+                    <h5 class="center red-text"><strong>There Are No Handled Reports OR Search Match Available</strong></h5>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
-                    <div class="row" style="margin-bottom:0px;">
-                        <div class="col m2 nopadding nomargin">
-                            <strong style="font-size:20px;" class="grey-text">Handled Forums</strong>
-                        </div>
-                        <div class="col m4">
-                            <div class="input-field nomargin">
-                                <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
-                                <label for="searchKeyword">Search For Report</label>
-                            </div>
-                        </div>
-
-                        <div class="col m3">
-                            <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
-                    </select>
-                            <label>Materialize Select</label>
-                        </div>
-
-                        <div class="col m2 offset-m1">
-                            <!--<a href="" ng-click="manageBlogCtrl.validateAllBlogs()" class="btn light-blue waves-effect waves-light">Handle All</a>-->
-                        </div>
-
-                    </div>
-                    <hr/>
 
                     <table class="highlight bordered">
                         <thead>
@@ -53,38 +55,32 @@
                                 <td>Status</td>
                             </tr>
                         </thead>
-                        <div ng-hide="pagedItems[currentPage]">
-                            <strong> <h3>There Are No Pending Reports OR Search Match Available </h3> </strong>
-                        </div>
-                        <div ng-hide="!pagedItems[currentPage]">
-                            <tbody>
 
-                                <tr ng-repeat="topic in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                                    <td><a href="#!/user/topic/view/{{topic.reportId}}">{{topic.title}}</a></td>
-                                    <td>{{topic.details}}</td>
-                                    <td><a href="#!/user/topic/view/{{topic.userId}}">{{topic.userName}}</a></td>
-                                    <td>{{topic.dateTime}}</td>
-                                    <td><a href="#!/user/topic/view/{{topic.handledByUserId}}">{{topic.handledBy}}</td>
+                        <tbody>
+
+                            <tr ng-repeat="topic in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                                <td><a href="#!/user/topic/view/{{topic.reportId}}">{{topic.title}}</a></td>
+                                <td>{{topic.details}}</td>
+                                <td><a href="#!/user/topic/view/{{topic.userId}}">{{topic.userName}}</a></td>
+                                <td>{{topic.dateTime}}</td>
+                                <td><a href="#!/user/topic/view/{{topic.handledByUserId}}">{{topic.handledBy}}</td>
                             <td>{{topic.status}}</td>
                          </tr>
                          </tbody>
-                        </div>
                 </table>
-                  <div ng-hide="!pagedItems[currentPage]">
-                 <div class="row">
+                 <div class="row nomargin">
                     <div class="col offset-m5">
-                        <ul class="pagination">
+                        <ul class="pagination nomargin">
                             <li ng-class="{disabled: currentPage == 0}">
                                 <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                                        </li>
-                                        </ul>
-                        </div>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                        <a href="javascript:;" ng-bind="n + 1">1</a>
+                                    </li>
+                                    <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                        <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                    </li>
+                                    </ul>
                 </div>
             </div>
         </div>

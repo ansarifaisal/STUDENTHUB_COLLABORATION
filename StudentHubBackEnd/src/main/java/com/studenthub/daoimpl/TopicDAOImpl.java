@@ -78,8 +78,9 @@ public class TopicDAOImpl implements TopicDAO {
 	@Override
 	@Transactional
 	public List<Topic> getCreatedTopics(int userID) {
-		String hql = "FROM TOPICS WHERE USER_ID = " + userID + " ORDER BY CREATED_DATE DESC";
+		String hql = "FROM TOPICS WHERE USER_ID = :userID AND STATUS = 'OPEN' ORDER BY CREATED_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userID", userID);
 		return query.list();
 	}
 

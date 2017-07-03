@@ -460,7 +460,7 @@ window.routes = {
     },
 
     //<=============Job Routing Module===========>
-    
+
     '/user/job/editJob/:id': {
         //page path
         templateUrl: 'app/components/job/editJob.html',
@@ -529,7 +529,7 @@ window.routes = {
 
     //<=============User Routing Module===========>
 
-    '/user/profile': {
+    '/user/profile/:id': {
         //page path
         templateUrl: 'app/components/user/profile.html',
         //controller that will handle this page

@@ -39,6 +39,9 @@
                 </div>
 
             </div>
+
+
+
             <hr/>
             <div ng-hide="pagedItems[currentPage]">
                 <strong> <h5 class="center red-text">There Are No Pending Request OR Search Match Available </h5> </strong>
@@ -50,24 +53,26 @@
                         <tr>
                             <td class="center"><a href="" ng-click="sort_by('userName')">Username</a></td>
                             <td class="center"><a href="" ng-click="sort_by('role')">Role</a></td>
-                            <td class="center"><a href="" ng-click="sort_by('status')">Status</a></td>
-                            <td class="center">Action</td>
+                            <div ng-repeat="member in pagedItems[currentPage]">
+                                <td ng-show="member.userId == user.id && member.role=='ADMIN'" class="center"><a href="" ng-click="sort_by('status')">Status</a></td>
+                                <td ng-show="member.userId == user.id && member.role=='ADMIN'" class="center">Action</td>
+                            </div>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="member in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+
                             <td class="center">{{member.userName}}</td>
                             <td class="center">{{member.role}}</td>
-                            <td class="center">{{member.status}}</td>
-                            <td class="center" ng-if="member.status == 'APPROVED' ">
+                            <td class="center" ng-show="member.userId == user.id && member.role=='ADMIN'">{{member.status}}</td>
+                            <td class="center" ng-show="member.userId == user.id && member.role=='ADMIN' && member.status == 'APPROVED' ">
                                 <a href="" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)" style="color:black;"><i class="material-icons ">block</i></a>
                             </td>
 
-                            <td class="center" ng-if=" member.status == 'PENDING' ">
+                            <td class="center" ng-show=" member.userId == user.id && member.role=='ADMIN' && member.status == 'PENDING' ">
                                 <a href="" ng-click="forumCtrl.performActionOnRequest('Approved', member.id)" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a href="#!" ng-click="forumCtrl.performActionOnRequest('Cancel', member.id)" style="color:black;"><i class="material-icons">close</i></a>
                             </td>
-
                         </tr>
 
                     </tbody>

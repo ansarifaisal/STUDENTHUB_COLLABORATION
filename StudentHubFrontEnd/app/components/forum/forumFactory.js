@@ -35,22 +35,7 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
         getTopicComment: getTopicComment,
         reportTopicComment: reportTopicComment,
         editTopicComment: editTopicComment,
-        deleteTopicComment: deleteTopicComment,
-        // fetchCreatedForums: fetchCreatedForums,
-        // fetchJoinForums: fetchJoinForums,
-        // fetchAllMembers: fetchAllMembers,
-        // getTopic: getTopic,
-        // getMemeber: getMember,
-        // joinForum: joinForum,
-        // createTopic: createTopic,
-        // createForumComment: createForumComment,
-        // editTopic: editTopic,
-        // editForumComment: editForumComment,
-        // editTopicComment: editTopicComment,
-        // reportTopic: reportTopic,
-        // reportForum: reportForum,
-        // reportForumComment: reportForumComment,
-        // reportTopicComment: reportTopicComment
+        deleteTopicComment: deleteTopicComment
 
     };
 

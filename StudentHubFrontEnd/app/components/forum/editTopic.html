@@ -4,17 +4,24 @@
             <nav class="navbar-color">
                 <div class="nav-wrapper">
                     <div class="col s12">
+
                         <a href="#!/user/home" class="breadcrumb">Home</a>
+
                         <a href="#!/user/forums" class="breadcrumb">Forums</a>
-                        <a href="#!/user/forum/view/{{forumCtrl.topic.id}}" class="breadcrumb">{{forumCtrl.topic.title}}</a>
+
+                        <a href="#!/user/forum/view/{{forumCtrl.topic.forum.id}}" class="breadcrumb">{{forumCtrl.topic.forum.forumName}}</a>
+
+                        <a href="#!/user/forum/topic/view/{{forumCtrl.topic.id}}" class="breadcrumb">{{forumCtrl.topic.title}}</a>
+
                         <a class="breadcrumb">Edit Topic</a>
+
                     </div>
                 </div>
             </nav>
         </div>
 
         <div class="card-panel">
-            <strong style="font-size:20px;" class="grey-text">Edit Topic</strong>
+            <h5><strong>Edit Topic</strong></h5>
             <hr/>
             <div class="row">
                 <div class="col offset-m3 m6">

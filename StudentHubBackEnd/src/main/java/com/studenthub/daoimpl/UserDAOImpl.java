@@ -85,16 +85,19 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	@Transactional
-	public User isValidate(User user) {
+	public boolean isValidate(User user) {
 		String userName = user.getUserName();
 		String password = user.getPassword();
-		
+
 		String hql = "FROM USERS WHERE USERNAME = :userName AND PASSWORD = :password";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("userName", userName);
 		query.setParameter("password", password);
-		
-		return (User) query.getSingleResult();
+		if (query.list().isEmpty()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -104,5 +107,5 @@ public class UserDAOImpl implements UserDAO {
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 	}
-	
+
 }

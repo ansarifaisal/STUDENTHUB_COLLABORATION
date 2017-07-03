@@ -14,7 +14,7 @@ public interface UserDAO {
 	
 	List<User> list();
 	
-	User isValidate(User user);
+	boolean isValidate(User user);
 	
 	boolean add(User user);
 	

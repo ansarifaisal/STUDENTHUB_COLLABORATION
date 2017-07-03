@@ -80,7 +80,7 @@ public class BlogDAOImpl implements BlogDAO {
 	@Override
 	@Transactional
 	public List<Blog> getCreatedBlogs(int userID) {
-		String hql = "FROM BLOGS WHERE USER_ID = :userID ORDER BY POST_DATE DESC";
+		String hql = "FROM BLOGS WHERE USER_ID = :userID AND STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("userID", userID);
 		return query.list();

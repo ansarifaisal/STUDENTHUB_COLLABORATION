@@ -78,8 +78,9 @@ public class ForumDAOImpl implements ForumDAO {
 	@Override
 	@Transactional
 	public List<Forum> getCreatedForums(int userID) {
-		String hql = "FROM FORUMS WHERE USER_ID = " + userID + " ORDER BY FORUM_ID DESC";
+		String hql = "FROM FORUMS WHERE USER_ID = :userID AND STATUS = 'APPROVED' ORDER BY FORUM_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userID", userID);
 		return query.list();
 	}
 

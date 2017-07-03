@@ -36,7 +36,7 @@
                             <!--forumDescription field starts here-->
                             <div class="input-field nomargin">
 
-                                <textarea id="forumDescription" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/"
+                                <textarea id="forumDescription" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/"
                                     ng-minlength="20" maxlength="500" ng-maxlength="500" placeholder="Forum Description" data-length="500"
                                     ng-model="forumCtrl.newForum.forumDescription" placeholder="forumDescription" required="required"></textarea>
                                 <div class="invalid-data center-align" ng-show="createForm.forumDescription.$dirty">

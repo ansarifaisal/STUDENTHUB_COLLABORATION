@@ -10,7 +10,7 @@ public interface JobDAO {
 
 	List<Job> list();
 
-	// List<Job> getCreatedJobs(int userID);
+	List<Job> getCreatedJobs(int userID);
 
 	List<Job> getLatestJobs();
 

@@ -12,19 +12,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.studenthub.dao.BlogDAO;
+import com.studenthub.dao.EducationDetailsDAO;
 import com.studenthub.dao.EventDAO;
 import com.studenthub.dao.ForumDAO;
 import com.studenthub.dao.JobDAO;
+import com.studenthub.dao.MoreDetailsDAO;
 import com.studenthub.dao.ReportDAO;
+import com.studenthub.dao.SocialLinksDAO;
 import com.studenthub.dao.TopicDAO;
 import com.studenthub.dao.UserDAO;
 import com.studenthub.entity.Blog;
+import com.studenthub.entity.EducationDetails;
 import com.studenthub.entity.Event;
 import com.studenthub.entity.Forum;
 import com.studenthub.entity.Job;
+import com.studenthub.entity.MoreDetails;
 import com.studenthub.entity.NotificationModel;
 import com.studenthub.entity.ProfileModel;
 import com.studenthub.entity.Report;
+import com.studenthub.entity.SocialLinks;
 import com.studenthub.entity.Topic;
 import com.studenthub.entity.User;
 import com.studenthub.entity.UserModel;
@@ -73,6 +79,24 @@ public class UserController {
 	BlogDAO blogDAO;
 
 	@Autowired
+	MoreDetails moreDetails;
+
+	@Autowired
+	MoreDetailsDAO moreDetailsDAO;
+
+	@Autowired
+	EducationDetails educationDetails;
+
+	@Autowired
+	EducationDetailsDAO educationDetailsDAO;
+
+	@Autowired
+	SocialLinks socialLinks;
+
+	@Autowired
+	SocialLinksDAO socialLinksDAO;
+
+	@Autowired
 	Report report;
 
 	@Autowired
@@ -83,19 +107,13 @@ public class UserController {
 	public ResponseEntity<Void> registerUser(@RequestBody User user) {
 
 		if (user.getId() == 0) {
-			user.setProfilePicture("noPic.png");
-			user.setRole("USER");
-			user.setIsOnline("FALSE");
-			user.setStatus("PENDING");
-			user.setNoOfComments(0);
-			user.setNoOfEvents(0);
-			user.setNoOfForums(0);
-			user.setNoOfJobs(0);
-			user.setNoOfFriends(0);
-			user.setCode(200);
-			user.setMessage("Registration Successful");
-			userDAO.add(user);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			boolean flag = userDAO.add(user);
+			if (flag != false) {
+				return new ResponseEntity<Void>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+
 		} else {
 			userDAO.update(user);
 			return new ResponseEntity<Void>(HttpStatus.OK);
@@ -137,7 +155,7 @@ public class UserController {
 	@RequestMapping(value = { "/login" }, method = RequestMethod.POST)
 	public ResponseEntity<User> login(@RequestBody User user) {
 		if (user.getUserName() != null && user.getPassword() != null) {
-			if (userDAO.isValidate(user) == null) {
+			if (userDAO.isValidate(user) == false) {
 				user = new User();
 				user.setCode(404);
 				user.setMessage("Invalid Credentials");
@@ -242,12 +260,52 @@ public class UserController {
 		ProfileModel profileModel = new ProfileModel();
 
 		user = userDAO.get(id);
+		profileModel.setUser(user);
 
-		List<Forum> createdForums = profileModel.getCreatedForums();
+		List<Forum> createdForums = forumDAO.getCreatedForums(user.getId());
 		profileModel.setCreatedForums(createdForums);
 
-		List<Event> appliedEvents = profileModel.getCreatedEvents();
-		profileModel.setCreatedEvents(appliedEvents);
+		List<Event> createdEvents = eventDAO.getCreatedEvents(user.getId());
+		profileModel.setCreatedEvents(createdEvents);
+
+		List<Blog> createdBlogs = blogDAO.getCreatedBlogs(user.getId());
+		profileModel.setCreatedBlogs(createdBlogs);
+
+		List<Topic> createdTopics = topicDAO.getCreatedTopics(user.getId());
+		profileModel.setCreatedTopics(createdTopics);
+
+		List<Job> createdJobs = jobDAO.getCreatedJobs(user.getId());
+		profileModel.setCreatedJobs(createdJobs);
+
+		int noOfEvents = createdEvents.size();
+
+		int noOfForums = createdForums.size();
+
+		int noOfBlogs = createdBlogs.size();
+
+		int noOfJobs = createdJobs.size();
+		
+		//prevent frequently updating the user table
+		if (user.getNoOfEvents() != noOfEvents || user.getNoOfForums() != noOfForums || user.getNoOfBlogs() != noOfBlogs
+				|| user.getNoOfJobs() != noOfJobs) {
+			if (user.getNoOfEvents() != noOfEvents) {
+				user.setNoOfEvents(noOfEvents);
+			}
+
+			if (user.getNoOfForums() != noOfForums) {
+				user.setNoOfForums(noOfForums);
+			}
+
+			if (user.getNoOfBlogs() != noOfBlogs) {
+				user.setNoOfBlogs(noOfBlogs);
+			}
+
+			if (user.getNoOfJobs() != noOfJobs) {
+				user.setNoOfJobs(noOfJobs);
+			}
+
+			userDAO.update(user);
+		}
 
 		return new ResponseEntity<ProfileModel>(profileModel, HttpStatus.OK);
 

@@ -2,6 +2,7 @@ var myApp = angular.module('myApp', [
 
     'ngRoute',
     'HomePageModule',
+    'UserModule',
     'AuthenticationModule',
     'ForumCategoryModule',
     'ForumModule',

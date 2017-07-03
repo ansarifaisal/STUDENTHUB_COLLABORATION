@@ -123,7 +123,7 @@ public class TopicController {
 	}
 
 	// <!--------------------Create topic----------------------->
-	@RequestMapping(value = "forum/topic/createEditTopic", method = RequestMethod.POST)
+	@RequestMapping(value = "/forum/topic/createEditTopic", method = RequestMethod.POST)
 	public ResponseEntity<Topic> createTopic(@RequestBody Topic topic) {
 		if (topic != null) {
 			if (topic.getId() == 0) {

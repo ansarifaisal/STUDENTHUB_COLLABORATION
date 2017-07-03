@@ -38,63 +38,68 @@
             </div>
             <hr/>
 
-            <table class="highlight bordered">
-                <thead>
-                    <tr>
-                        <td>Title</td>
-                        <td>Posted By</td>
-                        <td>Posted Date</td>
-                        <td>Forum Name</td>
-                        <td>Report</td>
-                        <td>Status</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="topic in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                        <td>{{topic.title}}</td>
-                        <td>{{topic.userName}}</td>
-                        <td>{{topic.createdDate}}</td>
-                        <td>{{topic.forum.forumName}}</td>
-                        <td>{{topic.report}}</td>
-                        <td>{{topic.status}}</td>
-                        <td ng-if=" topic.status == 'OPEN' ">
-                            <a href="#!/admin/edittopic/{{topic.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
-                        </td>
+            <div ng-show="!pagedItems[currentPage]">
+                <h5 class="center red-text"><strong>There Are No Topic(s) Yet OR Search Match Available</strong></h5>
+            </div>
+            <div ng-hide="!pagedItems[currentPage]">
 
-                        <td ng-if=" topic.status == 'PENDING' ">
-                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#!" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
-                        </td>
+                <table class="highlight bordered">
+                    <thead>
+                        <tr>
+                            <td>Title</td>
+                            <td>Posted By</td>
+                            <td>Posted Date</td>
+                            <td>Forum Name</td>
+                            <td>Report</td>
+                            <td>Status</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="topic in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                            <td>{{topic.title}}</td>
+                            <td>{{topic.userName}}</td>
+                            <td>{{topic.createdDate}}</td>
+                            <td>{{topic.forum.forumName}}</td>
+                            <td>{{topic.report}}</td>
+                            <td>{{topic.status}}</td>
+                            <td ng-if=" topic.status == 'OPEN' ">
+                                <a href="#!/admin/edittopic/{{topic.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Closed')" style="color:black;"><i class="material-icons ">block</i></a>
+                            </td>
 
-                        <td ng-if=" topic.status == 'CLOSED' || topic.status == 'REJECTED' ">
-                            <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        </td>
+                            <td ng-if=" topic.status == 'PENDING' ">
+                                <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="#!" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                            </td>
+
+                            <td ng-if=" topic.status == 'CLOSED' || topic.status == 'REJECTED' ">
+                                <a href="" ng-click="manageTopicCtrl.validateTopic(topic.id, 'Open')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
 
 
 
-                    </tr>
+                        </tr>
 
-                </tbody>
+                    </tbody>
 
-            </table>
-            <div class="row">
-                <div class="col offset-m5">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                        </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                        </li>
-                    </ul>
+                </table>
+                <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

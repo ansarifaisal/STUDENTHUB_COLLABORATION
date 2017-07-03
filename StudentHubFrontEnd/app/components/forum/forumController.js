@@ -457,10 +457,15 @@ ForumModule.controller('ForumController', [
             me.newForum.createdDate = dateTimeFormat(now);
             me.newForum.noOfRequest = 0;
             me.newForum.imageURL = 'noPic.jpg';
-            me.newForum.noOfMembers = 0;
+            me.newForum.noOfMembers = 1;
             me.newForum.noOfTopics = 0;
             me.newForum.report = 'NO';
-            me.newForum.status = 'PENDING';
+            if (user.role == 'Super_Admin' || user.role == 'ADMIN') {
+                me.newForum.status = 'APPROVED';
+            } else {
+                me.newForum.status = 'PENDING';
+            }
+
 
             ForumFactory.createForum(me.newForum).then(function (forum) {
                 me.forumMember.userId = user.id;
@@ -842,7 +847,7 @@ ForumModule.controller('ForumController', [
                 };
             },
                 function (errorResponse) {
-
+                    Materialize.toast('Error Fetching Comments', 6000);
                 }
             );
 
@@ -874,6 +879,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //function to report comment
         me.reportComment = function () {
 
             me.reportForumComment.typeOfReport = 'FORUM COMMENT';
@@ -886,7 +892,7 @@ ForumModule.controller('ForumController', [
             me.reportForumComment.title = me.forumComment.comment;
 
             ForumFactory.reportForumComment(me.reportForumComment).then(function () {
-                $location.path('/user/forums');
+                $location.path('/user/forum/view/' + me.forumComment.forum.id);
                 Materialize.toast('Comment Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -918,7 +924,12 @@ ForumModule.controller('ForumController', [
             me.newTopic.noOfLikes = 0;
             me.newTopic.imageURL = "noPic.jpg";
             me.newTopic.report = "NO";
-            me.newTopic.status = "PENDING"
+            if (user.role == 'Super_Admin' || user.role == 'ADMIN') {
+                me.newTopic.status = "OPEN"
+            } else {
+                me.newTopic.status = "PENDING"
+            }
+
 
             console.log(me.newTopic);
 
@@ -936,97 +947,400 @@ ForumModule.controller('ForumController', [
         me.fetchForumTopic = function (forumId) {
             ForumFactory.fetchTopics(forumId).then(function (topics) {
 
-                var topicSortingOrder = 'id'; //default sort
+                var sortingOrder_FOUR = 'id'; //default sort
 
-                $scope.topicSortingOrder = topicSortingOrder;
-                $scope.topicPageSizes = [5, 10, 25, 50];
-                $scope.reverse = true;
-                $scope.filteredTopics = [];
-                $scope.groupedTopics = [];
-                $scope.topicPerPage = 10;
-                $scope.pagedTopics = [];
-                $scope.topicPage = 0;
-                $scope.topics = topics;
+                $scope.sortingOrder_FOUR = sortingOrder_FOUR;
+                $scope.pageSizes_FOUR = [5, 10, 25, 50];
+                $scope.reverse_FOUR = true;
+                $scope.filteredItems_FOUR = [];
+                $scope.groupedItems_FOUR = [];
+                $scope.itemsPerPage_FOUR = 10;
+                $scope.pagedItems_FOUR = [];
+                $scope.currentPage_FOUR = 0;
+                $scope.items_FOUR = topics;
 
-                var searchMatched = function (haystack, needle) {
+                var searchMatch_FOUR = function (haystack, needle) {
                     if (!needle) {
-
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
                 };
 
-                // init the filtered topics
-                $scope.searched = function () {
-                    $scope.filteredTopics = $filter('filter')($scope.topics, function (item) {
+
+
+                // init the filtered items
+                $scope.search_FOUR = function () {
+
+                    $scope.filteredItems_FOUR = $filter('filter')($scope.items_FOUR, function (item) {
                         for (var attr in item) {
-                            if (searchMatched(item['title'], $scope.queried))
+                            if (searchMatch_FOUR(item['title'], me.test))
                                 return true;
                         }
                         return false;
                     });
 
                     //take care of the sorting order
-                    if ($scope.topicSortingOrder !== '') {
-                        $scope.filteredTopics = $filter('orderBy')($scope.filteredTopics, $scope.topicSortingOrder, $scope.reverse);
+                    if ($scope.sortingOrder_FOUR !== '') {
+                        $scope.filteredItems_FOUR = $filter('orderBy')($scope.filteredItems_FOUR, $scope.sortingOrder_FOUR, $scope.reverse_FOUR);
                     }
 
-                    $scope.topicPage = 0;
+                    $scope.currentPage_FOUR = 0;
                     // now group by pages
-                    $scope.groupToTopicPages();
+                    $scope.groupToPages_FOUR();
                 };
 
                 // show items per page
-                $scope.perPageTopic = function () {
-                    $scope.groupToTopicPages();
+                $scope.perPage_FOUR = function () {
+                    $scope.groupToPages_FOUR();
                 };
 
                 // calculate page in place
-                $scope.groupToTopicPages = function () {
-                    $scope.pagedTopics = [];
+                $scope.groupToPages_FOUR = function () {
+                    $scope.pagedItems_FOUR = [];
 
-                    for (var i = 0; i < $scope.filteredTopics.length; i++) {
-                        if (i % $scope.topicPerPage === 0) {
-                            $scope.pagedTopics[Math.floor(i / $scope.topicPerPage)] = [$scope.filteredTopics[i]];
+                    for (var i = 0; i < $scope.filteredItems_FOUR.length; i++) {
+                        if (i % $scope.itemsPerPage_FOUR === 0) {
+                            $scope.pagedItems_FOUR[Math.floor(i / $scope.itemsPerPage_FOUR)] = [$scope.filteredItems_FOUR[i]];
                         } else {
-                            $scope.pagedTopics[Math.floor(i / $scope.topicPerPage)].push($scope.filteredTopics[i]);
+                            $scope.pagedItems_FOUR[Math.floor(i / $scope.itemsPerPage_FOUR)].push($scope.filteredItems_FOUR[i]);
                         }
                     }
                 };
 
-                $scope.prevTopicPage = function () {
-                    if ($scope.topicPage > 0) {
-                        $scope.topicPage--;
+                $scope.prevPage_FOUR = function () {
+                    if ($scope.currentPage_FOUR > 0) {
+                        $scope.currentPage_FOUR--;
                     }
                 };
 
-                $scope.nextTopicPage = function () {
-                    if ($scope.topicPage < $scope.pagedTopics.length - 1) {
-                        $scope.topicPage++;
+                $scope.nextPage_FOUR = function () {
+                    if ($scope.currentPage_FOUR < $scope.pagedItems_FOUR.length - 1) {
+                        $scope.currentPage_FOUR++;
                     }
                 };
 
-                $scope.setTopicPage = function () {
-                    $scope.topicPage = this.n;
+                $scope.setPage_FOUR = function () {
+                    $scope.currentPage_FOUR = this.n;
                 };
 
                 // functions have been describe process the data for display
-                $scope.searched();
+                $scope.search_FOUR();
 
 
                 // change sorting order
-                $scope.topicSort_by = function (newSortingOrder) {
-                    if ($scope.topicSortingOrder == newSortingOrder)
-                        $scope.reverse = !$scope.reverse;
+                $scope.sort_by_FOUR = function (newSortingOrder) {
+                    if ($scope.sortingOrder_FOUR == newSortingOrder)
+                        $scope.reverse_FOUR = !$scope.reverse_FOUR;
 
-                    $scope.topicSortingOrder = newSortingOrder;
+                    $scope.sortingOrder_FOUR = newSortingOrder;
                 };
+
+                me.fetchCreatedTopics(topics);
+                me.fetchPendingTopics(topics);
+                me.fetchRejectedTopics(topics);
 
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Topic', 6000);
                 }
             );
+        }
+
+        //function to fetch created topic
+        me.fetchCreatedTopics = function (topics) {
+            me.createdTopics = [];
+
+            for (var i = 0; i < topics.length; i++) {
+                if (topics[i].userId == user.id) {
+                    me.createdTopics.push(topics[i]);
+                }
+            }
+
+            var sortingOrder_ONE = 'id'; //default sort
+
+            $scope.sortingOrder_ONE = sortingOrder_ONE;
+            $scope.pageSizes_ONE = [5, 10, 25, 50];
+            $scope.reverse_ONE = true;
+            $scope.filteredItems_ONE = [];
+            $scope.groupedItems_ONE = [];
+            $scope.itemsPerPage_ONE = 10;
+            $scope.pagedItems_ONE = [];
+            $scope.currentPage_ONE = 0;
+            $scope.items_ONE = me.createdTopics;
+
+            var searchMatch_ONE = function (haystack, needle) {
+
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_ONE = function () {
+                $scope.filteredItems_ONE = $filter('filter')($scope.items_ONE, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_ONE(item['title'], me.query_ONE))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_ONE !== '') {
+                    $scope.filteredItems_ONE = $filter('orderBy')($scope.filteredItems_ONE, $scope.sortingOrder_ONE, $scope.reverse_ONE);
+                }
+
+                $scope.currentPage_ONE = 0;
+                // now group by pages
+                $scope.groupToPages_ONE();
+            };
+
+            // show items per page
+            $scope.perPage_ONE = function () {
+                $scope.groupToPages_ONE();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_ONE = function () {
+                $scope.pagedItems_ONE = [];
+
+                for (var i = 0; i < $scope.filteredItems_ONE.length; i++) {
+                    if (i % $scope.itemsPerPage_ONE === 0) {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)] = [$scope.filteredItems_ONE[i]];
+                    } else {
+                        $scope.pagedItems_ONE[Math.floor(i / $scope.itemsPerPage_ONE)].push($scope.filteredItems_ONE[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_ONE = function () {
+                if ($scope.currentPage_ONE > 0) {
+                    $scope.currentPage_ONE--;
+                }
+            };
+
+            $scope.nextPage_ONE = function () {
+                if ($scope.currentPage_ONE < $scope.pagedItems_ONE.length - 1) {
+                    $scope.currentPage_ONE++;
+                }
+            };
+
+            $scope.setPage_ONE = function () {
+                $scope.currentPage_ONE = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_ONE();
+
+
+            // change sorting order
+            $scope.sort_by_ONE = function (newSortingOrder) {
+                if ($scope.sortingOrder_ONE == newSortingOrder)
+                    $scope.reverse_ONE = !$scope.reverse_ONE;
+
+                $scope.sortingOrder_ONE = newSortingOrder;
+            };
+
+        }
+
+        //function to fetch pending topic
+        me.fetchPendingTopics = function (topics) {
+
+            me.pendingTopics = [];
+
+            for (var i = 0; i < topics.length; i++) {
+                if (topics[i].status == 'PENDING') {
+                    me.pendingTopics.push(topics[i]);
+                }
+            }
+
+            var sortingOrder_TWO = 'id'; //default sort
+
+            $scope.sortingOrder_TWO = sortingOrder_TWO;
+            $scope.pageSizes_TWO = [5, 10, 25, 50];
+            $scope.reverse_TWO = true;
+            $scope.filteredItems_TWO = [];
+            $scope.groupedItems_TWO = [];
+            $scope.itemsPerPage_TWO = 10;
+            $scope.pagedItems_TWO = [];
+            $scope.currentPage_TWO = 0;
+            $scope.items_TWO = me.pendingTopics;
+
+            var searchMatch_TWO = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_TWO = function () {
+                $scope.filteredItems_TWO = $filter('filter')($scope.items_TWO, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_TWO(item['title'], me.query_TWO))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_TWO !== '') {
+                    $scope.filteredItems_TWO = $filter('orderBy')($scope.filteredItems_TWO, $scope.sortingOrder_TWO, $scope.reverse_TWO);
+                }
+
+                $scope.currentPage_TWO = 0;
+                // now group by pages
+                $scope.groupToPages_TWO();
+            };
+
+            // show items per page
+            $scope.perPage_TWO = function () {
+                $scope.groupToPages_TWO();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_TWO = function () {
+                $scope.pagedItems_TWO = [];
+
+                for (var i = 0; i < $scope.filteredItems_TWO.length; i++) {
+                    if (i % $scope.itemsPerPage_TWO === 0) {
+                        $scope.pagedItems_TWO[Math.floor(i / $scope.itemsPerPage_TWO)] = [$scope.filteredItems_TWO[i]];
+                    } else {
+                        $scope.pagedItems_TWO[Math.floor(i / $scope.itemsPerPage_TWO)].push($scope.filteredItems_TWO[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_TWO = function () {
+                if ($scope.currentPage_TWO > 0) {
+                    $scope.currentPage_TWO--;
+                }
+            };
+
+            $scope.nextPage_TWO = function () {
+                if ($scope.currentPage_TWO < $scope.pagedItems_TWO.length - 1) {
+                    $scope.currentPage_TWO++;
+                }
+            };
+
+            $scope.setPage_TWO = function () {
+                $scope.currentPage_TWO = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_TWO();
+
+
+            // change sorting order
+            $scope.sort_by_TWO = function (newSortingOrder) {
+                if ($scope.sortingOrder_TWO == newSortingOrder)
+                    $scope.reverse_TWO = !$scope.reverse_TWO;
+
+                $scope.sortingOrder_TWO = newSortingOrder;
+            };
+
+        }
+
+        //function to fetch rejected topic
+        me.fetchRejectedTopics = function (topics) {
+
+            me.rejectedTopics = [];
+
+            for (var i = 0; i < topics.length; i++) {
+                if (topics[i].status == 'REJECTED') {
+                    me.rejectedTopics.push(topics[i]);
+                }
+            }
+
+            //console.log(me.rejectedTopics.length);
+
+            var sortingOrder_THREE = 'id'; //default sort
+
+            $scope.sortingOrder_THREE = sortingOrder_THREE;
+            $scope.pageSizes_THREE = [5, 10, 25, 50];
+            $scope.reverse_THREE = true;
+            $scope.filteredItems_THREE = [];
+            $scope.groupedItems_THREE = [];
+            $scope.itemsPerPage_THREE = 10;
+            $scope.pagedItems_THREE = [];
+            $scope.currentPage_THREE = 0;
+            $scope.items_THREE = me.rejectedTopics;
+
+            var searchMatch_THREE = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_THREE = function () {
+                $scope.filteredItems_THREE = $filter('filter')($scope.items_THREE, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_THREE(item['title'], me.query_THREE))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_THREE !== '') {
+                    $scope.filteredItems_THREE = $filter('orderBy')($scope.filteredItems_THREE, $scope.sortingOrder_THREE, $scope.reverse_THREE);
+                }
+
+                $scope.currentPage_THREE = 0;
+                // now group by pages
+                $scope.groupToPages_THREE();
+            };
+
+            // show items per page
+            $scope.perPage_THREE = function () {
+                $scope.groupToPages_THREE();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_THREE = function () {
+                $scope.pagedItems_THREE = [];
+
+                for (var i = 0; i < $scope.filteredItems_THREE.length; i++) {
+                    if (i % $scope.itemsPerPage_THREE === 0) {
+                        $scope.pagedItems_THREE[Math.floor(i / $scope.itemsPerPage_THREE)] = [$scope.filteredItems_THREE[i]];
+                    } else {
+                        $scope.pagedItems_THREE[Math.floor(i / $scope.itemsPerPage_THREE)].push($scope.filteredItems_THREE[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_THREE = function () {
+                if ($scope.currentPage_THREE > 0) {
+                    $scope.currentPage_THREE--;
+                }
+            };
+
+            $scope.nextPage_THREE = function () {
+                if ($scope.currentPage_THREE < $scope.pagedItems_THREE.length - 1) {
+                    $scope.currentPage_THREE++;
+                }
+            };
+
+            $scope.setPage_THREE = function () {
+                $scope.currentPage_THREE = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_THREE();
+
+
+            // change sorting order
+            $scope.sort_by_THREE = function (newSortingOrder) {
+                if ($scope.sortingOrder_THREE == newSortingOrder)
+                    $scope.reverse_THREE = !$scope.reverse_THREE;
+
+                $scope.sortingOrder_THREE = newSortingOrder;
+            };
+
+
         }
 
         //function to perform action on topic
@@ -1167,7 +1481,7 @@ ForumModule.controller('ForumController', [
                 $scope.reverse = true;
                 $scope.filteredItems = [];
                 $scope.groupedItems = [];
-                $scope.itemsPerPage = 5;
+                $scope.itemsPerPage = 10;
                 $scope.pagedItems = [];
                 $scope.currentPage = 0;
                 $scope.items = topicComments;
@@ -1266,6 +1580,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //funtion to report topic comment
         me.topicCommentReport = function () {
             me.reportTopicComment.userName = user.userName;
             me.reportTopicComment.userId = user.id;
@@ -1289,6 +1604,7 @@ ForumModule.controller('ForumController', [
 
         }
 
+        //funtion to edit topic comment
         me.editTopicComment = function () {
             ForumFactory.editTopicComment(me.topicComment).then(function () {
                 $location.path('/user/forum/topic/view/' + me.topicComment.topic.id);
@@ -1300,6 +1616,7 @@ ForumModule.controller('ForumController', [
             );
         }
 
+        //function to delete topic comment
         me.deleteTopicComment = function (id) {
             ForumFactory.deleteTopicComment(id).then(function () {
                 $route.reload();

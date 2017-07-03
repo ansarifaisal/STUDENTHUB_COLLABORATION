@@ -84,4 +84,13 @@ public class JobDAOImpl implements JobDAO {
 		return query.list();
 	}
 
+	@Override
+	@Transactional
+	public List<Job> getCreatedJobs(int userID) {
+		String hql = "FROM JOBS WHERE USER_ID = :userID AND STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("userID", userID);
+		return query.list();
+	}
+
 }

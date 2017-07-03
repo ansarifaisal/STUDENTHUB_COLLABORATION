@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="row nomargin" ng-repeat="forum in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
-                    <div ng-hide="forum.status != 'APPROVED' && forum.report == 'YES'">
+                    <div ng-hide="forum.status != 'APPROVED' ||  forum.report == 'YES'">
                         <div class="card horizontal">
                             <div class="card-image">
                                 <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -197,7 +197,7 @@
             </div>
             <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
                 <div class="center">
-                    <ul class="pagination">
+                    <ul class="pagination nomargin">
                         <li ng-class="{disabled: currentPage_ONE == 0}">
                             <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
                         </li>
@@ -279,7 +279,7 @@
 
         <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
             <div class="center">
-                <ul class="pagination">
+                <ul class="pagination nomargin">
                     <li ng-class="{disabled: currentPage_ONE == 0}">
                         <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
                     </li>
@@ -330,7 +330,7 @@
         </div>
         <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
             <div class="center">
-                <ul class="pagination">
+                <ul class="pagination nomargin">
                     <li ng-class="{disabled: currentPage_TWO == 0}">
                         <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
                     </li>
@@ -410,7 +410,7 @@
 
     <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
         <div class="center">
-            <ul class="pagination">
+            <ul class="pagination nomargin">
                 <li ng-class="{disabled: currentPage_TWO == 0}">.
                     <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
                 </li>

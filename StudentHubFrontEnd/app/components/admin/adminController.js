@@ -50,7 +50,7 @@ AdminModule.controller('ManageUserController', [
                 var searchMatch = function (haystack, needle) {
                     console.log(haystack);
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
@@ -223,7 +223,7 @@ AdminModule.controller('ManageBlogController', [
         //function to fetch all the blogs from the database
         me.fetchAllBlogs = function () {
             ManageBlogFactory.fetchAllBlogs().then(function (blogs) {
-                
+
                 var sortingOrder = 'blogId'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
@@ -238,7 +238,7 @@ AdminModule.controller('ManageBlogController', [
 
                 var searchMatch = function (haystack, needle) {
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
@@ -419,7 +419,7 @@ AdminModule.controller('ManageForumController', [
                 var searchMatch = function (haystack, needle) {
                     console.log(haystack);
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
@@ -583,7 +583,7 @@ AdminModule.controller('ManageJobController', [
         //function to fetch all the jobs
         me.fetchAllJobs = function () {
             ManageJobFactory.fetchAllJobs().then(function (jobs) {
-              
+
                 var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
@@ -598,7 +598,7 @@ AdminModule.controller('ManageJobController', [
 
                 var searchMatch = function (haystack, needle) {
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
@@ -669,7 +669,7 @@ AdminModule.controller('ManageJobController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
-                
+
             },
                 function (errorResponse) {
                     Metrialize.toast('<strong>Error Fetching Jobs</strong>', 6000);
@@ -762,7 +762,7 @@ AdminModule.controller('ManageEventController', [
         me.fetchAllEvents = function () {
             ManageEventFactory.fetchAllEvents().then(function (events) {
 
-                 var sortingOrder = 'id'; //default sort
+                var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -777,7 +777,7 @@ AdminModule.controller('ManageEventController', [
                 var searchMatch = function (haystack, needle) {
                     console.log(haystack);
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
@@ -956,9 +956,8 @@ AdminModule.controller('ManageTopicController', [
                 $scope.items = topics;
 
                 var searchMatch = function (haystack, needle) {
-                    console.log(haystack);
                     if (!needle) {
-                        
+
                         return true;
                     }
                     return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;

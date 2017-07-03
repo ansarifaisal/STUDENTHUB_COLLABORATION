@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-init="userCtrl.loadProfile();">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <div class="row">
@@ -13,88 +13,122 @@
                 <div class="col m8">
                     <ul class="tabs tabs-fixed-width">
                         <li class="tab col s3"><a href="#about">About</a></li>
-                        <li class="tab col s3"><a href="#friends">Friends &nbsp;<span class="grey-text" style="font-size:12px;">113</span></a></li>
-                        <li class="tab col s3"><a href="#forums">Forums  &nbsp;<span class="grey-text" style="font-size:12px;">113</span></a></li>
-                        <li class="tab col s3"><a href="#jobs">Jobs  &nbsp;<span class="grey-text" style="font-size:12px;">113</span></a></li>
-                        <li class="tab col s3"><a href="#events">Events  &nbsp;<span class="grey-text" style="font-size:12px;">113</span></a></li>
+                        <li class="tab col s3"><a href="#friends">Friends &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfFriends}}</span></a></li>
+                        <li class="tab col s3"><a href="#forums">Forums  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfForums}}</span></a></li>
+                        <li class="tab col s3"><a href="#jobs">Jobs  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfJobs}}</span></a></li>
+                        <li class="tab col s3"><a href="#events">Events  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfEvents}}</span></a></li>
                     </ul>
+
+                    <!--About Section Starts Here-->
 
                     <div id="about">
                         <span style="padding-top:10px;">
                             <ul class="collapsible popout" data-collapsible="accordion">
                                 <li>
-                                    <div class="collapsible-header"><i class="material-icons">person</i>Contact & Basic Information</div>
+                                    <div class="collapsible-header active"><i class="material-icons">person</i>Contact & Basic Information</div>
                                     <div class="collapsible-body">
-                                        <strong class="grey-text">Contact Information</strong>
+                                        <strong class="grey-text">Contact Information & Basic Information</strong>
                                         <hr/>
                                         <table class="highlight">
                                             <tr>
-                                                <td>Mobile Phones</td>
-                                                <td>9920312317</td>
+                                                <td>Username</td>
+                                                <td>{{userCtrl.data.user.userName}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Address</td>
-                                                <td>Mumbai, India 400043</td>
+                                                <td>Name</td>
+                                                <td>{{userCtrl.data.user.firstName}} {{userCtrl.data.user.lastName}}</td>
                                             </tr>
-                                            <tr>
-                                                <td>Email Address</td>
-                                                <td>ansarifaisal480@gmail.com</td>
-                                            </tr>
-                                        </table><br/>
-
-                                    <strong class="grey-text">Social Links</strong>
-                                    <hr/>
-                                        <table class="highlight">
-                                            <tr>
-                                                <td>Social Links</td>
-                                                <td>ansari.faisal4 (Skype)</td>
-                                            </tr>
-                                        </table><br/>
-
-                                    <strong class="grey-text">Basic Information</strong>
-                                    <hr/>
-                                        <table class="highlight">
                                             <tr>
                                                 <td>Date of Birth</td>
-                                                <td>26 January, 1995</td>
+                                                <td>{{userCtrl.data.user.dob}}</td>
                                             </tr>
                                             <tr>
                                                 <td>Gender</td>
-                                                <td>Male</td>
+                                                <td>{{userCtrl.data.user.gender}}</td>
                                             </tr>
-                                        </table><br/>
+                                            <tr>
+                                                <td>Mobile Phones</td>
+                                                <td ng-show="!userCtrl.data.user.moreDetails.mobileNumber">Not Provided</td>
+                                                <td ng-hide="!userCtrl.data.user.moreDetails.mobileNumber">{{userCtrl.data.user.moreDetails.mobileNumber}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Address</td>
+                                                <td ng-show="!userCtrl.data.user.moreDetails">Not Provided</td>
+                                                <td ng-hide="!userCtrl.data.user.moreDetails.street || !userCtrl.data.user.moreDetails.city || !userCtrl.data.user.moreDetails.state || !userCtrl.data.user.moreDetails.country">
+                                                    <div class="row">
+                                                        <div ng-hide="!userCtrl.data.user.moreDetails.street">
+                                                        {{userCtrl.data.user.moreDetails.street}},
+                                                        </div>
+                                                        <div ng-hide="!userCtrl.data.user.moreDetails.city">
+                                                        {{userCtrl.data.user.moreDetails.city}},
+                                                        </div>
+                                                        <div ng-hide="!userCtrl.data.user.moreDetails.state">
+                                                        {{userCtrl.data.user.moreDetails.state}},
+                                                        </div>
+                                                        <div ng-hide="!userCtrl.data.user.moreDetails.country">
+                                                        {{userCtrl.data.user.moreDetails.country}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Email Address</td>
+                                                    <td>{{userCtrl.data.user.email}}</td>
+                                                </tr>
+                                                </table><br/>
 
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="collapsible-header"><i class="material-icons">school</i>Education Information</div>
-                                    <div class="collapsible-body">
-                                        
-                                        <strong class="grey-text">University</strong>
-                                        <hr/>
-                                        <table class="highlight">
-                                            <tr>
-                                                <td>University Name</td>
-                                            </tr>
-                                        </table><br/>
-                                        
-                                        <strong class="grey-text">High School</strong>
-                                        <hr/>
-                                        <table class="highlight">
-                                            <tr>
-                                                <td>School Name</td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                        <strong class="grey-text">Social Links</strong>
+                        <hr/>
+                        <table class="highlight">
+                            <tr ng-hide = "!userCtrl.data.userCtrl.data.user.socialLinks" ng-repeat="link in userCtrl.data.user.socialLinks">
+                                <td>{{link.belongs}}</td>
+                                <td>{{link.details}}</td>
+                            </tr>
+                            <tr>
+                                <td><a href = "">Add Link</a></td>
+                            </tr>
+                        </table><br/>
+
+                    </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">school</i>Education Information</div>
+                        <div class="collapsible-body">
+
+                            <strong class="grey-text">University</strong>
+                            <hr/>
+                            <table class="highlight">
+                                <tr>
+                                    <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
+                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.university}}</td>
+                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.universityYear}}</td>
+
+                                </tr>
+                            </table><br/>
+
+                            <strong class="grey-text">High School</strong>
+                            <hr/>
+                            <table class="highlight">
+                                <tr>
+                                    <td ng-show=""></td>
+                                </tr>
+                                <tr>
+                                    <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
+                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.highSchool}}</td>
+                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.hideSchoolYear}}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </li>
                     <li>
                         <div class="collapsible-header"><i class="material-icons">whatshot</i>Details About You</div>
-                        <div class="collapsible-body">  
+                        <div class="collapsible-body">
                             <strong class="grey-text">About You</strong>
                             <hr/>
                             <table class="highlight">
                                 <tr>
-                                    <td>This is a test</td>
+                                    <td ng-show="!userCtrl.data.user.moreDetails.about">Not Provided</td>
+                                    <td ng-hide="!userCtrl.data.user.moreDetails.about">{{userCtrl.data.user.moreDetails.about}}</td>
                                 </tr>
                             </table><br/>
                         </div>
@@ -103,6 +137,9 @@
                     </span>
                     </div>
 
+                    <!--Details Section Ends Here-->
+
+                    <!--Friends Section Starts Here-->
                     <div id="friends">
                         <div class="card-panel">
                             <div class="center">
@@ -206,344 +243,243 @@
                             </div>
                         </div>
                     </div>
+                    <!--Friend Section Ends Here-->
+
+
+                    <!--Forums Section Starts Here-->
                     <div id="forums">
 
                         <div class="card-panel">
-                            <div class="center">
-                                <ul class="pagination nomargin  nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
-                            </div>
 
-                            <div class="card-panel" style="padding: 10px; padding-bottom:24px;">
-                                <div class="row nomargin">
-                                    <div class="col m8">
-                                        <a href="">I am a very simple card. I am a very simple card. I am a very simple card. I am a very simple card.</a>
-                                    </div>
-                                    <div class="col m4">
-                                        <span class="right"><a href = "" class="btn">Leave Group</a></span>
-                                    </div><br>
-                                </div>
+                            <div class="row nomargin">
                                 <div class="col m8">
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>1 Topics</span>&nbsp;&nbsp;
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>1 Members</span>
+                                    <div class="input-field nomargin">
+                                        <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
+                                        <label for="searchKeyword">Search For Forum</label>
+                                    </div>
+                                </div>
+
+                                <div class="col m4">
+                                    <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
+                                    </select>
+                                    <label>Materialize Select</label>
                                 </div>
                             </div>
 
-                            <div class="card-panel">
-                                <div class="row nomargin">
-                                    <a href="">I am a very simple card.</a>
-                                    <span class="right"><a href = "" class="btn">Leave Group</a></span><br/>
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>1 Topics</span>&nbsp;&nbsp;
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>1 Members</span>
+                            <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                                <h6 class="center red-text">Not Created Any Forum(s) Yet Or No Search Match Available</h6>
+                            </div>
+                            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                                <div class="center">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_ONE == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row nomargin" ng-repeat="forum in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
+                                <div class="card-panel" style="padding: 10px; padding-bottom:24px;">
+                                    <div class="row nomargin">
+                                        <div class="col m8">
+                                            <a href="#!/user/forum/view/{{forum.id}}">{{forum.forumName}}</a>
+                                        </div>
+                                        <div class="col m4">
+                                            <span class="right"><a href = "" class="btn">Leave Group</a></span>
+                                        </div><br>
+                                    </div>
+                                    <div class="col m8">
+                                        <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>{{forum.noOfTopics}} Topics</span>&nbsp;&nbsp;
+                                        <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>{{forum.noOfMembers}} Members</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="card-panel">
-                                <div class="row nomargin">
-                                    <a href="">I am a very simple card.</a>
-                                    <span class="right"><a href = "" class="btn">Leave Group</a></span><br/>
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>1 Topics</span>&nbsp;&nbsp;
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>1 Members</span>
+                            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                                <div class="center">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_ONE == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin">
-                                    <a href="">I am a very simple card.</a>
-                                    <span class="right"><a href = "" class="btn">Leave Group</a></span><br/>
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>1 Topics</span>&nbsp;&nbsp;
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>1 Members</span>
-                                </div>
-                            </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin">
-                                    <a href="">I am a very simple card.</a>
-                                    <span class="right"><a href = "" class="btn">Leave Group</a></span><br/>
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>1 Topics</span>&nbsp;&nbsp;
-                                    <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>1 Members</span>
-                                </div>
-                            </div>
-
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
                             </div>
 
                         </div>
 
-
-
-
                     </div>
+
+                    <!--Forums Section Ends Here-->
+
+                    <!--Jobs Section Starts Here-->
                     <div id="jobs">
                         <div class="card-panel">
 
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
+                            <div class="row nomargin">
+                                <div class="col m8">
+                                    <div class="input-field nomargin">
+                                        <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                                        <label for="searchKeyword">Search For Job</label>
+                                    </div>
+                                </div>
+
+                                <div class="col m4">
+                                    <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
+                                    </select>
+                                    <label>Materialize Select</label>
+                                </div>
                             </div>
 
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m8">
-                                                <p><a href="#!">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">New Global Technologies</p>
-                                                <p class="grey-text" style="font-size: 10px;">
-                                                    <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;0-4
-                                                    yrs &nbsp;&nbsp;&nbsp;
-                                                    <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;Mumbai
-                                                    &nbsp;&nbsp;&nbsp; &#8377; 3,75,000-7,50,000 P.A.
-                                            </div>
-                                            <div class="col m4">
-                                                <a href="" class="right btn">Cancel</a>
+                            <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+                                <h6 class="center red-text">Haven't Created Any Job(s) Yet Or No Search Match Available</h6>
+                            </div>
+                            <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                                <div class="center ">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_TWO == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="row nomargin" ng-repeat="job in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
+                                <div class="card horizontal" style="padding: 0px;">
+                                    <div class="card-stacked">
+                                        <div class="card-content" style="padding: 10px;">
+                                            <div class="row nomargin">
+                                                <div class="col m8">
+                                                    <p><a href="#!">{{job.title}}</a></p>
+                                                    <p class="grey-text" style="font-size: 12px;">{{job.company}}</p>
+                                                    <p class="grey-text" style="font-size: 10px;">
+                                                        <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;{{job.experience}}
+                                                        yrs &nbsp;&nbsp;&nbsp;
+                                                        <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;{{job.location}}
+                                                        &nbsp;&nbsp;&nbsp; &#8377; {{job.salary}} P.A.
+                                                </div>
+                                                <div class="col m4">
+                                                    <a href="" class="right btn">Cancel</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m8">
-                                                <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                                                <p class="grey-text" style="font-size: 14px;">New Global Technologies</p>
-                                                <p class="grey-text" style="font-size: 10px;">
-                                                    <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;0-4
-                                                    yrs &nbsp;&nbsp;&nbsp;
-                                                    <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;Mumbai
-                                                    &nbsp;&nbsp;&nbsp; &#8377; 3,75,000-7,50,000 P.A.
-                                            </div>
-                                            <div class="col m4">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                                <div class="center">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_TWO == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m8">
-                                                <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                                                <p class="grey-text" style="font-size: 14px;">New Global Technologies</p>
-                                                <p class="grey-text" style="font-size: 10px;">
-                                                    <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;0-4
-                                                    yrs &nbsp;&nbsp;&nbsp;
-                                                    <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;Mumbai
-                                                    &nbsp;&nbsp;&nbsp; &#8377; 3,75,000-7,50,000 P.A.
-                                            </div>
-                                            <div class="col m4">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m8">
-                                                <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                                                <p class="grey-text" style="font-size: 14px;">New Global Technologies</p>
-                                                <p class="grey-text" style="font-size: 10px;">
-                                                    <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;0-4
-                                                    yrs &nbsp;&nbsp;&nbsp;
-                                                    <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;Mumbai
-                                                    &nbsp;&nbsp;&nbsp; &#8377; 3,75,000-7,50,000 P.A.
-                                            </div>
-                                            <div class="col m4">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m8">
-                                                <p style="font-size: 18px;">I am a very simple card. I am good at containing small bits of information.</p>
-                                                <p class="grey-text" style="font-size: 14px;">New Global Technologies</p>
-                                                <p class="grey-text" style="font-size: 10px;">
-                                                    <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;0-4
-                                                    yrs &nbsp;&nbsp;&nbsp;
-                                                    <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;Mumbai
-                                                    &nbsp;&nbsp;&nbsp; &#8377; 3,75,000-7,50,000 P.A.
-                                            </div>
-                                            <div class="col m4">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
                             </div>
 
                         </div>
                     </div>
+                    <!--Job Section Ends Here-->
 
+                    <!--Event Section Starts Hers-->
                     <div id="events">
                         <div class="card-panel">
+                            <div class="row nomargin">
+                                <div class="col m8">
+                                    <div class="input-field nomargin">
+                                        <input type="text" style="margin-bottom:0px;" ng-model="query_THREE" ng-change="search_THREE()" required="required">
+                                        <label for="searchKeyword">Search For Event</label>
+                                    </div>
+                                </div>
 
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
+                                <div class="col m4">
+                                    <select ng-model="itemsPerPage_THREE" ng-change="perPage_THREE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_THREE">
+                                    </select>
+                                    <label>Materialize Select</label>
+                                </div>
                             </div>
 
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m9">
-                                                <p><a href="">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">
-                                                    Joined:&nbsp;1 &nbsp;&nbsp;&nbsp; Status:&nbsp;Coming Soon
-                                                </p>
-                                            </div>
-                                            <div class="col m3">
-                                                <a href="" class="right btn">Cancel</a>
+                            <div ng-show="!pagedItems_THREE[currentPage_THREE]">
+                                <h6 class="center red-text">Haven't Created Any Event(s) Yet Or No Search Match Available</h6>
+                            </div>
+                            <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                                <div class="center ">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_THREE == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="row nomargin" ng-repeat="event in pagedItems_THREE[currentPage_THREE] | orderBy:sortingOrder_THREE:reverse_THREE">
+                                <div class="card horizontal">
+                                    <div class="card-stacked">
+                                        <div class="card-content">
+                                            <div class="row nomargin">
+                                                <div class="col m9">
+                                                    <p><a href="">{{event.eventTitle}}</a></p>
+                                                    <p class="grey-text" style="font-size: 12px;">
+                                                        Joined:&nbsp;{{event.noOfApplied}} &nbsp;&nbsp;&nbsp; Status:&nbsp;{{event.eventStatus}}
+                                                    </p>
+                                                </div>
+                                                <div class="col m3">
+                                                    <a href="" class="right btn">Cancel</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m9">
-                                                <p style="font-size: 16px;"><a href="">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">
-                                                    Joined:&nbsp;1 &nbsp;&nbsp;&nbsp; Status:&nbsp;Coming Soon
-                                                </p>
-                                            </div>
-                                            <div class="col m3">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                                <div class="center ">
+                                    <ul class="pagination nomargin">
+                                        <li ng-class="{disabled: currentPage_THREE == 0}">
+                                            <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                            <a href="javascript:;" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                            <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m9">
-                                                <p style="font-size: 16px;"><a href="">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">
-                                                    Joined:&nbsp;1 &nbsp;&nbsp;&nbsp; Status:&nbsp;Coming Soon
-                                                </p>
-                                            </div>
-                                            <div class="col m3">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m9">
-                                                <p style="font-size: 16px;"><a href="">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">
-                                                    Joined:&nbsp;1 &nbsp;&nbsp;&nbsp; Status:&nbsp;Coming Soon
-                                                </p>
-                                            </div>
-                                            <div class="col m3">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card horizontal">
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <div class="row nomargin">
-                                            <div class="col m9">
-                                                <p style="font-size: 16px;"><a href="">I am a very simple card. I am good at containing small bits of information.</a></p>
-                                                <p class="grey-text" style="font-size: 12px;">
-                                                    Joined:&nbsp;1 &nbsp;&nbsp;&nbsp; Status:&nbsp;Coming Soon
-                                                </p>
-                                            </div>
-                                            <div class="col m3">
-                                                <a href="" class="right btn">Cancel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
                             </div>
 
                         </div>
                     </div>
+                    <!--Job Section Ends Here-->
                 </div>
             </div>
         </div>

@@ -38,62 +38,67 @@
             </div>
             <hr/>
 
-            <table class="highlight bordered">
-                <thead>
-                    <tr>
-                        <td><a href="" ng-click="sort_by('eventTitle')">Title</a></td>
-                        <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
-                        <td><a href="" ng-click="sort_by('postDate')">Posted Date</a></td>
-                        <td><a href="" ng-click="sort_by('startDate')">Start Date</a></td>
-                        <td><a href="" ng-click="sort_by('eventStatus')">Event Status</a></td>
-                        <td><a href="" ng-click="sort_by('reported')">Report</a></td>
-                        <td><a href="" ng-click="sort_by('status')">Status</a></td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+            <div ng-show="!pagedItems[currentPage]">
+                <h5 class="center red-text"><strong>There Are No Event(s) Yet OR Search Match Available</strong></h5>
+            </div>
+            <div ng-hide="!pagedItems[currentPage]">
 
-                        <td>{{event.eventTitle}}</td>
-                        <td>{{event.userName}}</td>
-                        <td>{{event.postDate}}</td>
-                        <td>{{event.startDate}}</td>
-                        <td>{{event.eventStatus}}</td>
-                        <td>{{event.reported}}</td>
-                        <td>{{event.status}}</td>
-                        <td ng-if=" event.status == 'APPROVED' ">
-                            <a href="#!/admin/editevent/{{event.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
-                        </td>
+                <table class="highlight bordered">
+                    <thead>
+                        <tr>
+                            <td><a href="" ng-click="sort_by('eventTitle')">Title</a></td>
+                            <td><a href="" ng-click="sort_by('userName')">Posted By</a></td>
+                            <td><a href="" ng-click="sort_by('postDate')">Posted Date</a></td>
+                            <td><a href="" ng-click="sort_by('startDate')">Start Date</a></td>
+                            <td><a href="" ng-click="sort_by('eventStatus')">Event Status</a></td>
+                            <td><a href="" ng-click="sort_by('reported')">Report</a></td>
+                            <td><a href="" ng-click="sort_by('status')">Status</a></td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="event in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
 
-                        <td ng-if=" event.status == 'PENDING' ">
-                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#!" ng-click="manageEventCtrl.validateEvent(event.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
-                        </td>
+                            <td>{{event.eventTitle}}</td>
+                            <td>{{event.userName}}</td>
+                            <td>{{event.postDate}}</td>
+                            <td>{{event.startDate}}</td>
+                            <td>{{event.eventStatus}}</td>
+                            <td>{{event.reported}}</td>
+                            <td>{{event.status}}</td>
+                            <td ng-if=" event.status == 'APPROVED' ">
+                                <a href="#!/admin/editevent/{{event.id}}" style="color:black;"><i class="material-icons">edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Disabled')" style="color:black;"><i class="material-icons ">block</i></a>
+                            </td>
 
-                        <td ng-if=" event.status == 'DISABLED' || event.status == 'CLOSED' || event.status == 'REJECTED'">
-                            <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        </td>
+                            <td ng-if=" event.status == 'PENDING' ">
+                                <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="#!" ng-click="manageEventCtrl.validateEvent(event.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
+                            </td>
 
-                    </tr>
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col offset-m5">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
-                        </li>
-                        <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href="javascript:;" ng-bind="n + 1">{{n+1}}</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                            <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
-                        </li>
-                    </ul>
+                            <td ng-if=" event.status == 'DISABLED' || event.status == 'CLOSED' || event.status == 'REJECTED'">
+                                <a href="" ng-click="manageEventCtrl.validateEvent(event.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col offset-m5">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href="javascript:;" ng-bind="n + 1">{{n+1}}</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

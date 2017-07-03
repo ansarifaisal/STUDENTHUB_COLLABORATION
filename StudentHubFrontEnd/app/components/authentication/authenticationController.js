@@ -16,7 +16,7 @@ AuthenticationModule.controller('AuthenticationController', [
 
         //defining the fields
         me.user = {
-            id: undefined,
+            id: null,
             email: '',
             userName: '',
             password: '',
@@ -25,7 +25,16 @@ AuthenticationModule.controller('AuthenticationController', [
             lastName: '',
             gender: '',
             dob: '',
-            doj: ''
+            doj: '',
+            profilePicture: '',
+            noOfBlogs: '',
+            noOfForums: '',
+            noOfJobs: '',
+            noOfEvents: '',
+            noOfFriends: '',
+            isOnline: '',
+            role: '',
+            status: ''
         };
         //load jquery
         $timeout(function () {
@@ -36,7 +45,7 @@ AuthenticationModule.controller('AuthenticationController', [
         //method to login
         me.doLogin = function () {
             AuthenticationFactory.login(me.credentials).then(function (user) {
-                debugger;
+                console.log(user);
                 if (user.status === 'REJECT') {
                     me.error = true;
                     Materialize.toast('<strong>Sorry! Your Request Has Been Rejected</strong>', 6000);
@@ -46,9 +55,12 @@ AuthenticationModule.controller('AuthenticationController', [
                 } else if (me.user.userName === null || me.user.userName === '' && me.user.password === null || me.user.password === null) {
                     me.error = true;
                     Materialize.toast('<strong>Please, Provide Correct Username and Password</strong>', 6000);
-                } else if(user.status === 'DISABLED'){
+                } else if (user.status === 'DISABLED') {
                     me.error = true;
                     Materialize.toast('<strong>Your Account Has Been Disabled, Contact Administrator</strong>', 6000);
+                } else if (!user) {
+                    me.error = true;
+                    Materialize.toast('<strong>Invalid Credentials</strong>', 6000);
                 } else {
                     AuthenticationFactory.setUserIsAuthenticated(true);
                     AuthenticationFactory.setRole(user.role);
@@ -84,8 +96,6 @@ AuthenticationModule.controller('AuthenticationController', [
             var userName = me.user.userName;
             if (userName !== undefined && userName.length > 0) {
                 AuthenticationFactory.checkUserName(userName).then(function (response) {
-                    debugger;
-                    console.log(response);
                     if (response.status === 302) {
                         me.userNameExist = true;
                         $scope.registerForm.userName.$setValidity("userName", false);
@@ -102,16 +112,20 @@ AuthenticationModule.controller('AuthenticationController', [
 
         me.doRegisteration = function () {
 
-            //var date = new Date(me.user.dob).toISOString().slice(0, 10);
-
             var date = dateTimeFormat(me.user.dob);
             me.user.dob = date;
-            console.log(me.user.dob);
             var dateDoj = new Date();
-            console.log(dateDoj);
             me.user.doj = dateTimeFormat(dateDoj);
-            console.log(me.user.doj);
-            debugger;
+
+            me.user.profilePicture = "noPic.png";
+            me.user.noOfBlogs = 0;
+            me.user.noOfForums = 0;
+            me.user.noOfJobs = 0;
+            me.user.noOfEvents = 0;
+            me.user.noOfFriends = 0;
+            me.user.isOnline = 'FALSE';
+            me.user.role = 'USER';
+            me.user.status = 'PENDING';
 
             AuthenticationFactory.register(me.user).then(function () {
                 AuthenticationFactory.setUserIsAuthenticated(false);

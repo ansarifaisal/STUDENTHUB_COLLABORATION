@@ -1,16 +1,22 @@
 package com.studenthub.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity(name = "USERS")
 @Component
@@ -24,7 +30,7 @@ public class User extends Domain implements Serializable {
 	/*
 	 * Declaring Private Fields
 	 */
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	@SequenceGenerator(name = "generator", sequenceName = "USERS_SEQ", allocationSize = 1)
@@ -60,19 +66,19 @@ public class User extends Domain implements Serializable {
 
 	@Column(name = "PROFILE_IMAGE", nullable = false)
 	private String profilePicture;
-	
-	@Column(name = "NO_OF_COMMENTS", nullable = false)
-	private int noOfComments;
-	
+
+	@Column(name = "NO_OF_BLOGS", nullable = false)
+	private int noOfBlogs;
+
 	@Column(name = "NO_OF_FORUMS", nullable = false)
 	private int noOfForums;
-	
+
 	@Column(name = "NO_OF_JOBS", nullable = false)
 	private int noOfJobs;
-	
+
 	@Column(name = "NO_OF_EVENTS", nullable = false)
 	private int noOfEvents;
-	
+
 	@Column(name = "NO_OF_FRIENDS", nullable = false)
 	private int noOfFriends;
 
@@ -85,12 +91,22 @@ public class User extends Domain implements Serializable {
 	@Column(name = "STATUS", nullable = false)
 	private String status;
 
-	
+	@OneToOne(mappedBy = "user")
+	@JsonManagedReference
+	private MoreDetails moreDetails;
+
+	@OneToOne(mappedBy = "user")
+	@JsonManagedReference
+	private EducationDetails educationDetails;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonManagedReference
+	private List<SocialLinks> socialLinks;
+
 	/*
 	 * Getters and Setters OR Accessors and Muttators
 	 */
 
-	
 	public int getId() {
 		return id;
 	}
@@ -109,6 +125,30 @@ public class User extends Domain implements Serializable {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public MoreDetails getMoreDetails() {
+		return moreDetails;
+	}
+
+	public void setMoreDetails(MoreDetails moreDetails) {
+		this.moreDetails = moreDetails;
+	}
+
+	public EducationDetails getEducationDetails() {
+		return educationDetails;
+	}
+
+	public void setEducationDetails(EducationDetails educationDetails) {
+		this.educationDetails = educationDetails;
+	}
+
+	public List<SocialLinks> getSocialLinks() {
+		return socialLinks;
+	}
+
+	public void setSocialLinks(List<SocialLinks> socialLinks) {
+		this.socialLinks = socialLinks;
 	}
 
 	public void setUserName(String userName) {
@@ -179,12 +219,12 @@ public class User extends Domain implements Serializable {
 		this.profilePicture = profilePicture;
 	}
 
-	public int getNoOfComments() {
-		return noOfComments;
+	public int getNoOfBlogs() {
+		return noOfBlogs;
 	}
 
-	public void setNoOfComments(int noOfComments) {
-		this.noOfComments = noOfComments;
+	public void setNoOfBlogs(int noOfBlogs) {
+		this.noOfBlogs = noOfBlogs;
 	}
 
 	public int getNoOfForums() {
@@ -243,16 +283,17 @@ public class User extends Domain implements Serializable {
 		this.status = status;
 	}
 
-	
-	/*Overriding toString Method For Debugging*/
+	/* Overriding toString Method For Debugging */
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", userName=" + userName + ", password=" + password
 				+ ", confirmPassword=" + confirmPassword + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", gender=" + gender + ", dob=" + dob + ", doj=" + doj + ", profilePicture=" + profilePicture
-				+ ", noOfComments=" + noOfComments + ", noOfForums=" + noOfForums + ", noOfJobs=" + noOfJobs
-				+ ", noOfEvents=" + noOfEvents + ", noOfFriends=" + noOfFriends + ", isOnline=" + isOnline + ", role="
-				+ role + ", status=" + status + "]";
+				+ ", noOfBlogs=" + noOfBlogs + ", noOfForums=" + noOfForums + ", noOfJobs=" + noOfJobs + ", noOfEvents="
+				+ noOfEvents + ", noOfFriends=" + noOfFriends + ", isOnline=" + isOnline + ", role=" + role
+				+ ", status=" + status + ", moreDetails=" + moreDetails + ", educationDetails=" + educationDetails
+				+ ", socialLinks=" + socialLinks + "]";
 	}
-	
+
 }
