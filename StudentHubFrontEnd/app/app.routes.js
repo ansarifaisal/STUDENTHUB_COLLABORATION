@@ -542,7 +542,7 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
-    '/user/account': {
+    '/user/account/:id': {
         //page path
         templateUrl: 'app/components/user/account.html',
         //controller that will handle this page
@@ -960,6 +960,35 @@ window.routes = {
         //roles is use to define which user can access this page
         roles: ['Super_Admin', 'ADMIN']
     },
+
+    //<=====================User Report Module================>
+
+    '/admin/report/users': {
+        //page path
+        templateUrl: 'app/components/report/userReport.html',
+        //controller that will handle this page
+        controller: 'UserReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'userReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
+    '/admin/handled/users': {
+        //page path
+        templateUrl: 'app/components/report/handledUserReport.html',
+        //controller that will handle this page
+        controller: 'UserReportController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'userReportCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN']
+    },
+
 
     //<=====================Job Accept Module================>
 

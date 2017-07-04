@@ -1,15 +1,21 @@
 package com.studenthub.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.studenthub.dao.BlogCommentDAO;
 import com.studenthub.dao.BlogDAO;
@@ -55,6 +61,9 @@ public class BlogController {
 	@Autowired
 	HandledDAO handledDAO;
 
+	@Value("${blogImageBasePath}")
+	private String imageBasePath;
+
 	// <-----------------Fetch All Blogs--------------------------->
 	@RequestMapping(value = "/blogs", method = RequestMethod.GET)
 	public ResponseEntity<List<Blog>> getAllBlogs() {
@@ -84,16 +93,17 @@ public class BlogController {
 	}
 
 	// <---------------------Create Edit Blog--------------------------->
-	@RequestMapping(value = "/blog/createEditBlog", method = RequestMethod.POST)
-	public ResponseEntity<Void> createEditBlog(@RequestBody Blog blog) {
-		if (blog.getBlogId() == 0) {
-			blogDAO.addBlog(blog);
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		} else {
-			blogDAO.updateBlog(blog);
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
-	}
+	// @RequestMapping(value = "/blog/createEditBlog", method =
+	// RequestMethod.POST)
+	// public ResponseEntity<Void> createEditBlog(@RequestBody Blog blog) {
+	// if (blog.getBlogId() == 0) {
+	// blogDAO.addBlog(blog);
+	// return new ResponseEntity<Void>(HttpStatus.OK);
+	// } else {
+	// blogDAO.updateBlog(blog);
+	// return new ResponseEntity<Void>(HttpStatus.OK);
+	// }
+	// }
 
 	// <------------------Perform Action------------------------------->
 	@RequestMapping(value = "/admin/blog/{action}/{id}", method = RequestMethod.GET)
@@ -293,4 +303,71 @@ public class BlogController {
 			return new ResponseEntity<BlogLikes>(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	/**
+	 * 
+	 * uploadFile method has three parameters directory - where to upload
+	 * fileName - that will be used for naming the uploaded file file - the file
+	 * to upload
+	 * 
+	 */
+
+	private boolean uploadFile(String directory, String fileName, MultipartFile file) {
+
+		// Create the directory if does not exists
+		if (!new File(directory).exists()) {
+			new File(directory).mkdirs();
+		}
+
+		try {
+			// transfer the file
+			file.transferTo(new File(directory + fileName));
+			// file uploaded successfully
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// To resolve ${} in @Value
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	// <---------------------Create Edit Blog--------------------------->
+	@RequestMapping(value = "/blog/createEditBlog", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+	public ResponseEntity<Void> createEditBlog(@RequestPart("blog") Blog blog, @RequestPart("file") MultipartFile file) {
+		if (blog.getBlogId() == 0) {
+			boolean flag = blogDAO.addBlog(blog);
+			if (flag != false) {
+				String fileName = "blog" + file.getName() + ".png";
+				if (uploadFile(imageBasePath, fileName, file)) {
+					blog.setImageUrl(fileName);
+				}
+			}
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			blogDAO.updateBlog(blog);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+	}
+
+	// <!--------------------Upload Profile Picture-------------------!>
+	// @RequestMapping(value = { "/uploadProfile" }, method =
+	// RequestMethod.POST)
+	// public ResponseEntity<User> editUser(@RequestParam("file") MultipartFile
+	// file, @RequestParam("id") int id) {
+	//
+	// String fileName = "USER_PROFILE_" + id + ".png";
+	// user = userDAO.get(id);
+	// if (uploadFile(imageBasePath, fileName, file)) {
+	// user.setProfilePicture(fileName);
+	// userDAO.update(user);
+	// }
+	// return new ResponseEntity<User>(user, HttpStatus.OK);
+	// }
+
 }

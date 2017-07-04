@@ -35,7 +35,7 @@
                             data-delay="50" data-tooltip="Notification"><span class="material-icons">notifications</span><sup><span ng-show="rootNotification.totalReportedRequest != 0" class="new badge red">{{rootNotification.totalReportedRequest}}</span></sup></a>
 
                         <ul id='notification-list' class='dropdown-content'>
-                            <li><a href="#!">Users <span ng-show="rootNotification.noOfUserReported != 0" class="new badge red">{{rootNotification.noOfUserReported}}</span> </a></li>
+                            <li><a href="#!/admin/report/users">Users <span ng-show="rootNotification.noOfUserReported != 0" class="new badge red">{{rootNotification.noOfUserReported}}</span> </a></li>
                             <li><a href="#!/admin/report/blogs">Blogs <span ng-show="rootNotification.noOfBlogReported != 0" class="new badge red">{{rootNotification.noOfBlogReported}}</span></a></li>
                             <li><a href="#!/admin/report/blogcomments">Blog Comments <span ng-show="rootNotification.noOfBlogCommentReported != 0" class="new badge red">{{rootNotification.noOfBlogCommentReported}}</span></a></li>
                             <li><a href="#!/admin/report/forums">Forums <span ng-show="rootNotification.noOfForumReported != 0" class="new badge red">{{rootNotification.noOfForumReported}}</span></a></li>
@@ -82,7 +82,7 @@
 
                         <ul id='account' class='dropdown-content'>
                             <li><a href="#!/user/profile/{{user.id}}">Profile</a></li>
-                            <li><a href="#!/user/account">My Account</a></li>
+                            <li><a href="#!/user/account/{{user.id}}">My Account</a></li>
                             <li><a href="#!" ng-click="logout()">Logout</a></li>
                         </ul>
 

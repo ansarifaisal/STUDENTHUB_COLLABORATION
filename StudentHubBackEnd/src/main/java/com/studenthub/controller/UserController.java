@@ -1,15 +1,22 @@
 package com.studenthub.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.studenthub.dao.BlogDAO;
 import com.studenthub.dao.EducationDetailsDAO;
@@ -37,6 +44,7 @@ import com.studenthub.entity.UserModel;
 import com.studenthub.service.EmailService;
 
 @RestController
+@PropertySource("classpath:config.properties")
 public class UserController {
 
 	@Autowired
@@ -96,6 +104,9 @@ public class UserController {
 	@Autowired
 	SocialLinksDAO socialLinksDAO;
 
+	@Value("${imageBasePath}")
+	private String imageBasePath;
+
 	@Autowired
 	Report report;
 
@@ -107,7 +118,9 @@ public class UserController {
 	public ResponseEntity<Void> registerUser(@RequestBody User user) {
 
 		if (user.getId() == 0) {
+
 			boolean flag = userDAO.add(user);
+
 			if (flag != false) {
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			} else {
@@ -206,6 +219,9 @@ public class UserController {
 			case "Rejected":
 				user.setStatus("REJECTED");
 				break;
+			case "Blocked":
+				user.setStatus("BLOCKED");
+				break;
 			}
 			boolean flag = userDAO.update(user);
 			if (flag != false) {
@@ -228,6 +244,91 @@ public class UserController {
 		}
 		return new ResponseEntity<User>(HttpStatus.OK);
 	}
+
+	// <!----------------------Add Contact Information----------------!>
+
+	@RequestMapping(value = "/user/addEditMoreDetails", method = RequestMethod.POST)
+	public ResponseEntity<MoreDetails> addEditMoreDetails(@RequestBody MoreDetails moreDetails,
+			@RequestParam("id") int id) {
+		if (moreDetails != null) {
+			if (moreDetails.getId() == 0) {
+				moreDetails.setUser(user);
+				moreDetailsDAO.add(moreDetails);
+			} else {
+				moreDetails.setUser(user);
+				moreDetailsDAO.update(moreDetails);
+			}
+			return new ResponseEntity<MoreDetails>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<MoreDetails>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!-------------------Add Add Or Edit Education Details----------!>
+
+	@RequestMapping(value = "/user/addEditEducationDetails", method = RequestMethod.POST)
+	public ResponseEntity<EducationDetails> addEditEducationDetails(@RequestBody EducationDetails educationDetails,
+			@RequestParam("id") int id) {
+		if (educationDetails != null) {
+			if (educationDetails.getId() == 0) {
+				educationDetails.setUser(user);
+				educationDetailsDAO.add(educationDetails);
+			} else {
+				educationDetails.setUser(user);
+				educationDetailsDAO.update(educationDetails);
+			}
+			return new ResponseEntity<EducationDetails>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<EducationDetails>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!----------------------Check Old Password---------------------!>
+	@RequestMapping(value = { "/checkOldPassword" }, method = RequestMethod.POST)
+	public ResponseEntity<Void> checkOldPassword(@RequestBody String oldPassword, @RequestParam("id") int id) {
+		user = userDAO.get(id);
+		if (user != null) {
+			if (user.getPassword().equals(oldPassword)) {
+				return new ResponseEntity<Void>(HttpStatus.FOUND);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			}
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!---------------------Change Password-----------------------------!>
+	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+	public ResponseEntity<Void> changePassword(@RequestBody String password, @RequestParam("id") int id) {
+		user = userDAO.get(id);
+		if (user != null) {
+			user.setPassword(password);
+			userDAO.update(user);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	// <!---------------------Report User----------------------!>
+		@RequestMapping(value = "/user/report", method = RequestMethod.POST)
+		public ResponseEntity<Report> reportJob(@RequestBody Report report) {
+			user = userDAO.get(report.getReportId());
+			if (user != null) {
+				report.setStatus("UNREAD");
+				boolean flag = reportDAO.addReport(report);
+				if (flag != false) {
+					user.setStatus("REPORTED");
+					userDAO.update(user);
+					return new ResponseEntity<Report>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+				}
+			} else {
+				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
+			}
+		}
 
 	// <!---------------------Load User Content--------------------!>
 	@RequestMapping(value = "/content", method = RequestMethod.GET)
@@ -284,8 +385,8 @@ public class UserController {
 		int noOfBlogs = createdBlogs.size();
 
 		int noOfJobs = createdJobs.size();
-		
-		//prevent frequently updating the user table
+
+		// prevent frequently updating the user table
 		if (user.getNoOfEvents() != noOfEvents || user.getNoOfForums() != noOfForums || user.getNoOfBlogs() != noOfBlogs
 				|| user.getNoOfJobs() != noOfJobs) {
 			if (user.getNoOfEvents() != noOfEvents) {
@@ -377,6 +478,52 @@ public class UserController {
 		notificationModel.setTotalReportedRequest(totalReportedRequest);
 
 		return new ResponseEntity<NotificationModel>(notificationModel, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * uploadFile method has three parameters directory - where to upload
+	 * fileName - that will be used for naming the uploaded file file - the file
+	 * to upload
+	 * 
+	 */
+
+	private boolean uploadFile(String directory, String fileName, MultipartFile file) {
+
+		// Create the directory if does not exists
+		if (!new File(directory).exists()) {
+			new File(directory).mkdirs();
+		}
+
+		try {
+			// transfer the file
+			file.transferTo(new File(directory + fileName));
+			// file uploaded successfully
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// To resolve ${} in @Value
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	// <!---------------------------Upload Profile Picture--------------------------!>
+	@RequestMapping(value = { "/uploadProfile" }, method = RequestMethod.POST)
+	public ResponseEntity<User> editUser(@RequestParam("file") MultipartFile file, @RequestParam("id") int id) {
+
+		String fileName = "USER_PROFILE_" + id + ".png";
+		user = userDAO.get(id);
+		if (uploadFile(imageBasePath, fileName, file)) {
+			user.setProfilePicture(fileName);
+			userDAO.update(user);
+		}
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 
 }

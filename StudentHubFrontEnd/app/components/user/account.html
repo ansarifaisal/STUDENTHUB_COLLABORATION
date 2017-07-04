@@ -1,34 +1,386 @@
-<div class="row">
+<div class="row" ng-init="userCtrl.getUser()">
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 20px;">
 
             <ul class="collapsible popout" data-collapsible="accordion">
                 <li>
-                    <div class="collapsible-header active"><i class="material-icons">settings</i>General</div>
+                    <div class="collapsible-header active"><i class="material-icons">person</i>Change Profile</div>
+                    <div class="collapsible-body" style="padding: 10px;">
+                        <div class="row center-align">
+                            <img class="profile-picture" height="400px;" ng-src="../assets/images/users/{{userCtrl.user.profilePicture}}">
+                        </div>
+                        <div class="row">
+                            <div class="col m6 offset-m3">
+                                <form name="editForm" ng-submit="userCtrl.uploadProfile()" novalidate>
+                                    <div class="file-field input-field">
+                                        <div class="btn light-blue waves-effect waves-light">
+                                            <span>File</span>
+                                            <input type="file" file-model="userCtrl.tempPicture">
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" value="{{userCtrl.user.profilePicture}}" type="text">
+                                        </div>
+                                    </div>
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">settings</i>General</div>
                     <div class="collapsible-body" style="padding: 10px;">
                         <div class="row">
-                            <table class="highlight">
-                                <tr>
-                                    <td>Name</td>
-                                    <td>{{user.firstName}} {{user.lastName}}</td>
-                                    <td>Edit</td>
-                                </tr>
-                                <tr>
-                                    <td>Username</td>
-                                    <td>{{user.firstName}} {{user.lastName}}</td>
-                                    <td>Edit</td>
-                                </tr>
-                            </table>
+                            <div class="col m6 offset-m3">
+                                <div class="card-panel">
+                                    <form name="editForm" ng-submit="userCtrl.editUser()" novalidate>
+                                        <!--Id field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="hidden" name="userId" id="userId" ng-model="userCtrl.user.id" placeholder="User ID" required="required">
+                                        </div>
+                                        <!--Id field ends here-->
+
+                                        <!--firstName field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="firstName" id="firstName" ng-pattern="/^[a-zA-Z]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.firstName" placeholder="First Name"
+                                                required="required">
+                                            <div class="invalid-data center-align" ng-show="editForm.firstName.$dirty">
+                                                <span ng-show="editForm.firstName.$dirty && editForm.firstName.$error.required">Please, Provide First Name</span>
+                                                <span ng-show="editForm.firstName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="editForm.firstName.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="editForm.firstName.$error.pattern">This field can contain only charachters</span>
+                                            </div>
+                                        </div>
+                                        <!--firstName field ends here-->
+
+                                        <!--lastName field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="lastName" id="lastName" ng-pattern="/^[a-zA-Z]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.lastName" placeholder="Last Name" required="required">
+
+                                            <div class="invalid-data center-align" ng-show="editForm.lastName.$dirty">
+                                                <span ng-show="editForm.lastName.$dirty && editForm.lastName.$error.required">Please, Provide Last Name</span>
+                                                <span ng-show="editForm.lastName.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="editForm.lastName.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="editForm.lastName.$error.pattern">This field can contain only charachters</span>
+                                            </div>
+
+                                        </div>
+                                        <!--lastName field ends here-->
+
+                                        <!--email field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="email" name="email" id="email" ng-minlength="2" maxlength="40" ng-maxlength="40" data-length="40" ng-model="userCtrl.user.email"
+                                                placeholder="Email" required="required">
+                                            <div class="invalid-data center-align" ng-show="editForm.email.$dirty">
+                                                <span ng-show="editForm.email.$dirty && editForm.email.$error.required">Please, Provide Email</span>
+                                                <span ng-show="editForm.email.$invalid && !editForm.email.$error.required">Enter a valid email.</span>
+                                                <span ng-show="editForm.email.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="editForm.email.$error.maxlength">This field can contain maximum 40 charachters</span>
+                                            </div>
+                                        </div>
+                                        <!--Email field ends here-->
+
+
+
+                                        <!--Gender field starts here-->
+                                        <div class="input-field dropdown nomargin">
+
+                                            <select name="gender" id="gender" ng-model="userCtrl.user.gender" ng-required="true">
+                                        <option value = "" disabled selected>Choose Gender</option>
+                                        <option value = "MALE">Male</option>
+                                        <option value = "FEMALE">Female</option>
+                                    </select>
+
+                                            <div class="invalid-data center-align" ng-show="editForm.gdnder.$dirty">
+                                                <span ng-show="editForm.gender.$invalid && editForm.gender.touched">Please, Select Gender</span>
+                                            </div>
+                                        </div>
+                                        <!--Gender field ends here-->
+
+                                        <!--DOB Field Starts Here-->
+                                        <div class="input-field">
+                                            <input type="text" name="dob" id="dob" placeholder="Birth Date" class="datepicker" ng-model="userCtrl.user.dob" required="required">
+                                            <div class="invalid-data center-align" ng-show="registerForm.dob.$dirty">
+                                                <span ng-show="registerForm.dob.$invalid">Please, Provide Valid Birth Date</span>
+                                            </div>
+                                        </div>
+                                        <!--DOB Field Ends Here-->
+
+                                        <div class="input-field">
+                                            <div class="hoverable">
+                                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="editForm.$invalid" value="Save Changes">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">contacts</i>Contact Information</div>
+                    <div class="collapsible-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col m6 offset-m3">
+                                <div class="card-panel">
+                                    <form name="addForm" ng-submit="userCtrl.addContactInfo()" novalidate>
+
+                                        <!--Id field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="hidden" name="id" id="id" ng-model="userCtrl.user.moreDetails.id" placeholder="ID" required="required">
+                                        </div>
+                                        <!--Id field ends here-->
+
+                                        <!--Mobile Number field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="mobileNumber" id="mobileNumber" ng-pattern="/^[0-9]+$/" ng-minlength="2" maxlength="10" ng-maxlength="10"
+                                                data-length="10" ng-model="userCtrl.user.moreDetails.mobileNumber" placeholder="Mobile Number"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addForm.mobileNumber.$dirty">
+                                                <span ng-show="addForm.mobileNumber.$dirty && addForm.mobileNumber.$error.required">Please, Provide Mobile Number</span>
+                                                <span ng-show="addForm.mobileNumber.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.mobileNumber.$error.maxlength">This field can contain maximum 10 charachters</span>
+                                                <span ng-show="addForm.mobileNumber.$error.pattern">This field can contain only numbers</span>
+                                            </div>
+
+                                        </div>
+                                        <!--Mobile Number field ends here-->
+
+                                        <!--Street field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="street" id="street" ng-pattern="/^[a-zA-Z0-9\s\-\.\,\/\\]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.moreDetails.street" placeholder="Street"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addForm.street.$dirty">
+                                                <span ng-show="addForm.street.$dirty && addForm.street.$error.required">Please, Provide Street</span>
+                                                <span ng-show="addForm.street.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.street.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="addForm.street.$error.pattern">This field can contain these -.,\/ special charachters</span>
+                                            </div>
+
+                                        </div>
+                                        <!--Street field ends here-->
+
+                                        <!--City field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="city" id="city" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.moreDetails.city" placeholder="City"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addForm.city.$dirty">
+                                                <span ng-show="addForm.city.$dirty && addForm.city.$error.required">Please, Provide City</span>
+                                                <span ng-show="addForm.city.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.city.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="addForm.city.$error.pattern">This field cannot contain special charachters</span>
+                                            </div>
+
+                                        </div>
+                                        <!--City field ends here-->
+
+                                        <!--State field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="state" id="state" ng-pattern="/^[a-zA-Z\s]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.moreDetails.state" placeholder="State"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addForm.state.$dirty">
+                                                <span ng-show="addForm.state.$dirty && addForm.state.$error.required">Please, Provide State</span>
+                                                <span ng-show="addForm.state.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.state.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="addForm.state.$error.pattern">This field can contain only charachters</span>
+                                            </div>
+
+                                        </div>
+                                        <!--State field ends here-->
+
+                                        <!--Country field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="country" id="country" ng-pattern="/^[a-zA-Z\s]+$/" ng-minlength="2" maxlength="20" ng-maxlength="20"
+                                                data-length="20" ng-model="userCtrl.user.moreDetails.country" placeholder="Country"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addForm.country.$dirty">
+                                                <span ng-show="addForm.country.$dirty && addForm.country.$error.required">Please, Provide Country</span>
+                                                <span ng-show="addForm.country.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.country.$error.maxlength">This field can contain maximum 20 charachters</span>
+                                                <span ng-show="addForm.country.$error.pattern">This field can contain only charachters</span>
+                                            </div>
+
+                                        </div>
+                                        <!--Country field ends here-->
+
+                                        <!--About field starts here-->
+                                        <div class="input-field nomargin">
+                                            <textarea id="about" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z0-9\s\-\'\,\_\;]+$/" ng-minlength="20"
+                                                maxlength="500" ng-maxlength="500" placeholder="About" data-length="500" ng-model="userCtrl.user.moreDetails.about"
+                                                placeholder="About"></textarea>
+                                            <div class="invalid-data center-align" ng-show="addForm.description.$dirty">
+                                                <span ng-show="addForm.description.$dirty && addForm.description.$error.required">Please, Provide description</span>
+                                                <span ng-show="addForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addForm.description.$error.maxlength">This field can contain maximum 500 charachters</span>
+                                                <span ng-show="addForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                                            </div>
+                                        </div>
+                                        <!--description field ends here-->
+
+                                        <div class="input-field">
+                                            <div class="hoverable">
+                                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" value="Save">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">library_books</i>Education Information</div>
+                    <div class="collapsible-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col m6 offset-m3">
+                                <div class="card-panel">
+                                    <form name="addEducationForm" ng-submit="userCtrl.addEditEducationDetails()" novalidate>
+                                        <!--Id field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="hidden" name="id" id="id" ng-model="userCtrl.user.educationDetails.id" placeholder="ID" required="required">
+                                        </div>
+                                        <!--Id field ends here-->
+
+                                        <!--University field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="university" id="university" ng-pattern="/^[a-zA-Z\s0-9]+$/" ng-minlength="2" maxlength="100" ng-maxlength="100"
+                                                data-length="100" ng-model="userCtrl.user.educationDetails.university" placeholder="University"
+                                                required="required">
+                                            <div class="invalid-data center-align" ng-show="addEducationForm.university.$dirty">
+                                                <span ng-show="addEducationForm.university.$dirty && addEducationForm.university.$error.required">Please, Provide Univeristy</span>
+                                                <span ng-show="addEducationForm.university.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addEducationForm.university.$error.maxlength">This field can contain maximum 100 charachters</span>
+                                                <span ng-show="addEducationForm.university.$error.pattern">This field cannot contain special charachters</span>
+                                            </div>
+                                        </div>
+                                        <!--University field ends here-->
+
+                                        <!--University Year field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="universityYear" id="universityYear" ng-pattern="/^[0-9]+$/" ng-minlength="2" maxlength="4" ng-maxlength="4"
+                                                data-length="4" ng-model="userCtrl.user.educationDetails.universityYear" placeholder="University Year"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addEducationForm.universityYear.$dirty">
+                                                <span ng-show="addEducationForm.universityYear.$dirty && addEducationForm.universityYear.$error.required">Please, Provide University Year</span>
+                                                <span ng-show="addEducationForm.universityYear.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addEducationForm.universityYear.$error.maxlength">This field can contain maximum 4 charachters</span>
+                                                <span ng-show="addEducationForm.universityYear.$error.pattern">This field can contain only numbers</span>
+                                            </div>
+
+                                        </div>
+                                        <!--University Year field ends here-->
+
+                                        <!--HighSchool Field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="highSchool" id="highSchool" ng-pattern="/^[a-zA-Z\s0-9]+$/" ng-minlength="2" maxlength="100" ng-maxlength="100"
+                                                data-length="100" ng-model="userCtrl.user.educationDetails.highSchool" placeholder="High School"
+                                                required="required">
+                                            <div class="invalid-data center-align" ng-show="addEducationForm.highSchool.$dirty">
+                                                <span ng-show="addEducationForm.highSchool.$dirty && addEducationForm.highSchool.$error.required">Please, Provide High School</span>
+                                                <span ng-show="addEducationForm.highSchool.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addEducationForm.highSchool.$error.maxlength">This field can contain maximum 100 charachters</span>
+                                                <span ng-show="addEducationForm.highSchool.$error.pattern">This field cannot contain special charachters</span>
+                                            </div>
+                                        </div>
+                                        <!--HighSchool Field ends here-->
+
+                                        <!--High School Year field starts here-->
+                                        <div class="input-field nomargin">
+                                            <input type="text" name="highSchoolYear" id="highSchoolYear" ng-pattern="/^[0-9]+$/" ng-minlength="2" maxlength="4" ng-maxlength="4"
+                                                data-length="4" ng-model="userCtrl.user.educationDetails.highSchoolYear" placeholder="High School Year"
+                                                required="required">
+
+                                            <div class="invalid-data center-align" ng-show="addEducationForm.highSchoolYear.$dirty">
+                                                <span ng-show="addEducationForm.highSchoolYear.$dirty && addEducationForm.highSchoolYear.$error.required">Please, Provide High School Year</span>
+                                                <span ng-show="addEducationForm.highSchoolYear.$error.minlength">This field must contain atleast 2 charachters</span>
+                                                <span ng-show="addEducationForm.highSchoolYear.$error.maxlength">This field can contain maximum 4 charachters</span>
+                                                <span ng-show="addEducationForm.highSchoolYear.$error.pattern">This field can contain only numbers</span>
+                                            </div>
+
+                                        </div>
+                                        <!--High School Year field ends here-->
+
+                                        <div class="input-field">
+                                            <div class="hoverable">
+                                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" value="Save">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="collapsible-header"><i class="material-icons">verified_user</i>Change Password</div>
                     <div class="collapsible-body">
+                        <div class="row">
+                            <div class="col m6 offset-m3">
+                                <div class="card-panel">
+                                    <form name="changePassword" ng-submit="userCtrl.changePassword()" novalidate>
+                                        <!--Old Password Field Starts From Here-->
+                                        <div class="input-field">
+                                            <input type="password" name="oldPassword" id="oldPassword" ng-blur="userCtrl.checkOldPassword()" ng-model="userCtrl.oldPassword"
+                                                ng-minlength="5" class="validate" required="required">
+                                            <label for="oldPassword">Old Password</label>
+                                            <div class="invalid-data center-align" ng-show="changePassword.oldPassword.$dirty">
+                                                <span ng-show="changePassword.oldPassword.$error.minlength">Old Password Must Contain Atleast 5 Charachters</span>
+                                                <span ng-show="changePassword.oldPassword.$invalid && changePassword.oldPassword.$error.required">Please, Provide Old Password</span>
+                                                <span ng-show="userCtrl.checkPassword">Provide Correct Old Password</span>
+                                            </div>
+                                        </div>
+                                        <!--Old Password Field Ends Here-->
 
+                                        <!--New Password Field Starts From Here-->
+                                        <div class="input-field">
+                                            <input type="password" name="password" id="password" ng-model="userCtrl.password" ng-minlength="5" class="validate" required="required">
+                                            <label for="password">Password</label>
+                                            <div class="invalid-data center-align" ng-show="changePassword.password.$dirty">
+                                                <span ng-show="changePassword.password.$error.minlength">Password Must Contain Atleast 5 Charachters</span>
+                                                <span ng-show="changePassword.password.$invalid && changePassword.password.$error.required">Please, Provide Password</span>
+                                            </div>
+                                        </div>
+                                        <!--New Password Field Ends Here-->
+
+                                        <!--Confirm Password Field Starts From Here-->
+                                        <div class="input-field">
+                                            <input type="password" name="confirmPassword" id="confirmPassword" ng-model="userCtrl.user.confirmPassword" required="required">
+                                            <label for="confirmPassword">Confirm Password</label>
+                                            <div class="invalid-data center-align" ng-show="changePassword.confirmPassword.$dirty">
+                                                <span ng-show="changePassword.confirmPassword.$invalid && !changePassword.confirmPassword.$pristine">Please, Provide Password Same As Above</span>
+                                                <span ng-show="(!changePassword.confirmPassword.$invalid) && (userCtrl.password !== userCtrl.user.confirmPassword)">Password Doesn't Match</span>
+                                            </div>
+                                        </div>
+                                        <!--Confirm Password Field Ends Here-->
+
+                                        <div class="input-field">
+                                            <div class="hoverable">
+                                                <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="changePassword.$invalid" value="Change Password">
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </li>
-                <li>
+                <!--<li>
                     <div class="collapsible-header"><i class="material-icons">do_not_disturb_on</i>Block User</div>
                     <div class="collapsible-body">
 
@@ -59,7 +411,7 @@
                         </div>
                     </div>
 
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>

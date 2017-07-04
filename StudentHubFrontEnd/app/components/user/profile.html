@@ -3,11 +3,17 @@
         <div style="padding-top: 10px;">
             <div class="row">
                 <div class="col m4 center">
-                    <img src="../assets/images/profileExample.jpg" height="400px;" /><br>
-                    <a href="" class="black-text"><i class="material-icons">mode_edit</i></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="../assets/images/users/{{userCtrl.data.user.profilePicture}}" height="350px;" width="300px" /><br>
+
+                    <a ng-show="userCtrl.data.user.id != user.id && user.role == 'Super_Admin' || user.role == 'ADMIN'" href="#!/admin/edituser/{{userCtrl.data.user.id}}"
+                        class="black-text"><i class="material-icons">mode_edit</i></a>
+                    <a ng-show="userCtrl.data.user.id == user.id && user.role == 'Super_Admin' || user.role == 'ADMIN' || user.role == 'USER' || user.role == 'EMPLOYER'"
+                        href="#!/user/account/{{userCtrl.data.user.id}}" class="black-text"><i class="material-icons">mode_edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+
                     <a href="" class="black-text"><i class="material-icons">person_add</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="" class="black-text"><i class="material-icons">block</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="" class="black-text"><i class="material-icons">report</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="" ng-click="userCtrl.blockUser('Blocked', userCtrl.data.user.id)" ng-show="userCtrl.data.user.role != 'Super_Admin' && user.role == 'Super_Admin' || user.role == 'ADMIN'"
+                        class="black-text"><i class="material-icons">block</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a ng-hide="userCtrl.data.user.role == 'Super_Admin'" href="" data-target="reportForm" class="black-text"><i class="material-icons">report</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="" class="black-text"><i class="material-icons">remove_red_eye</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
                 <div class="col m8">
@@ -17,6 +23,7 @@
                         <li class="tab col s3"><a href="#forums">Forums  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfForums}}</span></a></li>
                         <li class="tab col s3"><a href="#jobs">Jobs  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfJobs}}</span></a></li>
                         <li class="tab col s3"><a href="#events">Events  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfEvents}}</span></a></li>
+                        <li class="tab col s3"><a href="#blogs">Blogs  &nbsp;<span class="grey-text" style="font-size:12px;">{{userCtrl.data.user.noOfBlogs}}</span></a></li>
                     </ul>
 
                     <!--About Section Starts Here-->
@@ -56,431 +63,540 @@
                                                 <td ng-show="!userCtrl.data.user.moreDetails">Not Provided</td>
                                                 <td ng-hide="!userCtrl.data.user.moreDetails.street || !userCtrl.data.user.moreDetails.city || !userCtrl.data.user.moreDetails.state || !userCtrl.data.user.moreDetails.country">
                                                     <div class="row">
-                                                        <div ng-hide="!userCtrl.data.user.moreDetails.street">
+                                                        <span ng-hide="!userCtrl.data.user.moreDetails.street">
                                                         {{userCtrl.data.user.moreDetails.street}},
-                                                        </div>
-                                                        <div ng-hide="!userCtrl.data.user.moreDetails.city">
+                                                        </span>
+                        <span ng-hide="!userCtrl.data.user.moreDetails.city">
                                                         {{userCtrl.data.user.moreDetails.city}},
-                                                        </div>
-                                                        <div ng-hide="!userCtrl.data.user.moreDetails.state">
+                                                        </span>
+                        <span ng-hide="!userCtrl.data.user.moreDetails.state">
                                                         {{userCtrl.data.user.moreDetails.state}},
-                                                        </div>
-                                                        <div ng-hide="!userCtrl.data.user.moreDetails.country">
+                                                        </span>
+                        <span ng-hide="!userCtrl.data.user.moreDetails.country">
                                                         {{userCtrl.data.user.moreDetails.country}}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Email Address</td>
-                                                    <td>{{userCtrl.data.user.email}}</td>
-                                                </tr>
-                                                </table><br/>
+                                                        </span>
+                    </div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>Email Address</td>
+                        <td>{{userCtrl.data.user.email}}</td>
+                    </tr>
+                    </table><br/>
 
-                        <strong class="grey-text">Social Links</strong>
+                    <strong class="grey-text">Social Links</strong>
+                    <hr/>
+                    <table class="highlight">
+                        <tr ng-hide="!userCtrl.data.userCtrl.data.user.socialLinks" ng-repeat="link in userCtrl.data.user.socialLinks">
+                            <td>{{link.belongs}}</td>
+                            <td>{{link.details}}</td>
+                        </tr>
+                        <tr>
+                            <td><a href="">Add Link</a></td>
+                        </tr>
+                    </table><br/>
+
+                </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">school</i>Education Information</div>
+                    <div class="collapsible-body">
+
+                        <strong class="grey-text">University</strong>
                         <hr/>
                         <table class="highlight">
-                            <tr ng-hide = "!userCtrl.data.userCtrl.data.user.socialLinks" ng-repeat="link in userCtrl.data.user.socialLinks">
-                                <td>{{link.belongs}}</td>
-                                <td>{{link.details}}</td>
-                            </tr>
                             <tr>
-                                <td><a href = "">Add Link</a></td>
+                                <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
+                                <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.university}}</td>
+                                <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.universityYear}}</td>
+
                             </tr>
                         </table><br/>
 
+                        <strong class="grey-text">High School</strong>
+                        <hr/>
+                        <table class="highlight">
+                            <tr>
+                                <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
+                                <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.highSchool}}</td>
+                                <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.highSchoolYear}}</td>
+                            </tr>
+                        </table>
                     </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><i class="material-icons">school</i>Education Information</div>
-                        <div class="collapsible-body">
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">whatshot</i>Details About You</div>
+                    <div class="collapsible-body">
+                        <strong class="grey-text">About You</strong>
+                        <hr/>
+                        <table class="highlight">
+                            <tr>
+                                <td ng-show="!userCtrl.data.user.moreDetails.about">Not Provided</td>
+                                <td ng-hide="!userCtrl.data.user.moreDetails.about">{{userCtrl.data.user.moreDetails.about}}</td>
+                            </tr>
+                        </table><br/>
+                    </div>
+                </li>
+                </ul>
+                </span>
+            </div>
 
-                            <strong class="grey-text">University</strong>
-                            <hr/>
-                            <table class="highlight">
-                                <tr>
-                                    <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
-                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.university}}</td>
-                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.universityYear}}</td>
+            <!--Details Section Ends Here-->
 
-                                </tr>
-                            </table><br/>
-
-                            <strong class="grey-text">High School</strong>
-                            <hr/>
-                            <table class="highlight">
-                                <tr>
-                                    <td ng-show=""></td>
-                                </tr>
-                                <tr>
-                                    <td ng-show="!userCtrl.data.user.educationDetails">Not Provided</td>
-                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.highSchool}}</td>
-                                    <td ng-hide="!userCtrl.data.user.educationDetails">{{userCtrl.data.user.educationDetails.hideSchoolYear}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><i class="material-icons">whatshot</i>Details About You</div>
-                        <div class="collapsible-body">
-                            <strong class="grey-text">About You</strong>
-                            <hr/>
-                            <table class="highlight">
-                                <tr>
-                                    <td ng-show="!userCtrl.data.user.moreDetails.about">Not Provided</td>
-                                    <td ng-hide="!userCtrl.data.user.moreDetails.about">{{userCtrl.data.user.moreDetails.about}}</td>
-                                </tr>
-                            </table><br/>
-                        </div>
-                    </li>
-                    </ul>
-                    </span>
+            <!--Friends Section Starts Here-->
+            <div id="friends">
+                <div class="card-panel">
+                    <div class="center">
+                        <ul class="pagination nomargin nopadding">
+                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                            <li class="active"><a href="#!">1</a></li>
+                            <li class="waves-effect"><a href="#!">2</a></li>
+                            <li class="waves-effect"><a href="#!">3</a></li>
+                            <li class="waves-effect"><a href="#!">4</a></li>
+                            <li class="waves-effect"><a href="#!">5</a></li>
+                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                        </ul>
                     </div>
 
-                    <!--Details Section Ends Here-->
 
-                    <!--Friends Section Starts Here-->
-                    <div id="friends">
-                        <div class="card-panel">
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
-                            </div>
-
-
-                            <div class="card-panel">
-                                <div class="row nomargin nopadding">
-                                    <div class="col m10">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                        <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                                    </div>
-                                    <div class="col m2">
-                                        <a href="" class="btn right">Friend</a>
-                                    </div>
+                    <div class="card-panel">
+                        <div class="row nomargin nopadding">
+                            <div class="col m10">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
                                 </div>
+                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
+                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
                             </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin nopadding">
-                                    <div class="col m10">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                        <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                                    </div>
-                                    <div class="col m2">
-                                        <a href="" class="btn right">Friend</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin nopadding">
-                                    <div class="col m10">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                        <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                                    </div>
-                                    <div class="col m2">
-                                        <a href="" class="btn right">Friend</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin nopadding">
-                                    <div class="col m10">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                        <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                                    </div>
-                                    <div class="col m2">
-                                        <a href="" class="btn right">Friend</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-panel">
-                                <div class="row nomargin nopadding">
-                                    <div class="col m10">
-                                        <div class=" col m0">
-                                            <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                        </div>
-                                        <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                        <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                                    </div>
-                                    <div class="col m2">
-                                        <a href="" class="btn right">Friend</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="center">
-                                <ul class="pagination nomargin nopadding">
-                                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                                    <li class="active"><a href="#!">1</a></li>
-                                    <li class="waves-effect"><a href="#!">2</a></li>
-                                    <li class="waves-effect"><a href="#!">3</a></li>
-                                    <li class="waves-effect"><a href="#!">4</a></li>
-                                    <li class="waves-effect"><a href="#!">5</a></li>
-                                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                                </ul>
+                            <div class="col m2">
+                                <a href="" class="btn right">Friend</a>
                             </div>
                         </div>
                     </div>
-                    <!--Friend Section Ends Here-->
+
+                    <div class="card-panel">
+                        <div class="row nomargin nopadding">
+                            <div class="col m10">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                </div>
+                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
+                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
+                            </div>
+                            <div class="col m2">
+                                <a href="" class="btn right">Friend</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-panel">
+                        <div class="row nomargin nopadding">
+                            <div class="col m10">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                </div>
+                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
+                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
+                            </div>
+                            <div class="col m2">
+                                <a href="" class="btn right">Friend</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-panel">
+                        <div class="row nomargin nopadding">
+                            <div class="col m10">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                </div>
+                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
+                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
+                            </div>
+                            <div class="col m2">
+                                <a href="" class="btn right">Friend</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-panel">
+                        <div class="row nomargin nopadding">
+                            <div class="col m10">
+                                <div class=" col m0">
+                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                                </div>
+                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
+                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
+                            </div>
+                            <div class="col m2">
+                                <a href="" class="btn right">Friend</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="center">
+                        <ul class="pagination nomargin nopadding">
+                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                            <li class="active"><a href="#!">1</a></li>
+                            <li class="waves-effect"><a href="#!">2</a></li>
+                            <li class="waves-effect"><a href="#!">3</a></li>
+                            <li class="waves-effect"><a href="#!">4</a></li>
+                            <li class="waves-effect"><a href="#!">5</a></li>
+                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--Friend Section Ends Here-->
 
 
-                    <!--Forums Section Starts Here-->
-                    <div id="forums">
+            <!--Forums Section Starts Here-->
+            <div id="forums">
 
-                        <div class="card-panel">
+                <div class="card-panel">
 
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
+                                <label for="searchKeyword">Search For Forum</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
+                                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+
+                    <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                        <h6 class="center red-text">Not Created Any Forum(s) Yet Or No Search Match Available</h6>
+                    </div>
+                    <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_ONE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row nomargin" ng-repeat="forum in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
+                        <div class="card-panel" style="padding: 10px; padding-bottom:24px;">
                             <div class="row nomargin">
                                 <div class="col m8">
-                                    <div class="input-field nomargin">
-                                        <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
-                                        <label for="searchKeyword">Search For Forum</label>
-                                    </div>
+                                    <a href="#!/user/forum/view/{{forum.id}}">{{forum.forumName}}</a>
                                 </div>
-
                                 <div class="col m4">
-                                    <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
-                                    </select>
-                                    <label>Materialize Select</label>
-                                </div>
+                                    <span class="right"><a href = "" class="btn">Leave Group</a></span>
+                                </div><br>
                             </div>
+                            <div class="col m8">
+                                <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>{{forum.noOfTopics}} Topics</span>&nbsp;&nbsp;
+                                <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>{{forum.noOfMembers}} Members</span>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div ng-show="!pagedItems_ONE[currentPage_ONE]">
-                                <h6 class="center red-text">Not Created Any Forum(s) Yet Or No Search Match Available</h6>
+                    <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_ONE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!--Forums Section Ends Here-->
+
+            <!--Jobs Section Starts Here-->
+            <div id="jobs">
+                <div class="card-panel">
+
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                                <label for="searchKeyword">Search For Job</label>
                             </div>
-                            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
-                                <div class="center">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_ONE == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="row nomargin" ng-repeat="forum in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
-                                <div class="card-panel" style="padding: 10px; padding-bottom:24px;">
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
+                                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+
+                    <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+                        <h6 class="center red-text">Haven't Created Any Job(s) Yet Or No Search Match Available</h6>
+                    </div>
+                    <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                        <div class="center ">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_TWO == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin" ng-repeat="job in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
+                        <div class="card horizontal" style="padding: 0px;">
+                            <div class="card-stacked">
+                                <div class="card-content" style="padding: 10px;">
                                     <div class="row nomargin">
                                         <div class="col m8">
-                                            <a href="#!/user/forum/view/{{forum.id}}">{{forum.forumName}}</a>
+                                            <p><a href="#!/user/job/view/{{job.id}}">{{job.title}}</a></p>
+                                            <p class="grey-text" style="font-size: 12px;">{{job.company}}</p>
+                                            <p class="grey-text" style="font-size: 10px;">
+                                                <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;{{job.experience}}
+                                                yrs &nbsp;&nbsp;&nbsp;
+                                                <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;{{job.location}}
+                                                &nbsp;&nbsp;&nbsp; &#8377; {{job.salary}} P.A.
                                         </div>
                                         <div class="col m4">
-                                            <span class="right"><a href = "" class="btn">Leave Group</a></span>
-                                        </div><br>
-                                    </div>
-                                    <div class="col m8">
-                                        <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>{{forum.noOfTopics}} Topics</span>&nbsp;&nbsp;
-                                        <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">group</i>{{forum.noOfMembers}} Members</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
-                                <div class="center">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_ONE == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!--Forums Section Ends Here-->
-
-                    <!--Jobs Section Starts Here-->
-                    <div id="jobs">
-                        <div class="card-panel">
-
-                            <div class="row nomargin">
-                                <div class="col m8">
-                                    <div class="input-field nomargin">
-                                        <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
-                                        <label for="searchKeyword">Search For Job</label>
-                                    </div>
-                                </div>
-
-                                <div class="col m4">
-                                    <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
-                                    </select>
-                                    <label>Materialize Select</label>
-                                </div>
-                            </div>
-
-                            <div ng-show="!pagedItems_TWO[currentPage_TWO]">
-                                <h6 class="center red-text">Haven't Created Any Job(s) Yet Or No Search Match Available</h6>
-                            </div>
-                            <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
-                                <div class="center ">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_TWO == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="row nomargin" ng-repeat="job in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
-                                <div class="card horizontal" style="padding: 0px;">
-                                    <div class="card-stacked">
-                                        <div class="card-content" style="padding: 10px;">
-                                            <div class="row nomargin">
-                                                <div class="col m8">
-                                                    <p><a href="#!">{{job.title}}</a></p>
-                                                    <p class="grey-text" style="font-size: 12px;">{{job.company}}</p>
-                                                    <p class="grey-text" style="font-size: 10px;">
-                                                        <i class="material-icons" style="font-size: 13px;">business_center</i>&nbsp;{{job.experience}}
-                                                        yrs &nbsp;&nbsp;&nbsp;
-                                                        <i class="material-icons" style="font-size: 14px;">location_on</i>&nbsp;{{job.location}}
-                                                        &nbsp;&nbsp;&nbsp; &#8377; {{job.salary}} P.A.
-                                                </div>
-                                                <div class="col m4">
-                                                    <a href="" class="right btn">Cancel</a>
-                                                </div>
-                                            </div>
+                                            <a href="" class="right btn">Cancel</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
-                                <div class="center">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_TWO == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
-                    <!--Job Section Ends Here-->
 
-                    <!--Event Section Starts Hers-->
-                    <div id="events">
-                        <div class="card-panel">
-                            <div class="row nomargin">
-                                <div class="col m8">
-                                    <div class="input-field nomargin">
-                                        <input type="text" style="margin-bottom:0px;" ng-model="query_THREE" ng-change="search_THREE()" required="required">
-                                        <label for="searchKeyword">Search For Event</label>
-                                    </div>
-                                </div>
-
-                                <div class="col m4">
-                                    <select ng-model="itemsPerPage_THREE" ng-change="perPage_THREE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_THREE">
-                                    </select>
-                                    <label>Materialize Select</label>
-                                </div>
-                            </div>
-
-                            <div ng-show="!pagedItems_THREE[currentPage_THREE]">
-                                <h6 class="center red-text">Haven't Created Any Event(s) Yet Or No Search Match Available</h6>
-                            </div>
-                            <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
-                                <div class="center ">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_THREE == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="row nomargin" ng-repeat="event in pagedItems_THREE[currentPage_THREE] | orderBy:sortingOrder_THREE:reverse_THREE">
-                                <div class="card horizontal">
-                                    <div class="card-stacked">
-                                        <div class="card-content">
-                                            <div class="row nomargin">
-                                                <div class="col m9">
-                                                    <p><a href="">{{event.eventTitle}}</a></p>
-                                                    <p class="grey-text" style="font-size: 12px;">
-                                                        Joined:&nbsp;{{event.noOfApplied}} &nbsp;&nbsp;&nbsp; Status:&nbsp;{{event.eventStatus}}
-                                                    </p>
-                                                </div>
-                                                <div class="col m3">
-                                                    <a href="" class="right btn">Cancel</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
-                                <div class="center ">
-                                    <ul class="pagination nomargin">
-                                        <li ng-class="{disabled: currentPage_THREE == 0}">
-                                            <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
-                                            <a href="javascript:;" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
-                                            <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
+                    <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_TWO == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <!--Job Section Ends Here-->
+
                 </div>
+            </div>
+            <!--Job Section Ends Here-->
+
+            <!--Event Section Starts Hers-->
+            <div id="events">
+                <div class="card-panel">
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_THREE" ng-change="search_THREE()" required="required">
+                                <label for="searchKeyword">Search For Event</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_THREE" ng-change="perPage_THREE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_THREE">
+                                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+
+                    <div ng-show="!pagedItems_THREE[currentPage_THREE]">
+                        <h6 class="center red-text">Haven't Created Any Event(s) Yet Or No Search Match Available</h6>
+                    </div>
+                    <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                        <div class="center ">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_THREE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin" ng-repeat="event in pagedItems_THREE[currentPage_THREE] | orderBy:sortingOrder_THREE:reverse_THREE">
+                        <div class="card horizontal">
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row nomargin">
+                                        <div class="col m9">
+                                            <p><a href="#!/user/event/view/{{event.id}}">{{event.eventTitle}}</a></p>
+                                            <p class="grey-text" style="font-size: 12px;">
+                                                Joined:&nbsp;{{event.noOfApplied}} &nbsp;&nbsp;&nbsp; Status:&nbsp;{{event.eventStatus}}
+                                            </p>
+                                        </div>
+                                        <div class="col m3">
+                                            <a href="" class="right btn">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                        <div class="center ">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_THREE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--Job Section Ends Here-->
+
+            <!--Blogs Section Starts Here-->
+            <div id="blogs">
+
+                <div class="card-panel">
+
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_FOUR" ng-change="search_FOUR()" required="required">
+                                <label for="searchKeyword">Search For Forum</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_FOUR" ng-change="perPage_FOUR()" ng-options="('Show '+size+' Per Page') for size in pageSizes_FOUR">
+                                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+
+                    <div ng-show="!pagedItems_FOUR[currentPage_FOUR]">
+                        <h6 class="center red-text">Not Created Any Blogs(s) Yet Or No Search Match Available</h6>
+                    </div>
+                    <div ng-hide="!pagedItems_FOUR[currentPage_FOUR]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_FOUR == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_FOUR()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_FOUR.length)" ng-class="{active: n == currentPage_FOUR}" ng-click="setPage_FOUR()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_FOUR == pagedItems_FOUR.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_FOUR()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row nomargin" ng-repeat="blog in pagedItems_FOUR[currentPage_FOUR] | orderBy:sortingOrder_FOUR:reverse_FOUR">
+                        <div class="card-panel" style="padding: 10px; padding-bottom:24px;">
+                            <div class="row nomargin">
+                                <div class="col m8">
+                                    <a href="#!/user/blog/view/{{blog.id}}">{{blog.title}}</a>
+                                </div>
+                                <!--<div class="col m4">
+                                            <span class="right"><a href = "" class="btn">Leave Group</a></span>
+                                        </div><br>-->
+                            </div>
+                            <div class="col m8">
+                                <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">comment</i>{{blog.noOfComments}} Comments</span>&nbsp;&nbsp;
+                                <span class="grey-text" style="font-size: 12px;"><i class="material-icons" style="font-size: 10px;">thumb_up</i>{{blog.noOfLikes}} Likes</span>&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems_FOUR[currentPage_FOUR]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_FOUR == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_FOUR()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_FOUR.length)" ng-class="{active: n == currentPage_FOUR}" ng-click="setPage_FOUR()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_FOUR == pagedItems_FOUR.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_FOUR()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Modal Structure -->
+<div id="reportForm" class="modal">
+    <div class="modal-content">
+        <h5><strong class="grey-text">Report User</strong></h5>
+        <hr/>
+        <div class="row">
+            <div class="col m6 offset-m3">
+                <form name="reportForm" ng-submit="userCtrl.userReport()" novalidate>
+
+                    <!--details field starts here-->
+                    <div class="input-field nomargin">
+                        <textarea id="details" class="materialize-textarea" style="margin-bottom: 0px;" ng-pattern="/^[a-zA-Z\s\-\'\,\_\;]+$/" ng-minlength="20"
+                            maxlength="1000" ng-maxlength="1000" placeholder="Provide Details of Your Report" data-length="1000"
+                            ng-model="userCtrl.reportUser.details" placeholder="Provide Details Of Your Report" required="required"></textarea>
+                        <div class="invalid-data center-align" ng-show="reportForm.details.$dirty">
+                            <span ng-show="reportForm.details.$dirty && reportForm.details.$error.required">Please, Provide details</span>
+                            <span ng-show="reportForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
+                            <span ng-show="reportForm.details.$error.maxlength">This field can contain maximum 50 charachters</span>
+                            <span ng-show="reportForm.details.$error.pattern">This field can contain '-,_;' these special charachters</span>
+                        </div>
+
+                    </div>
+                    <!--details field ends here-->
+
+                    <div class="input-field">
+                        <div class="hoverable">
+                            <input type="submit" class="btn light-blue modal-close waves-effect waves-light full-width" ng-disabled="reportForm.$invalid"
+                                value="Report Blog">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

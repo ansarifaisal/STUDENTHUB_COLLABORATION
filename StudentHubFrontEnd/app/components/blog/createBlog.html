@@ -43,7 +43,7 @@
                             <div class="invalid-data center-align" ng-show="createForm.description.$dirty">
                                 <span ng-show="createForm.description.$dirty && createForm.description.$error.required">Please, Provide description</span>
                                 <span ng-show="createForm.description.$error.minlength">This field must contain atleast 2 charachters</span>
-                                <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 50 charachters</span>
+                                <span ng-show="createForm.description.$error.maxlength">This field can contain maximum 4000 charachters</span>
                                 <span ng-show="createForm.description.$error.pattern">This field can contain '-,_;' these special charachters</span>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                         <div class="file-field input-field">
                             <div class="btn light-blue waves-effect waves-light">
                                 <span>File</span>
-                                <input type="file">
+                                <input type="file" file-model="blogCtrl.tempPicture">
                             </div>
                             <div class="file-path-wrapper">
                                 <input class="file-path validate" type="text">

@@ -403,9 +403,12 @@ BlogModule.controller('BlogController', [
                 me.createBlog.status = "PENDING";
             }
             me.createBlog.report = "NO";
-            me.createBlog.imageUrl = "noPic.jgp";
+            if (!me.createBlog.imageUrl) {
+                me.createBlog.imageUrl = "noPic.jgp";
+            }
 
-            BlogFactory.createEditBlog(me.createBlog).then(function () {
+
+            BlogFactory.createEditBlog(me.createBlog, me.tempPicture).then(function () {
                 $location.path("/user/blogs");
                 Materialize.toast('<strong>Blog Created Sucessfully!</strong>', 6000);
             },
@@ -574,6 +577,5 @@ BlogModule.controller('BlogController', [
                 }
             );
         }
-
     }
 ]);

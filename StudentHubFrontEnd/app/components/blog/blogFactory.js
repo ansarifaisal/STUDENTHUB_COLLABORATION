@@ -1,5 +1,23 @@
 var BlogModule = angular.module('BlogModule', []);
 
+
+// change BlogModule with your module name used within the application
+BlogModule.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function () {
+                scope.$apply(function () {
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);
+
+
 BlogModule.factory('BlogFactory', [
     '$http',
     '$q',
@@ -40,16 +58,24 @@ BlogModule.factory('BlogFactory', [
         }
 
         //function to edit blog
-        function createEditBlog(blog) {
+        function createEditBlog(blog, file) {
             var deferred = $q.defer();
-            $http.post(REST_API_URI + "blog/createEditBlog", blog).then(function (response) {
+
+            var fd = new FormData();
+            fd.append('file', file);
+            fd.append('blog', new Blob([JSON.stringify(blog)], { type: "application/json" }));
+
+            $http.post(REST_API_URI + "blog/createEditBlog", fd, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
                     console.log("Error While Creating Or Editing The Blog");
                     deferred.reject(errorResponse);
                 }
-            );
+                );
             return deferred.promise;
         }
 
@@ -192,6 +218,5 @@ BlogModule.factory('BlogFactory', [
             );
             return deferred.promise;
         }
-
     }
 ]);

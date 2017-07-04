@@ -61,6 +61,12 @@ AuthenticationModule.controller('AuthenticationController', [
                 } else if (!user) {
                     me.error = true;
                     Materialize.toast('<strong>Invalid Credentials</strong>', 6000);
+                } else if (user.status === 'REPORTED') {
+                    me.error = true;
+                    Materialize.toast('<strong>Sorry! Your Account Is Reported, Contact Our Admin</strong>', 6000);
+                } else if (user.status === 'BLOCKED') {
+                    me.error = true;
+                    Materialize.toast('<strong>Sorry! Your Account Is Blocked, Contact Our Admin</strong>', 6000);
                 } else {
                     AuthenticationFactory.setUserIsAuthenticated(true);
                     AuthenticationFactory.setRole(user.role);
@@ -117,7 +123,7 @@ AuthenticationModule.controller('AuthenticationController', [
             var dateDoj = new Date();
             me.user.doj = dateTimeFormat(dateDoj);
 
-            me.user.profilePicture = "noPic.png";
+            me.user.profilePicture = "photo.jpg";
             me.user.noOfBlogs = 0;
             me.user.noOfForums = 0;
             me.user.noOfJobs = 0;
