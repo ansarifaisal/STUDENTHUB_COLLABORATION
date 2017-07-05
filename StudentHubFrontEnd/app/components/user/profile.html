@@ -1,21 +1,51 @@
-<div class="row" ng-init="userCtrl.loadProfile();">
+<div class="row" ng-init="userCtrl.loadProfile();" ng-cloak>
     <div class="col m10 offset-l1 l10 s12">
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div style="padding-top: 10px;">
             <div class="row">
                 <div class="col m4 center">
                     <img src="../assets/images/users/{{userCtrl.data.user.profilePicture}}" height="350px;" width="300px" /><br>
+                    <div ng-show="userCtrl.data.user.status == 'APPROVED'">
+                        <span ng-show="userCtrl.data.user.id != user.id && user.role == 'Super_Admin' || user.role == 'ADMIN'"><a  href="#!/admin/edituser/{{userCtrl.data.user.id}}"
+                        class="black-text"><i class="material-icons">mode_edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                    <a ng-show="userCtrl.data.user.id != user.id && user.role == 'Super_Admin' || user.role == 'ADMIN'" href="#!/admin/edituser/{{userCtrl.data.user.id}}"
-                        class="black-text"><i class="material-icons">mode_edit</i></a>
-                    <a ng-show="userCtrl.data.user.id == user.id && user.role == 'Super_Admin' || user.role == 'ADMIN' || user.role == 'USER' || user.role == 'EMPLOYER'"
-                        href="#!/user/account/{{userCtrl.data.user.id}}" class="black-text"><i class="material-icons">mode_edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span ng-show="userCtrl.data.user.id == user.id"><a 
+                        href="#!/user/account/{{userCtrl.data.user.id}}" class="black-text"><i class="material-icons">mode_edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                    <a href="" class="black-text"><i class="material-icons">person_add</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="" ng-click="userCtrl.blockUser('Blocked', userCtrl.data.user.id)" ng-show="userCtrl.data.user.role != 'Super_Admin' && user.role == 'Super_Admin' || user.role == 'ADMIN'"
-                        class="black-text"><i class="material-icons">block</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a ng-hide="userCtrl.data.user.role == 'Super_Admin'" href="" data-target="reportForm" class="black-text"><i class="material-icons">report</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="" class="black-text"><i class="material-icons">remove_red_eye</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="" ng-click="userCtrl.sendFriendRequest(userCtrl.data.user.id)" class="black-text"><i class="material-icons">person_add</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span ng-show="userCtrl.data.user.role != 'Super_Admin' && userCtrl.data.user.status != 'BLOCKED' && user.role == 'Super_Admin' || user.role == 'ADMIN'"><a href="" ng-click="userCtrl.blockUser('Blocked', userCtrl.data.user.id)"
+                        class="black-text"><i class="material-icons">block</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span ng-show="userCtrl.data.user.role != 'Super_Admin' && userCtrl.data.user.status == 'BLOCKED' && user.role == 'Super_Admin' || user.role == 'ADMIN'"><a href="" ng-click="userCtrl.blockUser('Approved', userCtrl.data.user.id)"
+                        class="black-text"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span ng-hide="userCtrl.data.user.role == 'Super_Admin' || userCtrl.data.user.status == 'REPORTED' || userCtrl.data.user.status == 'BLOCKED'"><a href="" data-target="reportForm" class="black-text"><i class="material-icons">report</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="" class="black-text"><i class="material-icons">remove_red_eye</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div ng-show="userCtrl.data.user.status == 'PENDING'">
+                        <h6 class="center red-text"><strong>User Is Pending, It Will Be Visible Once Admin Approve The Request</strong></h6>
+                    </div>
+                    <div ng-show="userCtrl.data.user.status == 'REPORTED'">
+                        <h6 class="center red-text"><strong>User Is Reported</strong></h6>
+                    </div>
+                    <div ng-show="userCtrl.data.user.status == 'REJECTED'">
+                        <h6 class="center red-text"><strong>User Is Rejected</strong></h6>
+                    </div>
                 </div>
+
                 <div class="col m8">
                     <ul class="tabs tabs-fixed-width">
                         <li class="tab col s3"><a href="#about">About</a></li>
@@ -91,8 +121,15 @@
                             <td>{{link.belongs}}</td>
                             <td>{{link.details}}</td>
                         </tr>
+                        <tr ng-show="userCtrl.data.user.socialLinks" ng-repeat="socialLink in userCtrl.data.user.socialLinks">
+                            <td class="center">{{socialLink.belongs}}</td>
+                            <td class="center">{{socialLink.details}}</td>
+                            <td class="center">
+                                <a href="" ng-click="userCtrl.deleteLink(socialLink.id)" style="color:black;"><i class="material-icons">close</i></a>
+                            </td>
+                        </tr>
                         <tr>
-                            <td><a href="">Add Link</a></td>
+                            <td colspan="3" class="center"><a href="" data-target="socialLinkForm">Add Link</a></td>
                         </tr>
                     </table><br/>
 
@@ -562,6 +599,9 @@
 
         </div>
     </div>
+
+
+
 </div>
 </div>
 </div>
@@ -593,6 +633,56 @@
                     <div class="input-field">
                         <div class="hoverable">
                             <input type="submit" class="btn light-blue modal-close waves-effect waves-light full-width" ng-disabled="reportForm.$invalid"
+                                value="Report Blog">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="socialLinkForm" class="modal">
+    <div class="modal-content">
+        <h5><strong class="grey-text">Add Social Link</strong></h5>
+        <hr/>
+        <div class="row">
+            <div class="col m6 offset-m3">
+                <form name="socialLinkForm" ng-submit="userCtrl.addSocialLink()" novalidate>
+
+                    <!--Belongs Field Starts From Here-->
+                    <div class="input-field dropdown">
+                        <select name="social" ng-model="userCtrl.newSocialLink.belongs" ng-required="true">
+                                <option value = "" disabled selected>Choose One</option>
+                                <option value = "Gmail">Gmail</option>
+                                <option value = "Yahoo">Yahoo</option>
+                                <option value = "Linkedin">Linkedin</option>
+                                <option value = "Skype">Skype</option>
+                        </select>
+                        <label for="social">Social</label>
+                        <div class="invalid-data center-align" ng-show="socialLinkForm.social.$dirty">
+                            <span ng-show="socialLinkForm.social.$invalid && socialLinkForm.social.touched"></span>
+                        </div>
+                    </div>
+                    <!--Belongs Field Ends Here-->
+
+                    <!--Details field starts here-->
+                    <div class="input-field nomargin">
+                        <input type="text" name="details" id="details" ng-pattern="/^[a-zA-Z0-9\s]+$/" ng-minlength="2" maxlength="50" ng-maxlength="50"
+                            data-length="50" ng-model="userCtrl.newSocialLink.details" placeholder="details" required="required">
+                        <div class="invalid-data center-align" ng-show="socialLinkForm.details.$dirty">
+                            <span ng-show="socialLinkForm.details.$dirty && socialLinkForm.details.$error.required">Please, Provide details</span>
+                            <span ng-show="socialLinkForm.details.$error.minlength">This field must contain atleast 2 charachters</span>
+                            <span ng-show="socialLinkForm.details.$error.maxlength">This field can contain maximum 50 charachters</span>
+                            <span ng-show="socialLinkForm.details.$error.pattern">This field cannot contain special charachters</span>
+                        </div>
+                    </div>
+                    <!--Details field ends here-->
+
+                    <div class="input-field">
+                        <div class="hoverable">
+                            <input type="submit" class="btn light-blue modal-close waves-effect waves-light full-width" ng-disabled="socialLinkForm.$invalid"
                                 value="Report Blog">
                         </div>
                     </div>

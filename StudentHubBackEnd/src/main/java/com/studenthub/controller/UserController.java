@@ -175,8 +175,7 @@ public class UserController {
 				return new ResponseEntity<User>(user, HttpStatus.NO_CONTENT);
 			} else {
 				user = userDAO.getByUserName(user.getUserName());
-				user.setIsOnline("FALSE");
-				user.setProfilePicture("USER_" + user.getId() + ".png");
+				user.setIsOnline("true");
 				user.setCode(200);
 				user.setMessage("Login Successful!");
 				userDAO.update(user);
@@ -310,25 +309,25 @@ public class UserController {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 	// <!---------------------Report User----------------------!>
-		@RequestMapping(value = "/user/report", method = RequestMethod.POST)
-		public ResponseEntity<Report> reportJob(@RequestBody Report report) {
-			user = userDAO.get(report.getReportId());
-			if (user != null) {
-				report.setStatus("UNREAD");
-				boolean flag = reportDAO.addReport(report);
-				if (flag != false) {
-					user.setStatus("REPORTED");
-					userDAO.update(user);
-					return new ResponseEntity<Report>(HttpStatus.OK);
-				} else {
-					return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
-				}
+	@RequestMapping(value = "/user/report", method = RequestMethod.POST)
+	public ResponseEntity<Report> reportJob(@RequestBody Report report) {
+		user = userDAO.get(report.getReportId());
+		if (user != null) {
+			report.setStatus("UNREAD");
+			boolean flag = reportDAO.addReport(report);
+			if (flag != false) {
+				user.setStatus("REPORTED");
+				userDAO.update(user);
+				return new ResponseEntity<Report>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
 			}
+		} else {
+			return new ResponseEntity<Report>(HttpStatus.NO_CONTENT);
 		}
+	}
 
 	// <!---------------------Load User Content--------------------!>
 	@RequestMapping(value = "/content", method = RequestMethod.GET)
@@ -409,6 +408,43 @@ public class UserController {
 		}
 
 		return new ResponseEntity<ProfileModel>(profileModel, HttpStatus.OK);
+
+	}
+
+	// <!---------------------Social Links---------------------------!>
+
+	@RequestMapping(value = "/user/add/socialLinks", method = RequestMethod.POST)
+	public ResponseEntity<SocialLinks> addSocialLinks(@RequestBody SocialLinks socialLinks,
+			@RequestParam("id") int id) {
+		if (socialLinks != null) {
+			if (socialLinks.getId() == 0) {
+				socialLinks.setUser(user);
+				socialLinksDAO.add(socialLinks);
+			} else {
+				socialLinks.setUser(user);
+				socialLinksDAO.update(socialLinks);
+			}
+			return new ResponseEntity<SocialLinks>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<SocialLinks>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!--------------------Delete Social Link-------------------!>
+	@RequestMapping(value = "/social/delete/{id}", method = RequestMethod.GET)
+	public ResponseEntity<SocialLinks> deleteSocialLink(@PathVariable("id") int id) {
+
+		socialLinks = socialLinksDAO.get(id);
+		if (socialLinks != null) {
+			boolean flag = socialLinksDAO.delete(socialLinks);
+			if (flag != false) {
+				return new ResponseEntity<SocialLinks>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<SocialLinks>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			return new ResponseEntity<SocialLinks>(HttpStatus.NOT_FOUND);
+		}
 
 	}
 
@@ -513,7 +549,8 @@ public class UserController {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 
-	// <!---------------------------Upload Profile Picture--------------------------!>
+	// <!---------------------------Upload Profile
+	// Picture--------------------------!>
 	@RequestMapping(value = { "/uploadProfile" }, method = RequestMethod.POST)
 	public ResponseEntity<User> editUser(@RequestParam("file") MultipartFile file, @RequestParam("id") int id) {
 

@@ -555,6 +555,20 @@ window.routes = {
         roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
     },
 
+
+    '/user/friends/:id': {
+        //page path
+        templateUrl: 'app/components/user/friend.html',
+        //controller that will handle this page
+        controller: 'FriendController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'friendCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'USER', 'ADMIN', 'EMPLOYER']
+    },
+
     '/user/inbox': {
         //page path
         templateUrl: 'app/components/user/inbox.html',

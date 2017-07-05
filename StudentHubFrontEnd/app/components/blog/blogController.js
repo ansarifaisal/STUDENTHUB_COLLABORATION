@@ -86,7 +86,7 @@ BlogModule.controller('BlogController', [
         }
 
         me.fetchAllBlogs = function () {
-
+            $scope.$emit('LOAD');
             BlogFactory.fetchAllBlogs().then(function (blogs) {
 
                 var sortingOrder = 'blogId'; //default sort
@@ -176,6 +176,7 @@ BlogModule.controller('BlogController', [
                 };
 
                 me.fetchMyBlogs(blogs);
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching The Blogs</strong>', 6000);
@@ -185,7 +186,6 @@ BlogModule.controller('BlogController', [
 
         me.fetchMyBlogs = function (blogs) {
             me.myBlogs = [];
-
             for (var i = 0; i < blogs.length; i++) {
                 if (blogs[i].userId == user.id) {
                     me.myBlogs.push(blogs[i]);
@@ -279,10 +279,12 @@ BlogModule.controller('BlogController', [
         }
 
         me.getBlog = function () {
+            $scope.$emit('LOAD');
             var blogId = $routeParams.id;
             BlogFactory.getBlog(blogId).then(function (blog) {
                 me.blog = blog;
                 me.getComments();
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching Blog</strong>', 6000);
@@ -293,6 +295,7 @@ BlogModule.controller('BlogController', [
 
         me.getComments = function () {
             var blogId = $routeParams.id;
+            $scope.$emit('LOAD');
             BlogFactory.getComments(blogId).then(function (blogComments) {
 
                 var sortingOrder = 'blogId'; //default sort
@@ -380,6 +383,7 @@ BlogModule.controller('BlogController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
+                $scope.$emit('UNLOAD');
 
             },
                 function (errorResponse) {
@@ -403,13 +407,15 @@ BlogModule.controller('BlogController', [
                 me.createBlog.status = "PENDING";
             }
             me.createBlog.report = "NO";
+
             if (!me.createBlog.imageUrl) {
                 me.createBlog.imageUrl = "noPic.jgp";
             }
-
+            $scope.$emit('LOAD');
 
             BlogFactory.createEditBlog(me.createBlog, me.tempPicture).then(function () {
                 $location.path("/user/blogs");
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Blog Created Sucessfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -420,9 +426,12 @@ BlogModule.controller('BlogController', [
         }
         //function to edit blog
         me.editBlog = function () {
+            $scope.$emit('LOAD');
 
             BlogFactory.createEditBlog(me.blog).then(function () {
                 $location.path("/user/blog/view/" + me.blog.blogId);
+                $scope.$emit('UNLOAD');
+
                 Materialize.toast('<strong>Blog Successfully Updated!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -441,9 +450,10 @@ BlogModule.controller('BlogController', [
             var now = new Date();
             me.createBlogComment.commentDate = dateTimeFormat(now);
             me.createBlogComment.report = 'NO';
-
+            $scope.$emit('LOAD');
             BlogFactory.createEditBlogComment(me.createBlogComment).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast("<strong>Comment Added Sucessfully!</strong>", 6000);
             },
                 function (errorResponse) {
@@ -460,9 +470,10 @@ BlogModule.controller('BlogController', [
             me.likeBlog.userName = user.userName;
             var now = new Date();
             me.likeBlog.dateTime = dateTimeFormat(now);
-
+            $scope.$emit('LOAD');
             BlogFactory.likeBlog(me.likeBlog).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Liked Blog Successfully!</strong>', 6000);
             },
                 function (erorrResponse) {
@@ -474,8 +485,10 @@ BlogModule.controller('BlogController', [
 
         //function to dislike the blog
         me.disLikeBlog = function (id) {
+            $scope.$emit('LOAD');
             BlogFactory.disLikeBlog(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Blog Disliked Successfully!</strong>', 6000);
             },
                 function (erorrResponse) {
@@ -493,11 +506,11 @@ BlogModule.controller('BlogController', [
             me.reportBlog.dateTime = dateTimeFormat(now);
             me.reportBlog.reportId = me.blog.blogId;
             me.reportBlog.title = me.blog.title;
-
-            //console.log(me.reportBlog);
-
+            $scope.$emit('LOAD');
             BlogFactory.blogReport(me.reportBlog).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
+
                 Materialize.toast('<strong>Blog Reported Sucessfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -519,9 +532,12 @@ BlogModule.controller('BlogController', [
             var commentId = $routeParams.id;
             me.reportBlogComment.commentId = commentId;
             me.reportBlogComment.status = "UNREAD";
-            //console.log(me.reportBlogComment);
+
+            $scope.$emit('LOAD');
+
             BlogFactory.blogReportComment(me.reportBlogComment).then(function () {
                 $location.path('/user/blog/view/' + me.blogComment.blog.blogId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Comment Reported Sucessfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -533,8 +549,10 @@ BlogModule.controller('BlogController', [
         //function to get comment
         me.getComment = function () {
             var commentId = $routeParams.id;
+            $scope.$emit('LOAD');
             BlogFactory.getComment(commentId).then(function (comment) {
                 me.blogComment = comment;
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching Comment</strong>', 6000);
@@ -544,8 +562,10 @@ BlogModule.controller('BlogController', [
 
         //function to Edit blog comment
         me.editComment = function () {
+            $scope.$emit('LOAD');
             BlogFactory.createEditBlogComment(me.blogComment).then(function () {
                 $location.path('/user/blog/view/' + me.blogComment.blog.blogId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Comment Edited Successfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -556,8 +576,10 @@ BlogModule.controller('BlogController', [
 
         //function to delete blog
         me.deleteBlog = function (action, id) {
+            $scope.$emit('LOAD');
             BlogFactory.deleteBlog(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Blog Deleted Successfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -568,8 +590,10 @@ BlogModule.controller('BlogController', [
 
         //function to delete blog comment
         me.deleteComment = function (id) {
+            $scope.$emit('LOAD');
             BlogFactory.deleteBlogComment(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Comment Deleted Successfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -579,3 +603,14 @@ BlogModule.controller('BlogController', [
         }
     }
 ]);
+
+BlogModule.run(function ($rootScope) {
+
+    $rootScope.$on('LOAD', function () {
+        $rootScope.loading = true;
+    });
+
+    $rootScope.$on('UNLOAD', function () {
+        $rootScope.loading = false;
+    });
+});

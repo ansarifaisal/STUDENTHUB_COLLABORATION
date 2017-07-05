@@ -1,0 +1,50 @@
+<div class="row" ng-init="" ng-cloak>
+    <div class="col m10 offset-l1 l10 s12">
+        <div style="padding-top: 10px;">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a href="#!/user/home" class="breadcrumb">Home</a>
+
+                        <a href="#!/user/friends" class="breadcrumb">Friends</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-panel nopadding">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab col s3"><a class="active" href="#friends">Friends</a></li>
+                        <li class="tab col s3"><a href="#recieved">Recieved Request</a></li>
+                        <li class="tab col s3"><a href="#sent">Sent Request</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="friends">Friends Will Come Here</div>
+        <div id="recieved">Recieve Request Will Come Here</div>
+        <div id="sent">Sent Request Will Come Here</div>
+
+    </div>
+</div>

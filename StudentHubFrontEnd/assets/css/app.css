@@ -223,3 +223,10 @@ input.ng-dirty.ng-valid, .confirmPassword, textarea, .materialize-textarea{
     color: #0277bd;
     cursor: default;
 }
+
+.preloader{
+    background-position: center;
+	top: 50%;
+	left: 50%;
+	position: fixed;
+}

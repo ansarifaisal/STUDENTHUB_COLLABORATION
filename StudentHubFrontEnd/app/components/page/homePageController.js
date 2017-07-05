@@ -58,10 +58,13 @@ HomePageModule.controller('HomePageController', [
 
         //fetch all content
         me.fetchContent = function () {
+            $scope.$emit('LOAD');
             HomePageFactory.fetchContent().then(function (content) {
                 me.content = content;
 
                 me.pushNotification();
+
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Content From The Database', 6000);
@@ -71,8 +74,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to delete blog
         me.deleteBlog = function (action, id) {
+            $scope.$emit('LOAD');
             BlogFactory.deleteBlog(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Blog Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -172,8 +177,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to delete forum for access from the home page
         me.deleteForum = function (action, id) {
+            $scope.$emit('LOAD');
             ForumFactory.deleteForum(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Forum Deleted Successfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -184,6 +191,7 @@ HomePageModule.controller('HomePageController', [
 
         //function to join forum
         me.joinForum = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.getForum(id).then(function (forum) {
                 me.forumMember.userId = user.id;
                 me.forumMember.userName = user.userName;
@@ -198,6 +206,7 @@ HomePageModule.controller('HomePageController', [
                 console.log(me.forumMember);
                 ForumFactory.joinForum(me.forumMember).then(function () {
                     $route.reload();
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('<strong>Forum Join Request Sent Successfully!</strong>', 6000);
                 },
                     function (errorResponse) {
@@ -214,8 +223,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to perform various action on Request
         me.performActionOnRequest = function (action, id) {
+            $scope.$emit('LOAD');
             ForumFactory.performActionOnRequest(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Forum Request ' + action + ' Successfully!</strong>', 6000)
             },
                 function (errorResponse) {
@@ -226,8 +237,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to delete or disable job
         me.deleteJob = function (action, id) {
+            $scope.$emit('LOAD');
             JobFactory.deleteJob(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Job Delete Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -237,7 +250,7 @@ HomePageModule.controller('HomePageController', [
 
         //function to apply job
         me.applyJob = function (id) {
-
+            $scope.$emit('LOAD');
             JobFactory.getJob(id).then(function (job) {
                 me.jobApplied.userId = user.id;
                 me.jobApplied.job = job;
@@ -248,6 +261,7 @@ HomePageModule.controller('HomePageController', [
 
                 JobFactory.applyJob(me.jobApplied).then(function () {
                     $route.reload();
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('Job Applied Successfully!', 6000);
                 },
                     function (errorResponse) {
@@ -264,8 +278,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to del applied job
         me.delAppliedJob = function (id) {
+            $scope.$emit('LOAD');
             JobFactory.delAppliedJob(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Job Removed From Your List Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -275,9 +291,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to delete event
         me.deleteEvent = function (action, id) {
-            console.log(action);
+            $scope.$emit('LOAD');
             EventFactory.deleteEvent(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -288,6 +305,7 @@ HomePageModule.controller('HomePageController', [
 
         //function join event
         me.eventJoin = function (id) {
+            $scope.$emit('LOAD');
             EventFactory.getEvent(id).then(function (event) {
                 me.joinEvent.event = event;
                 me.joinEvent.userId = user.id;
@@ -295,6 +313,7 @@ HomePageModule.controller('HomePageController', [
                 me.joinEvent.status = "APPLIED";
                 EventFactory.applyEvent(me.joinEvent).then(function () {
                     $route.reload();
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('Event Joined Successfully!', 6000);
                 },
                     function (errorResponse) {
@@ -316,8 +335,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to delete Event
         me.deleteEvent = function (action, id) {
+            $scope.$emit('LOAD');
             EventFactory.deleteEvent(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -328,8 +349,10 @@ HomePageModule.controller('HomePageController', [
 
         //function to leave event
         me.leaveEvent = function (id) {
+            $scope.$emit('LOAD');
             EventFactory.leaveEvent(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Left Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -341,3 +364,14 @@ HomePageModule.controller('HomePageController', [
     }
 
 ]);
+
+HomePageModule.run(function ($rootScope) {
+
+    $rootScope.$on('LOAD', function () {
+        $rootScope.loading = true;
+    });
+
+    $rootScope.$on('UNLOAD', function () {
+        $rootScope.loading = false;
+    });
+});

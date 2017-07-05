@@ -16,6 +16,11 @@ UserModule.directive('fileModel', ['$parse', function ($parse) {
     };
 }]);
 
+/*
+<======================================================================>
+|---------------------------User Factory-------------------------------|
+<======================================================================>
+ */
 
 UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
 
@@ -32,7 +37,9 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
         checkOldPassword: checkOldPassword,
         changePassword: changePassword,
         reportUser: reportUser,
-        blockUser: blockUser
+        blockUser: blockUser,
+        addEditSocialLinks: addEditSocialLinks,
+        deleteLink: deleteLink
     };
 
     return userFactory;
@@ -202,7 +209,7 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
-                console.log('Error Getting User');
+                console.log('Error ' + action + ' User');
                 deferred.reject(errorResponse);
             }
         );
@@ -210,4 +217,76 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
     }
 
 
+    //function to add edit social link
+    function addEditSocialLinks(socialLink) {
+
+        var deferred = $q.defer();
+        $http.post(REST_API_URI + 'user/add/socialLinks', socialLink, {
+            params: {
+                'id': user.id
+            }
+        }).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Editing User');
+                deferred.reject(errorResponse);
+            }
+            );
+        return deferred.promise;
+    }
+
+
+    //function to delete social link
+    function deleteLink(id) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'social/delete/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Deleting Social Link');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
 }]);
+
+/*
+<======================================================================>
+|---------------------------Friend Factory-----------------------------|
+<======================================================================>
+ */
+
+UserModule.factory('FriendFactory', [
+    '$http',
+    '$q',
+    function ($http, $q) {
+
+        var REST_API_URI = "http://localhost:9005/webapp/";
+
+        var friendFactory = {
+            sendFriendRequest: sendFriendRequest
+        };
+
+        return friendFactory;
+
+
+        //function to send friend request
+        function sendFriendRequest(friendRequest) {
+            var deferred = $q.defer();
+
+            $http.post(REST_API_URI + 'user/request/friend', friendRequest).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+    }]);

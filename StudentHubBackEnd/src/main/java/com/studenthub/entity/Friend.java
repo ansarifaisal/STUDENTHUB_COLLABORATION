@@ -75,4 +75,15 @@ public class Friend implements Serializable {
 		this.status = status;
 	}
 
+	/**
+	 * Overriding toString Method For Debugging
+	 */
+	
+	@Override
+	public String toString() {
+		return "Friend [id=" + id + ", initiaterId=" + initiaterId + ", friendId=" + friendId + ", status=" + status
+				+ "]";
+	}
+	
+	
 }

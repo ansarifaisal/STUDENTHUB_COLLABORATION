@@ -72,7 +72,7 @@
                                 <a href="#!" ng-click="manageUserCtrl.validateUser(user.id, 'Rejected')" style="color:black;"><i class="material-icons">close</i></a>
                             </td>
 
-                            <td ng-if=" user.status == 'DISABLED' ">
+                            <td ng-if=" user.status == 'DISABLED' || user.status == 'REPORTED' ">
                                 <a href="" ng-click="manageUserCtrl.validateUser(user.id, 'Approved')" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
