@@ -14,7 +14,7 @@
         <div class="col m12">
             <div class="card">
                 <div class="card-image">
-                    <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
+                    <img src="../assets/images/forums/{{forum.imageURL}}" height="300px;">
 
                     <span class="card-title"><strong>{{forumCtrl.forum.forumName}}</strong></span>
                     <div ng-hide="forumCtrl.forum.status == 'PENDING'">
@@ -33,23 +33,6 @@
             </div>
 
             <div ng-hide="forumCtrl.forum.status == 'PENDING' || forumCtrl.forum.status == 'CLOSED' ">
-
-
-                <!--<div>
-                    <div class="row card-panel nopadding">
-                        <div class="col s12">
-                            <ul class="tabs tabs-fixed-width">
-                                <li class="tab col s3"><a href="#details">Details</a></li>
-                                <li class="tab col s3 disabled"><a href="#discussion">Discussion Board</a></li>
-                                <li class="tab col s3 disabled"><a href="#topics">Topics</a></li>
-                                <li class="tab col s3 disabled"><a href="#myTopics">My Topics</a></li>
-                                <li ng-show="member.role == 'ADMIN'" class="tab col s3 disabled"><a href="#pendingTopics">Pending Topics</a></li>
-                                <li ng-show="member.role == 'ADMIN'" class="tab col s3 disabled"><a href="#rejectedTopics">Rejected Topics</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>-->
-
 
                 <div ng-repeat="member in forumCtrl.forum['members']">
                     <div ng-show="member.status == 'APPROVED' && member.userId == user.id">
@@ -82,8 +65,8 @@
                                     <div ng-hide="!forumCtrl.twelveMembers['admins']">
                                         <div ng-repeat="admin in forumCtrl.twelveMembers['admins']">
                                             <div class=" col m2">
-                                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                                <div class="truncate"> {{admin.userName}}</div>
+                                                <img src="../assets/images/users/{{user.profilePicture}}" width="50" height="50">
+                                                <div class="truncate"><a href="#!/user/profile/{{admin.userId}}"> {{admin.userName}} </a></div>
                                             </div>
                                         </div>
                                     </div>
@@ -96,8 +79,8 @@
                                     <div ng-hide="!forumCtrl.twelveMembers['members']">
                                         <div ng-repeat="member in forumCtrl.twelveMembers['members']">
                                             <div class=" col m2">
-                                                <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                                <div class="truncate"> {{member.userName}}</div>
+                                                <img src="../assets/images/users/{{member.profilePicture}}" width="50" height="50">
+                                                <div class="truncate"><a href="#!/user/profile/{{member.userId}}"> {{member.userName}}</a></div>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +116,7 @@
                                 </span>
                             </div>
                             <span class="grey-text" style="font-size: 12px;">Created By:</span><br>
-                            <div class="truncate">{{forumCtrl.forum.userName}}</div>
+                            <div class="truncate"><a href="#!/user/profile/{{forumCtrl.forum.userId}}">{{forumCtrl.forum.userName}}</a></div>
                             <span class="grey-text" style="font-size: 12px;">Created On:</span><br>
                             <div class="truncate">{{forumCtrl.forum.createdDate}}</div>
 
@@ -142,7 +125,6 @@
 
                             <span class="grey-text" style="font-size: 12px;">Description</span><br>
                             <div class="truncate">{{forumCtrl.forum.forumDescription}} </div>
-                            <a href="" style="font-size: 14px;" class="right">See More</a>
                         </div>
                     </div>
                 </div>
@@ -206,7 +188,7 @@
                     <div class="card-panel">
                         <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
                             <div class=" col m0">
-                                <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                                <img src="../assets/images/users/{{comment.profilePicture}}" width="25" height="25">
                             </div>
                             <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.comment}}</span>
                             <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.comment}}</span>

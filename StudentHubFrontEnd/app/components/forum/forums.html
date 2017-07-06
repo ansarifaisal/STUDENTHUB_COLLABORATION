@@ -83,7 +83,7 @@
                     <div ng-hide="forum.status != 'APPROVED' ||  forum.report == 'YES'">
                         <div class="card horizontal">
                             <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                                <img src="../assets/images/forums/{{forum.imageURL}}" style="width: 320px; height: 228px;">
                             </div>
                             <div class="card-stacked">
                                 <div class="card-content">
@@ -108,7 +108,7 @@
                                 </div>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
-                                        <td>Created By <a href="">{{forum.userName}}</a></td>
+                                        <td>Created By <a href="#!/user/profile/{{forum.userId}}">{{forum.userName}}</a></td>
                                         <td>On: <span>{{forum.createdDate}}</span></td>
                                     </tr>
                                     <tr>
@@ -216,7 +216,7 @@
                     <div ng-show="member.userId == user.id && member.role == 'USER' && forum.status == 'APPROVED' && forum.report == 'NO'">
                         <div class="card horizontal">
                             <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                                <img src="../assets/images/forums/{{forum.imageURL}}" style="width: 320px; height: 228px;">
                             </div>
                             <div class="card-stacked">
                                 <div class="card-content">
@@ -241,7 +241,7 @@
                                 </div>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
-                                        <td>Created By <a href="">{{forum.userName}}</a></td>
+                                        <td>Created By <a href="#!/user/profile/{{forum.userId}}">{{forum.userName}}</a></td>
                                         <td>On: <span>{{forum.createdDate}}</span></td>
                                     </tr>
                                     <tr>
@@ -348,7 +348,7 @@
             <div ng-show="forum.userId == user.id">
                 <div class="card horizontal">
                     <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        <img src="../assets/images/forums/{{forum.imageURL}}" style="width: 320px; height: 228px;">
                     </div>
                     <div class="card-stacked">
                         <div class="card-content">
@@ -373,7 +373,7 @@
                         </div>
                         <table class="bordered" style="font-size: 12px; color:grey;">
                             <tr>
-                                <td>Created By <a href="">{{forum.userName}}</a></td>
+                                <td>Created By <a href="#!/user/profile/{{forum.userId}}">{{forum.userName}}</a></td>
                                 <td>On: <span>{{forum.createdDate}}</span></td>
                             </tr>
                             <tr>

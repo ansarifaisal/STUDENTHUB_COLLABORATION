@@ -77,7 +77,7 @@
                     <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
                         <div class="card horizontal">
                             <div class="card-image">
-                                <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                                <img src="../assets/images/events/{{event.imageURL}}" style="width: 320px; height: 228px;">
                             </div>
                             <div class="card-stacked">
                                 <div class="card-content">
@@ -102,7 +102,7 @@
                                 </div>
                                 <table class="bordered" style="font-size: 12px; color:grey;">
                                     <tr>
-                                        <td>By <a href="">{{event.userName}}</a></td>
+                                        <td>By <a href="#!/user/profile/{{event.userId}}">{{event.userName}}</a></td>
                                         <td> <span>On: {{event.postDate}}</span></td>
                                     </tr>
                                     <tr>
@@ -202,7 +202,7 @@
                 <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
                     <div class="card horizontal">
                         <div class="card-image">
-                            <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                            <img src="../assets/images/events/{{event.imageURL}}" style="width: 320px; height: 228px;">
                         </div>
                         <div class="card-stacked">
                             <div class="card-content">
@@ -227,7 +227,7 @@
                             </div>
                             <table class="bordered" style="font-size: 12px; color:grey;">
                                 <tr>
-                                    <td>By <a href="">{{event.userName}}</a></td>
+                                    <td>By <a href="#!/user/profile/{{event.userId}}">{{event.userName}}</a></td>
                                     <td> <span>On: {{event.postDate}}</span></td>
                                 </tr>
                                 <tr>
@@ -331,7 +331,7 @@
             <div ng-hide="event.status != 'APPROVED' || event.reported == 'YES'">
                 <div class="card horizontal">
                     <div class="card-image">
-                        <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
+                        <img src="../assets/images/events/{{event.imageURL}}" style="width: 320px; height: 228px;">
                     </div>
                     <div class="card-stacked">
                         <div class="card-content">
@@ -356,7 +356,7 @@
                         </div>
                         <table class="bordered" style="font-size: 12px; color:grey;">
                             <tr>
-                                <td>By <a href="">{{event.userName}}</a></td>
+                                <td>By <a href="#!/user/profile/{{event.userId}}">{{event.userName}}</a></td>
                                 <td> <span>On: {{event.postDate}}</span></td>
                             </tr>
                             <tr>

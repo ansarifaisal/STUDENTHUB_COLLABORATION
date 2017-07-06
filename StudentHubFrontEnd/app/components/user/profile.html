@@ -1,4 +1,4 @@
-<div class="row" ng-init="userCtrl.loadProfile();" ng-cloak>
+<div class="row" ng-init="userCtrl.checkUser();" ng-cloak>
     <div class="col m10 offset-l1 l10 s12">
 
         <div class="preloader" ng-show="loading">
@@ -16,6 +16,7 @@
                 </div>
             </div>
         </div>
+
         <div style="padding-top: 10px;">
             <div class="row">
                 <div class="col m4 center">
@@ -27,9 +28,28 @@
                         <span ng-show="userCtrl.data.user.id == user.id"><a 
                         href="#!/user/account/{{userCtrl.data.user.id}}" class="black-text"><i class="material-icons">mode_edit</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                        <a href="" ng-click="userCtrl.sendFriendRequest(userCtrl.data.user.id)" class="black-text"><i class="material-icons">person_add</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span ng-show="userCtrl.data.user.id != user.id && !userCtrl.friend">
+                        <a href="" ng-click="userCtrl.sendFriendRequest(userCtrl.data.user.id)"
+                            class="black-text"><i class="material-icons">person_add</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                        <span ng-show="userCtrl.data.user.id != user.id && userCtrl.friend.initiaterId == user.id  && userCtrl.friend.status == 'PENDING'">
+                        <a href="" ng-click="userCtrl.cancelRequest(userCtrl.data.user.id)"
+                            class="black-text"><i class="material-icons">close</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+                        <span ng-show="userCtrl.data.user.id != user.id && userCtrl.friend.friendId == user.id && userCtrl.friend.status == 'PENDING'">
+                        <a href="" ng-click="userCtrl.approveRequest(userCtrl.data.user.id)"
+                            class="black-text"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="userCtrl.cancelRequest(userCtrl.data.user.id)"
+                            class="black-text"><i class="material-icons">close</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+
+                        <span ng-show="userCtrl.data.user.id != user.id && userCtrl.friend.status == 'APPROVED'">
+                        <a href="" ng-click="userCtrl.rejectRequest(userCtrl.data.user.id)"
+                            class="black-text"><i class="material-icons">close</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
                         <span ng-show="userCtrl.data.user.role != 'Super_Admin' && userCtrl.data.user.status != 'BLOCKED' && user.role == 'Super_Admin' || user.role == 'ADMIN'"><a href="" ng-click="userCtrl.blockUser('Blocked', userCtrl.data.user.id)"
                         class="black-text"><i class="material-icons">block</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
                         <span ng-show="userCtrl.data.user.role != 'Super_Admin' && userCtrl.data.user.status == 'BLOCKED' && user.role == 'Super_Admin' || user.role == 'ADMIN'"><a href="" ng-click="userCtrl.blockUser('Approved', userCtrl.data.user.id)"
                         class="black-text"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <span ng-hide="userCtrl.data.user.role == 'Super_Admin' || userCtrl.data.user.status == 'REPORTED' || userCtrl.data.user.status == 'BLOCKED'"><a href="" data-target="reportForm" class="black-text"><i class="material-icons">report</i></a>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -183,105 +203,73 @@
             <!--Friends Section Starts Here-->
             <div id="friends">
                 <div class="card-panel">
-                    <div class="center">
-                        <ul class="pagination nomargin nopadding">
-                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                            <li class="active"><a href="#!">1</a></li>
-                            <li class="waves-effect"><a href="#!">2</a></li>
-                            <li class="waves-effect"><a href="#!">3</a></li>
-                            <li class="waves-effect"><a href="#!">4</a></li>
-                            <li class="waves-effect"><a href="#!">5</a></li>
-                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                        </ul>
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_FIVE" ng-change="search_FIVE()" required="required">
+                                <label for="searchKeyword">Search For Forum</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_FIVE" ng-change="perPage_FIVE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_FIVE">
+                                    </select>
+                            <label>Materialize Select</label>
+                        </div>
                     </div>
 
+                    <div ng-show="!pagedItems_FIVE[currentPage_FIVE]">
+                        <h6 class="center red-text">Not Created Any Forum(s) Yet Or No Search Match Available</h6>
+                    </div>
+                    <div ng-hide="!pagedItems_FIVE[currentPage_FIVE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_FIVE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_FIVE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_FIVE.length)" ng-class="{active: n == currentPage_FIVE}" ng-click="setPage_FIVE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_FIVE == pagedItems_FIVE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_FIVE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row nomargin" ng-repeat="friend in pagedItems_FIVE[currentPage_FIVE] | orderBy:sortingOrder_FIVE:reverse_FIVE">
 
-                    <div class="card-panel">
-                        <div class="row nomargin nopadding">
-                            <div class="col m10">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
+                        <div class="card-panel" style="padding: 10px;">
+                            <div class="row nomargin nopadding">
+                                <div class="col m10" style="padding: 0px;">
+                                    <div class=" col m0">
+                                        <img src="../assets/images/users/{{friend.profilePicture}}" width="50" height="50">
+                                    </div>
+                                    <a href="#!/user/profile/{{friend.id}}">{{friend.userName}}</a><br/>
+                                    <span class="grey-text" style="font-size: 12px;">{{friend.noOfFriends}} Friends</span>
                                 </div>
-                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                            </div>
-                            <div class="col m2">
-                                <a href="" class="btn right">Friend</a>
+                                <div class="right" style="padding-top:12px;" ng-show="userCtrl.data.user.id == user.id">
+                                    <a href="" ng-click="userCtrl.rejectRequest(userCtrl.data.user.id)" class="black-text"><i class="material-icons">close</i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-panel">
-                        <div class="row nomargin nopadding">
-                            <div class="col m10">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                </div>
-                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                            </div>
-                            <div class="col m2">
-                                <a href="" class="btn right">Friend</a>
-                            </div>
+                    <div ng-hide="!pagedItems_FIVE[currentPage_FIVE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_FIVE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_FIVE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_FIVE.length)" ng-class="{active: n == currentPage_FIVE}" ng-click="setPage_FIVE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_FIVE == pagedItems_FIVE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_FIVE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="card-panel">
-                        <div class="row nomargin nopadding">
-                            <div class="col m10">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                </div>
-                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                            </div>
-                            <div class="col m2">
-                                <a href="" class="btn right">Friend</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-panel">
-                        <div class="row nomargin nopadding">
-                            <div class="col m10">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                </div>
-                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                            </div>
-                            <div class="col m2">
-                                <a href="" class="btn right">Friend</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-panel">
-                        <div class="row nomargin nopadding">
-                            <div class="col m10">
-                                <div class=" col m0">
-                                    <img src="http://lorempixel.com/800/400/nature/4" width="50" height="50">
-                                </div>
-                                <a href="">{{user.firstName}} {{user.lastName}}</a><br/>
-                                <span class="grey-text" style="font-size: 12px;">1234 Friends</span>
-                            </div>
-                            <div class="col m2">
-                                <a href="" class="btn right">Friend</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="center">
-                        <ul class="pagination nomargin nopadding">
-                            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                            <li class="active"><a href="#!">1</a></li>
-                            <li class="waves-effect"><a href="#!">2</a></li>
-                            <li class="waves-effect"><a href="#!">3</a></li>
-                            <li class="waves-effect"><a href="#!">4</a></li>
-                            <li class="waves-effect"><a href="#!">5</a></li>
-                            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <!--Friend Section Ends Here-->

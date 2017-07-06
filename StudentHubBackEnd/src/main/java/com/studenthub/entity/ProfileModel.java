@@ -10,7 +10,6 @@ public class ProfileModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
 	/*
 	 * Declaring Private Fields
 	 */
@@ -26,6 +25,8 @@ public class ProfileModel implements Serializable {
 	private List<Event> createdEvents;
 
 	private List<Job> createdJobs;
+
+	private List<User> myFriends;
 
 	/*
 	 * Declaring Accessers and Mutators
@@ -79,6 +80,14 @@ public class ProfileModel implements Serializable {
 		this.createdJobs = createdJobs;
 	}
 
+	public List<User> getMyFriends() {
+		return myFriends;
+	}
+
+	public void setMyFriends(List<User> myFriends) {
+		this.myFriends = myFriends;
+	}
+
 	/*
 	 * Overriding toString Method For Debugging
 	 */
@@ -87,7 +96,7 @@ public class ProfileModel implements Serializable {
 	public String toString() {
 		return "ProfileModel [user=" + user + ", createdBlogs=" + createdBlogs + ", createdTopics=" + createdTopics
 				+ ", createdForums=" + createdForums + ", createdEvents=" + createdEvents + ", createdJobs="
-				+ createdJobs + "]";
+				+ createdJobs + ", myFriends=" + myFriends + "]";
 	}
 
 }

@@ -1,4 +1,4 @@
-<div class="row" ng-init="" ng-cloak>
+<div class="row" ng-init="friendCtrl.fetchFriends();" ng-cloak>
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -29,22 +29,314 @@
             </div>
         </div>
 
+        <div ng-show="friendCtrl.authorize == 'YES'">
 
-        <div class="card-panel nopadding">
-            <div class="row">
-                <div class="col s12">
-                    <ul class="tabs tabs-fixed-width">
-                        <li class="tab col s3"><a class="active" href="#friends">Friends</a></li>
-                        <li class="tab col s3"><a href="#recieved">Recieved Request</a></li>
-                        <li class="tab col s3"><a href="#sent">Sent Request</a></li>
-                    </ul>
+            <div class="card-panel nopadding">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs tabs-fixed-width">
+                            <li class="tab col s3"><a class="active" href="#friends">Friends &nbsp;<span class="grey-text" style="font-size:12px;">{{pagedItems[currentPage].length}}</span></a></a>
+                            </li>
+                            <li class="tab col s3"><a href="#recieved">Recieved Request &nbsp;<span class="grey-text" style="font-size:12px;">{{pagedItems_TWO[currentPage_TWO].length}}</span></a></a>
+                            </li>
+                            <li class="tab col s3"><a href="#sent">Sent Request &nbsp;<span class="grey-text" style="font-size:12px;">{{pagedItems_ONE[currentPage_ONE].length}}</span></a>
+                            </li>
+                            <li class="tab col s3"><a href="#users">Users</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!--Friend Section Starts Here-->
+
+            <div id="friends">
+
+                <div class="card-panel">
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query" ng-change="search()" required="required">
+                                <label for="searchKeyword">Search For Friend</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage" ng-change="perPage()" ng-options="('Show '+size+' Per Page') for size in pageSizes">
+                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                    <div ng-show="!pagedItems[currentPage]">
+                        <h5 class="center red-text">No Friend(s) Or No Search Match Available</h5>
+                    </div>
+                    <div ng-hide="!pagedItems[currentPage]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin">
+                        <div class="card-panel col m5" style="margin-left:40px; padding:0px;" ng-repeat="friend in pagedItems[currentPage] | orderBy:sortingOrder:reverse">
+                            <div class="col m0" style="padding-left:0px;">
+                                <img src="../assets/images/users/{{friend.profilePicture}}" width="50" height="50">
+                            </div>
+                            <a href="#!/user/profile/{{friend.id}}" class="black-text">{{friend.userName}}</a>
+
+                            <span class="right" style="padding-top:12px;">
+                            <a href = "" ng-click="friendCtrl.rejectRequest(friend.id)" style="color:black;"><i class="material-icons">close</i></a>
+                        </span>
+
+                            <div class="grey-text" style="font-size:12px;">{{friend.noOfFriends}} Friends</div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems[currentPage]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href="javascript:;" ng-click="prevPage()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--Friend Section Ends Here-->
+
+            <!--Recieve Request Section Starts Here-->
+            <div id="recieved">
+
+                <div class="card-panel">
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_TWO" ng-change="search_TWO()" required="required">
+                                <label for="searchKeyword">Search For Friend Request</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_TWO" ng-change="perPage_TWO()" ng-options="('Show '+size+' Per Page') for size in pageSizes_TWO">
+                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                    <div ng-show="!pagedItems_TWO[currentPage_TWO]">
+                        <h5 class="center red-text">No Friend(s) Request Or No Search Match Available</h5>
+                    </div>
+                    <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_TWO == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin">
+                        <div class="card-panel col m5" style="margin-left:40px; padding:0px;" ng-repeat="friend in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
+                            <div class="col m0" style="padding-left:0px;">
+                                <img src="../assets/images/users/{{friend.profilePicture}}" width="50" height="50">
+                            </div>
+                            <a href="#!/user/profile/{{friend.id}}" class="black-text">{{friend.userName}}</a>
+
+                            <span class="right" style="padding-top:12px;">
+                            <a href="" ng-click="friendCtrl.approveRequest(friend.id)" style="color:black;"><i class="material-icons">done</i></a>&nbsp;&nbsp;&nbsp;
+                            <a href="" ng-click="friendCtrl.cancelRequest(friend.id)" style="color:black;"><i class="material-icons">close</i></a>
+                        </span>
+
+                            <div class="grey-text" style="font-size:12px;">{{friend.noOfFriends}} Friends</div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_TWO == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_TWO()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_TWO.length)" ng-class="{active: n == currentPage_TWO}" ng-click="setPage_TWO()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_TWO == pagedItems_TWO.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_TWO()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Receive Request Section Ends Here-->
+
+            <!--Sent Request Section Starts Here-->
+            <div id="sent">
+
+                <div class="card-panel">
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_ONE" ng-change="search_ONE()" required="required">
+                                <label for="searchKeyword">Search For Friend Request</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_ONE" ng-change="perPage_ONE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_ONE">
+                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                    <div ng-show="!pagedItems_ONE[currentPage_ONE]">
+                        <h5 class="center red-text">No Friend(s) Request Or No Search Match Available</h5>
+                    </div>
+                    <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_ONE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin">
+                        <div class="card-panel col m5" style="margin-left:40px; padding:0px;" ng-repeat="friend in pagedItems_ONE[currentPage_ONE] | orderBy:sortingOrder_ONE:reverse_ONE">
+                            <div class="col m0" style="padding-left:0px;">
+                                <img src="../assets/images/users/{{friend.profilePicture}}" width="50" height="50">
+                            </div>
+                            <a href="#!/user/profile/{{friend.id}}" class="black-text">{{friend.userName}}</a>
+
+                            <span class="right" style="padding-top:12px;">
+                            <a href=""  ng-click="friendCtrl.cancelRequest(friend.id)" style="color:black;"><i class="material-icons">close</i></a>
+                        </span>
+
+                            <div class="grey-text" style="font-size:12px;">{{friend.noOfFriends}} Friends</div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_ONE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_ONE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_ONE.length)" ng-class="{active: n == currentPage_ONE}" ng-click="setPage_ONE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_ONE == pagedItems_ONE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_ONE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Sent Request Section Ends Here-->
+
+            <!--Users Section Starts Here-->
+            <div id="users">
+
+                <div class="card-panel">
+                    <div class="row nomargin">
+                        <div class="col m8">
+                            <div class="input-field nomargin">
+                                <input type="text" style="margin-bottom:0px;" ng-model="query_THREE" ng-change="search_THREE()" required="required">
+                                <label for="searchKeyword">Search For User</label>
+                            </div>
+                        </div>
+
+                        <div class="col m4">
+                            <select ng-model="itemsPerPage_THREE" ng-change="perPage_THREE()" ng-options="('Show '+size+' Per Page') for size in pageSizes_THREE">
+                    </select>
+                            <label>Materialize Select</label>
+                        </div>
+                    </div>
+                    <div ng-show="!pagedItems_THREE[currentPage_THREE]">
+                        <h5 class="center red-text">No User(s) Or No Search Match Available</h5>
+                    </div>
+                    <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_THREE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row nomargin">
+                        <div class="card-panel col m5" style="margin-left:40px; padding:0px;" ng-repeat="user in pagedItems_THREE[currentPage_THREE] | orderBy:sortingOrder_THREE:reverse_THREE">
+                            <div class="col m0" style="padding-left:0px;">
+                                <img src="../assets/images/users/{{user.profilePicture}}" width="50" height="50">
+                            </div>
+                            <a href="#!/user/profile/{{user.id}}" class="black-text">{{user.userName}}</a>
+
+                            <span class="right" style="padding-top:12px;">
+                            <a href=""  ng-click="friendCtrl.sendFriendRequest(user.id)" style="color:black;"><i class="material-icons">person_add</i></a>
+                        </span>
+
+                            <div class="grey-text" style="font-size:12px;">{{user.noOfFriends}} Friends</div>
+                        </div>
+                    </div>
+
+                    <div ng-hide="!pagedItems_THREE[currentPage_THREE]">
+                        <div class="center">
+                            <ul class="pagination nomargin">
+                                <li ng-class="{disabled: currentPage_THREE == 0}">
+                                    <a href="javascript:;" ng-click="prevPage_THREE()"><strong>« Prev</strong></a>
+                                </li>
+                                <li ng-repeat="n in range(pagedItems_THREE.length)" ng-class="{active: n == currentPage_THREE}" ng-click="setPage_THREE()">
+                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage_THREE == pagedItems_THREE.length - 1}">
+                                    <a href="javascript:;" ng-click="nextPage_THREE()"><strong>Next »</strong></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div id="friends">Friends Will Come Here</div>
-        <div id="recieved">Recieve Request Will Come Here</div>
-        <div id="sent">Sent Request Will Come Here</div>
-
+        <div ng-show="friendCtrl.authorize == 'NO'">
+            <h5 class="red-text center"><strong>You Are Not Authorize To View This Page</strong></h5>
+        </div>
     </div>
 </div>

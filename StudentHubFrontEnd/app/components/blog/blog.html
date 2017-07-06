@@ -38,11 +38,11 @@
         <div class="row">
             <div class="card">
                 <div class="card-image">
-                    <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
+                    <img src="../assets/images/blogs/{{blogCtrl.blog.imageUrl}}" height="300px;">
                     <span class="card-title"><strong>{{blogCtrl.blog.title}}</strong></span>
                 </div>
                 <div class="card-panel">
-                    Posted By - {{blogCtrl.blog.userName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Posted By - <a href="#!/user/profile/{{blogCtrl.blog.userId}}"> {{blogCtrl.blog.userName}} </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">query_builder</i> {{blogCtrl.blog.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">chat_bubble_outline</i> {{blogCtrl.blog.noOfComments}}
                     Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -144,9 +144,9 @@
                             <div class="card-panel nomargin">
                                 <div class="row nopadding nomargin" ng-hide="blogComment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
                                     <div class=" col m0">
-                                        <img src="http://lorempixel.com/800/400/nature/4" width="25" height="25">
+                                        <img src="../assets/images/users/{{blogCtrl.blog.imageUrl}}" width="25" height="25">
                                     </div>
-                                    <a href="">{{user.userName}}</a> <span ng-show="blogComment.report =='NO'">{{blogComment.blogComment}}</span>
+                                    <a href="#!/user/profile/{{blogComment.userId}}">{{blogComment.userName}}</a> <span ng-show="blogComment.report =='NO'">{{blogComment.blogComment}}</span>
                                     <span ng-show="blogComment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{blogComment.blogComment}}</span>
                                     <span class="right">
                                     <span ng-show="blogComment.report =='YES'"><i class="material-icons"><a href = "#!/admin/report/blogcomments" class="red-text">report_problem</a></i></span>

@@ -16,7 +16,7 @@
 
         <div class="card">
             <div class="card-image">
-                <img src="http://materializecss.com/images/sample-1.jpg" height="300px;">
+                <img src="../assets/images/events/{{eventCtrl.event.imageURL}}" height="300px;">
                 <span class="card-title"><strong>{{eventCtrl.event.eventTitle}}</strong></span>
                 <a ng-click="eventCtrl.eventJoin(eventCtrl.event.id)" ng-hide="eventCtrl.status != 'APPROVED' || eventCtrl.report != 'NO'"
                     class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
@@ -28,7 +28,7 @@
             </div>
             <div class="card-stacked">
                 <div class="card-content row">
-                    Posted By: {{eventCtrl.event.userName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Posted By: <a href="#!/user/profile/{{eventCtrl.event.userId}}">{{eventCtrl.event.userName}}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 14px;">query_builder</i> {{eventCtrl.event.postDate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="material-icons" style="font-size: 16px;">person</i> {{eventCtrl.event.noOfApplied}} Applied
 

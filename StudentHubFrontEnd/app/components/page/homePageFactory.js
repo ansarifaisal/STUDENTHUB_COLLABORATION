@@ -26,10 +26,10 @@ HomePageModule.factory('HomePageFactory', ['$http', '$q', '$timeout', function (
         return deferred.promise;
     }
 
-    function notification() {
+    function notification(id) {
         var deferred = $q.defer();
 
-        $http.get(REST_API_URI + 'notification').then(function (response) {
+        $http.get(REST_API_URI + 'notification/' + id).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {

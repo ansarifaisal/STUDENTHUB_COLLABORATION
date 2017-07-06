@@ -12,12 +12,14 @@ public interface FriendDAO {
 	List<Friend> listSentRequest(int id);
 
 	List<Friend> listReceivedRequest(int id);
-	
+
 	List<User> noFriends(int id);
 
 	List<User> myFriends(int id);
 
 	Friend getFriend(int id);
+
+	Friend getFriend(int initiaterId, int friendId);
 
 	boolean addFriend(Friend friend);
 

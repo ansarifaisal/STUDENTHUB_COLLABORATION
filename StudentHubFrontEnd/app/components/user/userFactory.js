@@ -39,7 +39,8 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
         reportUser: reportUser,
         blockUser: blockUser,
         addEditSocialLinks: addEditSocialLinks,
-        deleteLink: deleteLink
+        deleteLink: deleteLink,
+        checkFriend: checkFriend
     };
 
     return userFactory;
@@ -253,6 +254,23 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
         return deferred.promise;
 
     }
+
+    //function to check whether user is a frnd
+    function checkFriend(initiaterId, friendId) {
+
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'user/checkFrnd/' + initiaterId + '/' + friendId).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log('Error Deleting Social Link');
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+
+    }
 }]);
 
 /*
@@ -269,7 +287,14 @@ UserModule.factory('FriendFactory', [
         var REST_API_URI = "http://localhost:9005/webapp/";
 
         var friendFactory = {
-            sendFriendRequest: sendFriendRequest
+            sendFriendRequest: sendFriendRequest,
+            fetchFriends: fetchFriends,
+            fetchSentRequest: fetchSentRequest,
+            fetchReceivedRequest: fetchReceivedRequest,
+            approveRequest: approveRequest,
+            rejectRequest: rejectRequest,
+            cancelRequest: cancelRequest,
+            fetchUsers: fetchUsers
         };
 
         return friendFactory;
@@ -287,6 +312,112 @@ UserModule.factory('FriendFactory', [
                 }
             );
             return deferred.promise;
+        }
+
+        //function to fetch friends
+        function fetchFriends(id) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/friends/' + id).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        //function to fetch sent request
+        function fetchSentRequest(id) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/sent/request/' + id).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        //function to fetch Received Request
+        function fetchReceivedRequest(id) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/request/receive/' + id).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        //function to approve request
+        function approveRequest(initaterId, friendId) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/approve/' + initaterId + '/' + friendId).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+
+        }
+
+        //function to reject request
+        function rejectRequest(initaterId, friendId) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/reject/' + initaterId + '/' + friendId).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+
+        }
+
+
+        //function to cancel request
+        function cancelRequest(initaterId, friendId) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/cancel/' + initaterId + '/' + friendId).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+
+        }
+
+        //function to fetch users
+        function fetchUsers(id) {
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/nofriend/' + id).then(function (response) {
+                deferred.resolve(response);
+            },
+                function (errorResponse) {
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+
         }
 
     }]);

@@ -46,9 +46,28 @@ UserModule.controller('UserController', [
             status: ''
         }
 
-        //function to load profile
-        me.loadProfile = function () {
+        //function to check user
+        me.checkUser = function () {
             var userId = $routeParams.id;
+            $scope.$emit('LOAD');
+            if (userId != user.id) {
+                UserFactory.checkFriend(userId, user.id).then(function (friend) {
+                    me.friend = friend;
+                    console.log(me.friend);
+                    me.loadProfile(userId);
+                },
+                    function (errorResponse) {
+                        Materialize.toast('Error While Checking User', 6000);
+                    }
+                );
+            } else {
+                me.loadProfile(userId);
+            }
+        }
+
+        //function to load profile
+        me.loadProfile = function (userId) {
+
             $scope.$emit('LOAD');
             UserFactory.loadProfile(userId).then(function (content) {
                 me.data = content;
@@ -57,6 +76,7 @@ UserModule.controller('UserController', [
                 me.fetchCreatedJobs(me.data.createdJobs);
                 me.fetchCreatedEvents(me.data.createdEvents);
                 me.fetchCreatedBlogs(me.data.createdBlogs);
+                me.fetchMyFriends(me.data.myFriends);
                 $scope.$emit('UNLOAD');
             },
                 function (errorResposne) {
@@ -423,6 +443,95 @@ UserModule.controller('UserController', [
 
         }
 
+        me.fetchMyFriends = function (friends) {
+
+            var sortingOrder_FIVE = 'id'; //default sort
+
+            $scope.sortingOrder_FIVE = sortingOrder_FIVE;
+            $scope.pageSizes_FIVE = [5, 10, 25, 50];
+            $scope.reverse_FIVE = true;
+            $scope.filteredItems_FIVE = [];
+            $scope.groupedItems_FIVE = [];
+            $scope.itemsPerPage_FIVE = 10;
+            $scope.pagedItems_FIVE = [];
+            $scope.currentPage_FIVE = 0;
+            $scope.items_FIVE = friends;
+
+            var searchMatch_FIVE = function (haystack, needle) {
+                if (!needle) {
+                    return true;
+                }
+                return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            };
+
+            // init the filtered items
+            $scope.search_FIVE = function () {
+                $scope.filteredItems_FIVE = $filter('filter')($scope.items_FIVE, function (item) {
+                    for (var attr in item) {
+                        if (searchMatch_FIVE(item['userName'], $scope.query_FIVE))
+                            return true;
+                    }
+                    return false;
+                });
+
+                //take care of the sorting order
+                if ($scope.sortingOrder_FIVE !== '') {
+                    $scope.filteredItems_FIVE = $filter('orderBy')($scope.filteredItems_FIVE, $scope.sortingOrder_FIVE, $scope.reverse_FIVE);
+                }
+
+                $scope.currentPage_FIVE = 0;
+                // now group by pages
+                $scope.groupToPages_FIVE();
+            };
+
+            // show items per page
+            $scope.perPage_FIVE = function () {
+                $scope.groupToPages_FIVE();
+            };
+
+            // calculate page in place
+            $scope.groupToPages_FIVE = function () {
+                $scope.pagedItems_FIVE = [];
+
+                for (var i = 0; i < $scope.filteredItems_FIVE.length; i++) {
+                    if (i % $scope.itemsPerPage_FIVE === 0) {
+                        $scope.pagedItems_FIVE[Math.floor(i / $scope.itemsPerPage_FIVE)] = [$scope.filteredItems_FIVE[i]];
+                    } else {
+                        $scope.pagedItems_FIVE[Math.floor(i / $scope.itemsPerPage_FIVE)].push($scope.filteredItems_FIVE[i]);
+                    }
+                }
+            };
+
+            $scope.prevPage_FIVE = function () {
+                if ($scope.currentPage_FIVE > 0) {
+                    $scope.currentPage_FIVE--;
+                }
+            };
+
+            $scope.nextPage_FIVE = function () {
+                if ($scope.currentPage_FIVE < $scope.pagedItems_FIVE.length - 1) {
+                    $scope.currentPage_FIVE++;
+                }
+            };
+
+            $scope.setPage_FIVE = function () {
+                $scope.currentPage_FIVE = this.n;
+            };
+
+            // functions have been describe process the data for display
+            $scope.search_FIVE();
+
+
+            // change sorting order
+            $scope.sort_by_FIVE = function (newSortingOrder) {
+                if ($scope.sortingOrder_FIVE == newSortingOrder)
+                    $scope.reverse_FIVE = !$scope.reverse_FIVE;
+
+                $scope.sortingOrder_FIVE = newSortingOrder;
+            };
+
+        }
+
         //function to get user
         me.getUser = function () {
             var userID = $routeParams.id;
@@ -436,6 +545,7 @@ UserModule.controller('UserController', [
                 }
             );
         }
+
 
         //function to update profile
         me.uploadProfile = function () {
@@ -630,6 +740,46 @@ UserModule.controller('UserController', [
 
         }
 
+        //function to approve request
+        me.approveRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.approveRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Accepted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Approving Request', 6000);
+                }
+            );
+        }
+
+        //function to Reject request
+        me.rejectRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.rejectRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Rejected Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Rejecting Request', 6000);
+                }
+            );
+        }
+
+        //function to cancel request
+        me.cancelRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.cancelRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Cancelled Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Cancelling Request', 6000);
+                }
+            );
+        }
+
+
     }
 ]);
 
@@ -687,6 +837,13 @@ UserModule.controller('FriendController', [
         //function to fetch friends
         me.fetchFriends = function () {
             var userId = $routeParams.id;
+
+            if (userId != user.id) {
+                me.authorize = 'NO';
+            } else {
+                me.authorize = 'YES';
+            }
+
             FriendFactory.fetchFriends(userId).then(function (friends) {
 
                 var sortingOrder = 'id'; //default sort
@@ -699,7 +856,7 @@ UserModule.controller('FriendController', [
                 $scope.itemsPerPage = 10;
                 $scope.pagedItems = [];
                 $scope.currentPage = 0;
-                $scope.items = friends;
+                $scope.items = friends.data;
 
                 var searchMatch = function (haystack, needle) {
                     if (!needle) {
@@ -713,7 +870,7 @@ UserModule.controller('FriendController', [
                 $scope.search = function () {
                     $scope.filteredItems = $filter('filter')($scope.items, function (item) {
                         for (var attr in item) {
-                            if (searchMatch(item['title'], $scope.query))
+                            if (searchMatch(item['userName'], $scope.query))
                                 return true;
                         }
                         return false;
@@ -775,7 +932,11 @@ UserModule.controller('FriendController', [
                     $scope.sortingOrder = newSortingOrder;
                 };
 
+                me.fetchSentRequest(userId);
+                me.fetchReceivedRequest(userId);
+                me.fetchUsers(userId);
             },
+
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Friends', 6000);
                 }
@@ -784,8 +945,8 @@ UserModule.controller('FriendController', [
         }
 
         //function to fetch send request
-        me.fetchSendRequest = function (initiaterId) {
-            FriendFactory.fetchSendRequest('INITIATER_ID', initiaterId, 'PENDING').then(function (requests) {
+        me.fetchSentRequest = function (initiaterId) {
+            FriendFactory.fetchSentRequest(initiaterId).then(function (requests) {
 
                 var sortingOrder_ONE = 'id'; //default sort
 
@@ -797,7 +958,7 @@ UserModule.controller('FriendController', [
                 $scope.itemsPerPage_ONE = 10;
                 $scope.pagedItems_ONE = [];
                 $scope.currentPage_ONE = 0;
-                $scope.items_ONE = requests;
+                $scope.items_ONE = requests.data;
 
                 var searchMatch_ONE = function (haystack, needle) {
                     if (!needle) {
@@ -810,7 +971,7 @@ UserModule.controller('FriendController', [
                 $scope.search_ONE = function () {
                     $scope.filteredItems_ONE = $filter('filter')($scope.items_ONE, function (item) {
                         for (var attr in item) {
-                            if (searchMatch_ONE(item['title'], $scope.query_ONE))
+                            if (searchMatch_ONE(item['userName'], $scope.query_ONE))
                                 return true;
                         }
                         return false;
@@ -880,8 +1041,8 @@ UserModule.controller('FriendController', [
         }
 
         //function to fetch send request
-        me.fetchRecievedRequest = function (friendId) {
-            FriendFactory.fetchRecievedRequest('FRIEND_ID', friendId, 'PENDING').then(function (requests) {
+        me.fetchReceivedRequest = function (friendId) {
+            FriendFactory.fetchReceivedRequest(friendId).then(function (requests) {
 
                 var sortingOrder_TWO = 'id'; //default sort
 
@@ -893,7 +1054,7 @@ UserModule.controller('FriendController', [
                 $scope.itemsPerPage_TWO = 10;
                 $scope.pagedItems_TWO = [];
                 $scope.currentPage_TWO = 0;
-                $scope.items_TWO = requests;
+                $scope.items_TWO = requests.data;
 
                 var searchMatch_TWO = function (haystack, needle) {
                     if (!needle) {
@@ -906,7 +1067,7 @@ UserModule.controller('FriendController', [
                 $scope.search_TWO = function () {
                     $scope.filteredItems_TWO = $filter('filter')($scope.items_TWO, function (item) {
                         for (var attr in item) {
-                            if (searchMatch_TWO(item['title'], $scope.query_TWO))
+                            if (searchMatch_TWO(item['userName'], $scope.query_TWO))
                                 return true;
                         }
                         return false;
@@ -970,6 +1131,139 @@ UserModule.controller('FriendController', [
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Request', 6000);
+                }
+            );
+        }
+
+        //function to approve request
+        me.approveRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.approveRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Accepted Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Approving Request', 6000);
+                }
+            );
+        }
+
+        //function to Reject request
+        me.rejectRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.rejectRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Rejected Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Rejecting Request', 6000);
+                }
+            );
+        }
+
+        //function to cancel request
+        me.cancelRequest = function (initiaterId) {
+            var friendId = user.id;
+            FriendFactory.cancelRequest(initiaterId, friendId).then(function () {
+                $route.reload();
+                Materialize.toast('Friend Request Cancelled Successfully!', 6000);
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Cancelling Request', 6000);
+                }
+            );
+        }
+
+        //function to fetch users
+        me.fetchUsers = function (id) {
+            FriendFactory.fetchUsers(id).then(function (users) {
+                var sortingOrder_THREE = 'id'; //default sort
+
+                $scope.sortingOrder_THREE = sortingOrder_THREE;
+                $scope.pageSizes_THREE = [5, 10, 25, 50];
+                $scope.reverse_THREE = true;
+                $scope.filteredItems_THREE = [];
+                $scope.groupedItems_THREE = [];
+                $scope.itemsPerPage_THREE = 10;
+                $scope.pagedItems_THREE = [];
+                $scope.currentPage_THREE = 0;
+                $scope.items_THREE = users.data;
+
+                var searchMatch_THREE = function (haystack, needle) {
+                    if (!needle) {
+                        return true;
+                    }
+                    return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+                };
+
+                // init the filtered items
+                $scope.search_THREE = function () {
+                    $scope.filteredItems_THREE = $filter('filter')($scope.items_THREE, function (item) {
+                        for (var attr in item) {
+                            if (searchMatch_THREE(item['userName'], $scope.query_THREE))
+                                return true;
+                        }
+                        return false;
+                    });
+
+                    //take care of the sorting order
+                    if ($scope.sortingOrder_THREE !== '') {
+                        $scope.filteredItems_THREE = $filter('orderBy')($scope.filteredItems_THREE, $scope.sortingOrder_THREE, $scope.reverse_THREE);
+                    }
+
+                    $scope.currentPage_THREE = 0;
+                    // now group by pages
+                    $scope.groupToPages_THREE();
+                };
+
+                // show items per page
+                $scope.perPage_THREE = function () {
+                    $scope.groupToPages_THREE();
+                };
+
+                // calculate page in place
+                $scope.groupToPages_THREE = function () {
+                    $scope.pagedItems_THREE = [];
+
+                    for (var i = 0; i < $scope.filteredItems_THREE.length; i++) {
+                        if (i % $scope.itemsPerPage_THREE === 0) {
+                            $scope.pagedItems_THREE[Math.floor(i / $scope.itemsPerPage_THREE)] = [$scope.filteredItems_THREE[i]];
+                        } else {
+                            $scope.pagedItems_THREE[Math.floor(i / $scope.itemsPerPage_THREE)].push($scope.filteredItems_THREE[i]);
+                        }
+                    }
+                };
+
+                $scope.prevPage_THREE = function () {
+                    if ($scope.currentPage_THREE > 0) {
+                        $scope.currentPage_THREE--;
+                    }
+                };
+
+                $scope.nextPage_THREE = function () {
+                    if ($scope.currentPage_THREE < $scope.pagedItems_THREE.length - 1) {
+                        $scope.currentPage_THREE++;
+                    }
+                };
+
+                $scope.setPage_THREE = function () {
+                    $scope.currentPage_THREE = this.n;
+                };
+
+                // functions have been describe process the data for display
+                $scope.search_THREE();
+
+
+                // change sorting order
+                $scope.sort_by_THREE = function (newSortingOrder) {
+                    if ($scope.sortingOrder_THREE == newSortingOrder)
+                        $scope.reverse_THREE = !$scope.reverse_THREE;
+
+                    $scope.sortingOrder_THREE = newSortingOrder;
+                };
+            },
+                function (errorResponse) {
+                    Materialize.toast('Error Approving Request', 6000);
                 }
             );
         }

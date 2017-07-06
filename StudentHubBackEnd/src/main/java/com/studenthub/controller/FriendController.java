@@ -81,7 +81,7 @@ public class FriendController {
 	}
 
 	// <!----------------Fetch Received Requests---------------------!>
-	@RequestMapping(value = "/user/sent/receive/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/request/receive/{id}", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> fetchReceiveRequest(@PathVariable("id") int id) {
 		List<Friend> friends = friendDAO.listReceivedRequest(id);
 		List<User> requests = new ArrayList<>();
@@ -92,4 +92,147 @@ public class FriendController {
 		return new ResponseEntity<List<User>>(requests, HttpStatus.OK);
 	}
 
+	// <!---------------------Approve Friend Request-------------------!>
+	@RequestMapping(value = "/user/approve/{initiaterId}/{friendId}", method = RequestMethod.GET)
+	public ResponseEntity<Friend> approveRequest(@PathVariable("initiaterId") int initiaterId,
+			@PathVariable("friendId") int friendId) {
+		friend = friendDAO.getFriend(initiaterId, friendId);
+		if (friend != null) {
+			friend.setStatus("APPROVED");
+			boolean flag = friendDAO.updateFriend(friend);
+			if (flag != false) {
+
+				User initiaterUser = userDAO.get(initiaterId);
+				int initiaterFrnds = initiaterUser.getNoOfFriends() + 1;
+				initiaterUser.setNoOfFriends(initiaterFrnds);
+				userDAO.update(initiaterUser);
+
+				User friendUser = userDAO.get(friendId);
+				int friendFrnds = friendUser.getNoOfFriends() + 1;
+				friendUser.setNoOfFriends(friendFrnds);
+				userDAO.update(friendUser);
+
+				return new ResponseEntity<Friend>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(HttpStatus.NOT_IMPLEMENTED);
+			}
+		} else {
+			return new ResponseEntity<Friend>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!---------------------Reject Request---------------------------!>
+	@RequestMapping(value = "/user/reject/{initiaterId}/{friendId}", method = RequestMethod.GET)
+	public ResponseEntity<Friend> rejectRequest(@PathVariable("initiaterId") int initiaterId,
+			@PathVariable("friendId") int friendId) {
+		// get friend
+		friend = friendDAO.getFriend(initiaterId, friendId);
+		// if not found then perform the this
+		if (friend == null) {
+			int temp = initiaterId;
+			initiaterId = friendId;
+			friendId = temp;
+			friend = friendDAO.getFriend(initiaterId, friendId);
+			if (friend != null) {
+				friendDAO.deleteFriend(friend);
+				User initiaterUser = userDAO.get(initiaterId);
+				int initiaterFrnds = initiaterUser.getNoOfFriends() - 1;
+				initiaterUser.setNoOfFriends(initiaterFrnds);
+				userDAO.update(initiaterUser);
+
+				User friendUser = userDAO.get(friendId);
+				int friendFrnds = friendUser.getNoOfFriends() - 1;
+				friendUser.setNoOfFriends(friendFrnds);
+				userDAO.update(initiaterUser);
+				return new ResponseEntity<Friend>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(HttpStatus.NO_CONTENT);
+			}
+		} else {
+			if (friend != null) {
+
+				friendDAO.deleteFriend(friend);
+				User initiaterUser = userDAO.get(initiaterId);
+				int initiaterFrnds = initiaterUser.getNoOfFriends() - 1;
+				initiaterUser.setNoOfFriends(initiaterFrnds);
+				userDAO.update(initiaterUser);
+
+				User friendUser = userDAO.get(friendId);
+				int friendFrnds = friendUser.getNoOfFriends() - 1;
+				friendUser.setNoOfFriends(friendFrnds);
+				userDAO.update(initiaterUser);
+				return new ResponseEntity<Friend>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(HttpStatus.NOT_IMPLEMENTED);
+			}
+		}
+	}
+
+	// <!-------------------------Cancel Request--------------------!>
+	@RequestMapping(value = "/user/cancel/{initiaterId}/{friendId}", method = RequestMethod.GET)
+	public ResponseEntity<Friend> cancelRequest(@PathVariable("initiaterId") int initiaterId,
+			@PathVariable("friendId") int friendId) {
+
+		friend = friendDAO.getFriend(initiaterId, friendId);
+		if (friend == null) {
+			int temp = initiaterId;
+			initiaterId = friendId;
+			friendId = temp;
+			friend = friendDAO.getFriend(initiaterId, friendId);
+			if (friend != null) {
+				friendDAO.deleteFriend(friend);
+				return new ResponseEntity<Friend>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(HttpStatus.NOT_IMPLEMENTED);
+			}
+		} else {
+			boolean flag = friendDAO.deleteFriend(friend);
+			if (flag != false) {
+				return new ResponseEntity<Friend>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(HttpStatus.NO_CONTENT);
+			}
+		}
+	}
+
+	// <!-----------------fetch Users Other Than Friends---------------------!>
+	@RequestMapping(value = "/user/nofriend/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> fetchUsers(@PathVariable("id") int id) {
+		List<User> users = friendDAO.noFriends(id);
+		List<User> noFrnd = new ArrayList<>();
+		for (User user : users) {
+			if (user.getId() != id) {
+				noFrnd.add(user);
+			}
+		}
+		if (!noFrnd.isEmpty()) {
+			return new ResponseEntity<List<User>>(noFrnd, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
+		}
+	}
+
+	// <!---------------------Check Whether User Is Friend------------------!>
+	@RequestMapping(value = "/user/checkFrnd/{initiaterId}/{friendId}", method = RequestMethod.GET)
+	public ResponseEntity<Friend> checkFriend(@PathVariable("initiaterId") int initiaterId,
+			@PathVariable("friendId") int friendId) {
+		friend = friendDAO.getFriend(initiaterId, friendId);
+		if (friend == null) {
+			int temp = initiaterId;
+			initiaterId = friendId;
+			friendId = temp;
+			friend = friendDAO.getFriend(initiaterId, friendId);
+			if (friend != null) {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			}
+		} else {
+			if (friend != null) {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			}
+		}
+	}
 }

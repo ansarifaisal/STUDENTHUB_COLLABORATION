@@ -2,6 +2,8 @@ package com.studenthub.daoimpl;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,22 @@ public class FriendDAOImpl implements FriendDAO {
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("id", id);
 		return query.list();
+	}
+
+	@Override
+	@Transactional
+	public Friend getFriend(int initiaterId, int friendId) {
+		// putting try catch to handle the exception
+		// since we need to perform some action if the result is null
+		try {
+			String hql = "FROM FRIENDS WHERE INITIATER_ID = :intiaterId AND FRIEND_ID = :friendId";
+			Query query = sessionFactory.getCurrentSession().createQuery(hql);
+			query.setParameter("intiaterId", initiaterId);
+			query.setParameter("friendId", friendId);
+			return (Friend) query.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	@Override

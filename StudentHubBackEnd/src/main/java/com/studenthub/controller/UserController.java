@@ -1,6 +1,7 @@
 package com.studenthub.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.studenthub.dao.BlogDAO;
 import com.studenthub.dao.EducationDetailsDAO;
 import com.studenthub.dao.EventDAO;
 import com.studenthub.dao.ForumDAO;
+import com.studenthub.dao.FriendDAO;
 import com.studenthub.dao.JobDAO;
 import com.studenthub.dao.MoreDetailsDAO;
 import com.studenthub.dao.ReportDAO;
@@ -32,6 +34,7 @@ import com.studenthub.entity.Blog;
 import com.studenthub.entity.EducationDetails;
 import com.studenthub.entity.Event;
 import com.studenthub.entity.Forum;
+import com.studenthub.entity.Friend;
 import com.studenthub.entity.Job;
 import com.studenthub.entity.MoreDetails;
 import com.studenthub.entity.NotificationModel;
@@ -103,6 +106,12 @@ public class UserController {
 
 	@Autowired
 	SocialLinksDAO socialLinksDAO;
+
+	@Autowired
+	Friend friend;
+
+	@Autowired
+	FriendDAO friendDAO;
 
 	@Value("${imageBasePath}")
 	private String imageBasePath;
@@ -377,6 +386,16 @@ public class UserController {
 		List<Job> createdJobs = jobDAO.getCreatedJobs(user.getId());
 		profileModel.setCreatedJobs(createdJobs);
 
+		List<User> myFriends = friendDAO.myFriends(user.getId());
+		List<User> friends = new ArrayList<>();
+
+		for (User friend : myFriends) {
+			if (friend.getId() != user.getId()) {
+				friends.add(friend);
+			}
+		}
+		profileModel.setMyFriends(friends);
+
 		int noOfEvents = createdEvents.size();
 
 		int noOfForums = createdForums.size();
@@ -385,9 +404,11 @@ public class UserController {
 
 		int noOfJobs = createdJobs.size();
 
+		int noOfFriends = friends.size();
+
 		// prevent frequently updating the user table
 		if (user.getNoOfEvents() != noOfEvents || user.getNoOfForums() != noOfForums || user.getNoOfBlogs() != noOfBlogs
-				|| user.getNoOfJobs() != noOfJobs) {
+				|| user.getNoOfJobs() != noOfJobs || user.getNoOfFriends() != noOfFriends) {
 			if (user.getNoOfEvents() != noOfEvents) {
 				user.setNoOfEvents(noOfEvents);
 			}
@@ -402,6 +423,10 @@ public class UserController {
 
 			if (user.getNoOfJobs() != noOfJobs) {
 				user.setNoOfJobs(noOfJobs);
+			}
+
+			if (user.getNoOfFriends() != noOfFriends) {
+				user.setNoOfFriends(noOfFriends);
 			}
 
 			userDAO.update(user);
@@ -450,8 +475,8 @@ public class UserController {
 
 	// <!---------------------Loading Notification Module------------------!>
 
-	@RequestMapping(value = "/notification", method = RequestMethod.GET)
-	public ResponseEntity<NotificationModel> notificationModel() {
+	@RequestMapping(value = "/notification/{id}", method = RequestMethod.GET)
+	public ResponseEntity<NotificationModel> notificationModel(@PathVariable("id") int id) {
 
 		NotificationModel notificationModel = new NotificationModel();
 
@@ -467,6 +492,8 @@ public class UserController {
 
 		int noOfPendingUsers = userDAO.getAllPendingUsers().size();
 
+		int noOfFriendRequest = friendDAO.listReceivedRequest(id).size();
+		
 		// Reported Section
 
 		int noOfForumReported = reportDAO.getByCategory("FORUM").size();
@@ -501,6 +528,8 @@ public class UserController {
 		notificationModel.setNoOfPendingUser(noOfPendingUsers);
 		notificationModel.setNoOfPendingTopics(noOfPendingTopics);
 		notificationModel.setTotalPendingRequest(totalPendingRequest);
+		
+		notificationModel.setNoOfFriendRequest(noOfFriendRequest);
 
 		notificationModel.setNoOfBlogReported(noOfBlogReported);
 		notificationModel.setNoOfEventReported(noOfEventReported);

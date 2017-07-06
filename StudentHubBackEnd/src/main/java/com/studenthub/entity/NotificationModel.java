@@ -46,6 +46,9 @@ public class NotificationModel implements Serializable {
 	private int noOfUserReported;
 
 	private int totalReportedRequest;
+
+	private int noOfFriendRequest;
+
 	/*
 	 * Accessors and Mutators OR Getters and Setters
 	 */
@@ -186,6 +189,14 @@ public class NotificationModel implements Serializable {
 		this.totalReportedRequest = totalReportedRequest;
 	}
 
+	public int getNoOfFriendRequest() {
+		return noOfFriendRequest;
+	}
+
+	public void setNoOfFriendRequest(int noOfFriendRequest) {
+		this.noOfFriendRequest = noOfFriendRequest;
+	}
+
 	/**
 	 * Overriding toString Method For Debugging
 	 */
@@ -200,7 +211,7 @@ public class NotificationModel implements Serializable {
 				+ ", noOfJobReported=" + noOfJobReported + ", noOfBlogReported=" + noOfBlogReported
 				+ ", noOfBlogCommentReported=" + noOfBlogCommentReported + ", noOfTopicReported=" + noOfTopicReported
 				+ ", noOfTopicCommentReported=" + noOfTopicCommentReported + ", noOfUserReported=" + noOfUserReported
-				+ ", totalReportedRequest=" + totalReportedRequest + "]";
+				+ ", totalReportedRequest=" + totalReportedRequest + ", noOfFriendRequest=" + noOfFriendRequest + "]";
 	}
 
 }

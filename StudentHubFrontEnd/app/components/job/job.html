@@ -54,8 +54,8 @@
                         </div>
                         <table class="bordered" style="font-size: 12px; color:grey;">
                             <tr>
-                                <td>By <a href="">{{user.firstName}} {{user.lastName}}</a></td>
-                                <td> <span>On: April 4th, 2017</span></td>
+                                <td>By <a href="#!/user/profile/{{jobCtrl.job.userId}}">{{jobCtrl.job.userName}}</a></td>
+                                <td> <span>On: {{jobCtrl.job.postDate}}</span></td>
                             </tr>
                             <tr>
                                 <td><i class="material-icons" style="font-size: 13px;">business_center</i> {{jobCtrl.job.experience}}
