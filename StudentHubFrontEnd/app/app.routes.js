@@ -1019,6 +1019,20 @@ window.routes = {
         roles: ['Super_Admin', 'ADMIN']
     },
 
+    // <=====================Chat Module=====================>
+    '/user/chat/:userName': {
+        //page path
+        templateUrl: 'app/components/chat/chat.html',
+        //controller that will handle this page
+        controller: 'ChatController',
+        //nick name of the controller so that we dont have to declare the name in the HTML page
+        controllerAs: 'chatCtrl',
+        //declaring own keys - requireLogin (check whether the page requires the user to be logged in)
+        requireLogin: true,
+        //roles is use to define which user can access this page
+        roles: ['Super_Admin', 'ADMIN', 'USER', 'EMPLOYER']
+    },
+
 };
 
 //Load all the routes

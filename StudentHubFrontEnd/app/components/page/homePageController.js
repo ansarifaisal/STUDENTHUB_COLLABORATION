@@ -64,6 +64,8 @@ HomePageModule.controller('HomePageController', [
 
                 me.pushNotification();
 
+                me.fetchOnlineFriends(user.id);
+
                 $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
@@ -365,6 +367,17 @@ HomePageModule.controller('HomePageController', [
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Leaving Event</strong>', 6000);
+                }
+            );
+        }
+
+        //fetch online friends
+        me.fetchOnlineFriends = function (id) {
+            HomePageFactory.fetchOnlineFriends(id).then(function (users) {
+                $rootScope.onlineFriends = users;
+            },
+                function (errorResponse) {
+                    Materialize.toast('', 6000);
                 }
             );
         }

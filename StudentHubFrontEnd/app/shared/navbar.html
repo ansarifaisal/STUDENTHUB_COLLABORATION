@@ -14,12 +14,8 @@
                 <ul class="right hide-on-med-and-down">
 
                     <li>
-                        <a href="javascript:void(0)" class="tooltipped" data-position="bottom" data-href="#" data-delay="50" data-tooltip="Search"><sup><i class="material-icons">search</i></sup></a>
-                    </li>
-
-                    <li>
-                        <a href="javascript:void(0)" class="dropdown-button" data-activates="manage-list" data-position="bottom" data-href="#" data-delay="50"
-                            data-tooltip="Manage"><span class="material-icons">settings</span><sup><span ng-show="rootNotification.totalPendingRequest != 0" class="new badge red">{{rootNotification.totalPendingRequest}}</span></sup></a>
+                        <a href="javascript:void(0)" class="dropdown-button tooltipped" data-activates="manage-list" data-position="bottom" data-href="#"
+                            data-delay="50" data-tooltip="Manage"><span class="material-icons">settings</span><sup><span ng-show="rootNotification.totalPendingRequest != 0" class="new badge red">{{rootNotification.totalPendingRequest}}</span></sup></a>
                         <ul id='manage-list' class='dropdown-content'>
                             <li><a href="#!/admin/manageuser">Users <span ng-show="rootNotification.noOfPendingUser != 0" class="new badge red">{{rootNotification.noOfPendingUser}}</span></a></li>
                             <li><a href="#!/admin/manageblogs">Blogs <span ng-show="rootNotification.noOfPendingBlogs != 0" class="new badge red">{{rootNotification.noOfPendingBlogs}}</span></a></li>
@@ -31,8 +27,8 @@
                     </li>
 
                     <li>
-                        <a href="javascript:void(0)" class="dropdown-button" data-activates="notification-list" data-position="bottom" data-href="#"
-                            data-delay="50" data-tooltip="Notification"><span class="material-icons">notifications</span><sup><span ng-show="rootNotification.totalReportedRequest != 0" class="new badge red">{{rootNotification.totalReportedRequest}}</span></sup></a>
+                        <a href="javascript:void(0)" class="dropdown-button tooltipped" data-activates="notification-list" data-position="bottom"
+                            data-href="#" data-delay="50" data-tooltip="Reports"><span class="material-icons">report</span><sup><span ng-show="rootNotification.totalReportedRequest != 0" class="new badge red">{{rootNotification.totalReportedRequest}}</span></sup></a>
 
                         <ul id='notification-list' class='dropdown-content'>
                             <li><a href="#!/admin/report/users">Users <span ng-show="rootNotification.noOfUserReported != 0" class="new badge red">{{rootNotification.noOfUserReported}}</span> </a></li>
@@ -51,34 +47,13 @@
                     </li>
 
                     <li>
-                        <a href="javascript:void(0)" class="dropdown-button" data-activates="messages-list" data-position="bottom" data-href="#"
-                            data-delay="50" data-tooltip="Message"><span class="material-icons">mail</span><sup><span class="new badge red">4</span></sup></a>
-
-                        <ul id='messages-list' class='dropdown-content'>
-                            <li><a href="#!/user/inbox" style="font-size: 15px;">View All Message</a></li>
-
-                            <ul class="collection" style="margin-top:0px;">
-                                <li class="collection-item avatar">
-                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
-                                </li>
-
-                                <li class="collection-item avatar">
-                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
-                                </li>
-
-                                <li class="collection-item avatar">
-                                    <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                                    <span class="title">Title<br><span style="color:grey; font-size:13px;"> First kdjf </span></span>
-                                </li>
-                            </ul>
-                        </ul>
-
+                        <a href="#!/user/friends/{{user.id}}" class="tooltipped" data-delay="50" data-tooltip="Friends"><span class="material-icons">people</span> <sup><span ng-show="rootNotification.noOfFriendRequest != 0" class="new badge red">{{rootNotification.noOfFriendRequest}}</span></sup></a>
                     </li>
 
                     <li>
-                        <a href="javascript:void(0)" class="dropdown-button" data-activates="account" data-href="#"><span style="font-size:30px;" class="material-icons">account_circle</span></a>
+                        <!--<a href="javascript:void(0)" class="dropdown-button" data-activates="account" data-href="#"><span style="font-size:30px;" class="material-icons">account_circle</span> {{user.userName}} </a>-->
+
+                        <a href="javascript:void(0)" class="dropdown-button" data-activates="account" data-href="#">{{user.userName}}</a>
 
                         <ul id='account' class='dropdown-content'>
                             <li><a href="#!/user/profile/{{user.id}}">Profile</a></li>
@@ -88,13 +63,9 @@
 
                     </li>
 
-                    <!--<li>
-                        <a data-href="#" href="javascript:void(0)" class="tooltipped right-bar" data-position="bottom" data-delay="50" data-tooltip="Messages"
-                            data-activates="right-slide-out"><span class="material-icons">people</span></a>
-                    </li>-->
-
                     <li>
-                        <a href="#!/user/friends/{{user.id}}"><span class="material-icons">people</span> <sup><span ng-show="rootNotification.noOfFriendRequest != 0" class="new badge red">{{rootNotification.noOfFriendRequest}}</span></sup></a>
+                        <a data-href="#" href="javascript:void(0)" class="tooltipped right-bar" data-position="bottom" data-delay="50" data-tooltip="Online Friends"
+                            data-activates="right-slide-out"><span class="material-icons">public</span></a>
                     </li>
 
 
@@ -135,24 +106,11 @@
 
 
     <ul id="right-slide-out" class="side-nav">
-        <li>&nbsp;&nbsp;&nbsp;Online (10)</li>
+        <li>&nbsp;&nbsp;&nbsp;Online ({{onlineFriends.length}})</li>
         <ul class="collection" style="margin-top:0px;">
-            <li class="collection-item avatar">
-                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                <span class="title">Title</span>
-                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
-            </li>
-
-            <li class="collection-item avatar">
-                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                <span class="title">Title</span>
-                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
-            </li>
-
-            <li class="collection-item avatar">
-                <img src="http://materializecss.com/images/yuna.jpg" alt="" class="circle">
-                <span class="title">Title</span>
-                <p>First Line <a href="#!" class="secondary-content"><i class="material-icons">send</i></a></p>
+            <li class="collection-item avatar" ng-repeat="friend in onlineFriends">
+                <a href="#!/user/chat/{{friend.userName}}"><img src="../assets/images/users/{{friend.profilePicture}}" alt="" class="circle">
+                <span class="title">{{friend.userName}}</span></a>
             </li>
         </ul>
 

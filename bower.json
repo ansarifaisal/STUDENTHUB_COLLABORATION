@@ -13,5 +13,10 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "sockjs": "^0.3.4",
+    "ng-stomp": "^0.4.0"
+  }
 }

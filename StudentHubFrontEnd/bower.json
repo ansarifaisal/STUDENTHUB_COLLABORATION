@@ -3,7 +3,7 @@
   "description": "",
   "main": "",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/ansarifaisal/STUDENTHUB_COLLABORATION",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -19,5 +19,8 @@
     "tooltip": "*",
     "bootstrap": "^3.3.7",
     "materialize": "^0.98.0"
-  }
+  },
+  "authors": [
+    "ansarifaisal <ansarifaisal480@gmail.com>"
+  ]
 }

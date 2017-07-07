@@ -12,6 +12,7 @@ import com.studenthub.config.CORSFilter;
 import com.studenthub.config.EmailConfig;
 import com.studenthub.config.HibernateConfigure;
 import com.studenthub.config.MvcConfig;
+import com.studenthub.config.WebSocketConfig;
 
 public class MVCWebApplicationIntializer extends AbstractAnnotationConfigDispatcherServletInitializer{
 	
@@ -19,7 +20,7 @@ public class MVCWebApplicationIntializer extends AbstractAnnotationConfigDispatc
 	
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] {HibernateConfigure.class, MvcConfig.class, EmailConfig.class};
+		return new Class[] {HibernateConfigure.class, MvcConfig.class, EmailConfig.class, WebSocketConfig.class};
 	}
 
 	@Override

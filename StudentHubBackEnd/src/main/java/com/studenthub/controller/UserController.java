@@ -184,7 +184,7 @@ public class UserController {
 				return new ResponseEntity<User>(user, HttpStatus.NO_CONTENT);
 			} else {
 				user = userDAO.getByUserName(user.getUserName());
-				user.setIsOnline("true");
+				user.setIsOnline("TRUE");
 				user.setCode(200);
 				user.setMessage("Login Successful!");
 				userDAO.update(user);
@@ -493,7 +493,7 @@ public class UserController {
 		int noOfPendingUsers = userDAO.getAllPendingUsers().size();
 
 		int noOfFriendRequest = friendDAO.listReceivedRequest(id).size();
-		
+
 		// Reported Section
 
 		int noOfForumReported = reportDAO.getByCategory("FORUM").size();
@@ -528,7 +528,7 @@ public class UserController {
 		notificationModel.setNoOfPendingUser(noOfPendingUsers);
 		notificationModel.setNoOfPendingTopics(noOfPendingTopics);
 		notificationModel.setTotalPendingRequest(totalPendingRequest);
-		
+
 		notificationModel.setNoOfFriendRequest(noOfFriendRequest);
 
 		notificationModel.setNoOfBlogReported(noOfBlogReported);

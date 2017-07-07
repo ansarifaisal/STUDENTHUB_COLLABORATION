@@ -68,6 +68,28 @@ public class FriendController {
 		return new ResponseEntity<List<User>>(friends, HttpStatus.OK);
 	}
 
+	// <!-----------------------Get Online Friends------------------!>
+
+	@RequestMapping(value = "/user/friends/online/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> fetchOnlineFriends(@PathVariable("id") int id) {
+		// all user fetched along with user id
+		List<User> users = friendDAO.myFriends(id);
+		// creating new list to send only friends id
+		List<User> friends = new ArrayList<>();
+		// traversing the list
+		for (User user : users) {
+			// prevent adding requested user
+			if (user.getId() != id) {
+				if (user.getIsOnline().equals("TRUE")) {
+					// adding friends into the list
+					friends.add(user);
+				}
+			}
+		}
+		// sending friends to the front end
+		return new ResponseEntity<List<User>>(friends, HttpStatus.OK);
+	}
+
 	// <!-------------------Fetch Sent Requests--------------------!>
 	@RequestMapping(value = "/user/sent/request/{id}", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> fetchSendRequest(@PathVariable("id") int id) {
@@ -235,4 +257,33 @@ public class FriendController {
 			}
 		}
 	}
+
+	// <!---------------------Check Whether User Is Friend------------------!>
+	@RequestMapping(value = "/user/checkFrndByUser/{initiaterUserName}/{friendUserName}", method = RequestMethod.GET)
+	public ResponseEntity<Friend> checkFriendByUserName(@PathVariable("initiaterUserName") String initiaterUserName,
+			@PathVariable("friendUserName") String friendUserName) {
+		User initiater = userDAO.getByUserName(initiaterUserName);
+		User tempFriend= userDAO.getByUserName(friendUserName);
+		int initiaterId = initiater.getId();
+		int friendId = tempFriend.getId();
+		friend = friendDAO.getFriend(initiaterId, friendId);
+		if (friend == null) {
+			int temp = initiaterId;
+			initiaterId = friendId;
+			friendId = temp;
+			friend = friendDAO.getFriend(initiaterId, friendId);
+			if (friend != null) {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			}
+		} else {
+			if (friend != null) {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Friend>(friend, HttpStatus.OK);
+			}
+		}
+	}
+
 }

@@ -11,6 +11,8 @@ var myApp = angular.module('myApp', [
     'JobModule',
     'AdminModule',
     'ReportModule',
+    'ChatModule',
     'JobAcceptModule'
+
 
 ]);

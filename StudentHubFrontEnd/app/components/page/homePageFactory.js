@@ -7,7 +7,8 @@ HomePageModule.factory('HomePageFactory', ['$http', '$q', '$timeout', function (
 
     var homePageFactory = {
         fetchContent: fetchContent,
-        notification: notification
+        notification: notification,
+        fetchOnlineFriends: fetchOnlineFriends
     }
 
     return homePageFactory;
@@ -40,6 +41,20 @@ HomePageModule.factory('HomePageFactory', ['$http', '$q', '$timeout', function (
         return deferred.promise;
     }
 
+
+    function fetchOnlineFriends(id) {
+        var deferred = $q.defer();
+
+        $http.get(REST_API_URI + 'user/friends/online/' + id).then(function (response) {
+            deferred.resolve(response.data);
+        },
+            function (errorResponse) {
+                console.log("Error Fetching Online Friends");
+                deferred.reject(errorResponse);
+            }
+        );
+        return deferred.promise;
+    }
 
 
 }]);

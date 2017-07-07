@@ -264,7 +264,7 @@ UserModule.factory('UserFactory', ['$http', '$q', function ($http, $q) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
-                console.log('Error Deleting Social Link');
+                console.log('Error Checking Friend');
                 deferred.reject(errorResponse);
             }
         );
