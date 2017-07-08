@@ -34,7 +34,7 @@
         </div>
 
 
-
+        <!--Blogs Section Starts Here-->
         <div class="row">
             <div class="card">
                 <div class="card-image">
@@ -144,7 +144,7 @@
                             <div class="card-panel nomargin">
                                 <div class="row nopadding nomargin" ng-hide="blogComment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
                                     <div class=" col m0">
-                                        <img src="../assets/images/users/{{blogCtrl.blog.imageUrl}}" width="25" height="25">
+                                        <img src="../assets/images/users/{{blogComment.imageURL}}" width="25" height="25">
                                     </div>
                                     <a href="#!/user/profile/{{blogComment.userId}}">{{blogComment.userName}}</a> <span ng-show="blogComment.report =='NO'">{{blogComment.blogComment}}</span>
                                     <span ng-show="blogComment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{blogComment.blogComment}}</span>
@@ -154,9 +154,9 @@
                                     <span class="right">
                                             
                                 <!-- Dropdown Trigger -->
-                                <a class='dropdown-button' href="#" data-activates='{{blogComment.id}}_OP' ng-hide="blogComment.report == 'YES'"><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' href="#" data-activates='OP_{{blogComment.id}}' ng-hide="blogComment.report == 'YES'"><i class="material-icons">more_vert</i></a>
                                 <!-- Dropdown Structure -->
-                                <ul id='{{blogComment.id}}_OP' class='dropdown-content'>
+                                <ul id='OP_{{blogComment.id}}' class='dropdown-content'>
                                     <li><a href = "#!/user/blog/comment/report/{{blogComment.id}}">Report</a></li>
                                     <span ng-if="blogComment.userId == user.id">
                                     <li class="divider"></li>

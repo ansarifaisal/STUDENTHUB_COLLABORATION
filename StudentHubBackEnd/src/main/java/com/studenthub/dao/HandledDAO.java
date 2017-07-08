@@ -3,7 +3,6 @@ package com.studenthub.dao;
 import java.util.List;
 
 import com.studenthub.entity.Handled;
-import com.studenthub.entity.Report;
 
 public interface HandledDAO {
 

@@ -1,4 +1,4 @@
-<div class="row" ng-init="forumCtrl.getForum()">
+<div class="row" ng-init="forumCtrl.getForum()" ng-cloak>
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -11,10 +11,28 @@
                 </div>
             </nav>
         </div>
+
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col m12">
             <div class="card">
                 <div class="card-image">
-                    <img src="../assets/images/forums/{{forum.imageURL}}" height="300px;">
+                    <img src="../assets/images/forums/{{forumCtrl.forum.imageURL}}" height="300px;">
 
                     <span class="card-title"><strong>{{forumCtrl.forum.forumName}}</strong></span>
                     <div ng-hide="forumCtrl.forum.status == 'PENDING'">
@@ -65,7 +83,7 @@
                                     <div ng-hide="!forumCtrl.twelveMembers['admins']">
                                         <div ng-repeat="admin in forumCtrl.twelveMembers['admins']">
                                             <div class=" col m2">
-                                                <img src="../assets/images/users/{{user.profilePicture}}" width="50" height="50">
+                                                <img src="../assets/images/users/{{admin.profilePicture}}" width="50" height="50">
                                                 <div class="truncate"><a href="#!/user/profile/{{admin.userId}}"> {{admin.userName}} </a></div>
                                             </div>
                                         </div>
@@ -188,7 +206,7 @@
                     <div class="card-panel">
                         <div class="row nopadding nomargin" ng-hide="comment.report == 'YES' && user.role == 'USER' || user.role == 'EMPLOYER' ">
                             <div class=" col m0">
-                                <img src="../assets/images/users/{{comment.profilePicture}}" width="25" height="25">
+                                <img src="../assets/images/users/{{comment.imageURL}}" width="25" height="25">
                             </div>
                             <a href="">{{comment.userName}}</a> <span ng-show="comment.report =='NO'">{{comment.comment}}</span>
                             <span ng-show="comment.report =='YES' && user.role !='USER' && user.role !='EMPLOYER'" class="red-text">{{comment.comment}}</span>

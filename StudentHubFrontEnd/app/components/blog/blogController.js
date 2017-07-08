@@ -50,6 +50,7 @@ BlogModule.controller('BlogController', [
             userName: '',
             blogComment: '',
             commentDate: '',
+            imageURL: '',
             report: ''
         };
 
@@ -298,7 +299,7 @@ BlogModule.controller('BlogController', [
             $scope.$emit('LOAD');
             BlogFactory.getComments(blogId).then(function (blogComments) {
 
-                var sortingOrder = 'blogId'; //default sort
+                var sortingOrder = 'id'; //default sort
 
                 $scope.sortingOrder = sortingOrder;
                 $scope.pageSizes = [5, 10, 25, 50];
@@ -407,9 +408,8 @@ BlogModule.controller('BlogController', [
                 me.createBlog.status = "PENDING";
             }
             me.createBlog.report = "NO";
-
             if (!me.createBlog.imageUrl) {
-                me.createBlog.imageUrl = "noPic.jgp";
+                me.createBlog.imageUrl = "NoCover.png";
             }
             $scope.$emit('LOAD');
 
@@ -428,7 +428,7 @@ BlogModule.controller('BlogController', [
         me.editBlog = function () {
             $scope.$emit('LOAD');
 
-            BlogFactory.createEditBlog(me.blog).then(function () {
+            BlogFactory.createEditBlog(me.blog, me.tempPicture).then(function () {
                 $location.path("/user/blog/view/" + me.blog.blogId);
                 $scope.$emit('UNLOAD');
 
@@ -447,6 +447,7 @@ BlogModule.controller('BlogController', [
             me.createBlogComment.blog = me.blog;
             me.createBlogComment.userId = user.id;
             me.createBlogComment.userName = user.userName;
+            me.createBlogComment.imageURL = user.profilePicture;
             var now = new Date();
             me.createBlogComment.commentDate = dateTimeFormat(now);
             me.createBlogComment.report = 'NO';
@@ -508,7 +509,7 @@ BlogModule.controller('BlogController', [
             me.reportBlog.title = me.blog.title;
             $scope.$emit('LOAD');
             BlogFactory.blogReport(me.reportBlog).then(function () {
-                $route.reload();
+                $location.path('/user/blog/view/' + me.reportBlog.reportId);
                 $scope.$emit('UNLOAD');
 
                 Materialize.toast('<strong>Blog Reported Sucessfully!</strong>', 6000);

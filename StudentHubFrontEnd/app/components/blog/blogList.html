@@ -41,6 +41,8 @@
             </div>
         </div>
 
+
+        <!--Blogs Section Starts Here-->
         <div id="blogs">
 
             <div class="card-panel row" style="padding:10px;">
@@ -52,7 +54,6 @@
                     <span class="right"><a href = "#!/user/blog/createBlog" class="btn light-blue waves-effect waves-light">+ Create Blogs</a></span>
                 </div>
             </div>
-
             <div class="card-panel">
                 <div class="row nomargin">
                     <div class="col m8">
@@ -160,7 +161,9 @@
                 </div>
             </div>
         </div>
+        <!--Blogs Section Ends Here-->
 
+        <!--My Blogs Section Starts Here-->
         <div id="myBlogs">
 
             <div class="card-panel row" style="padding:10px;">
@@ -211,7 +214,7 @@
                     <div ng-show="myBlog.userId == user.id">
                         <div class="card horizontal">
                             <div class="card-image">
-                                <img src="../assets/images/blogs/{{blog.imageUrl}}" style="width: 320px; height: 228px;">
+                                <img src="../assets/images/blogs/{{myBlog.imageUrl}}" style="width: 320px; height: 228px;">
                             </div>
                             <div class="card-stacked">
                                 <div class="card-content">
@@ -278,5 +281,6 @@
                 </div>
             </div>
         </div>
+        <!--My Blogs Section Ends Here-->
     </div>
 </div>

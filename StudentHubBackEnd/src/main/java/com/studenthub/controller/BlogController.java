@@ -95,10 +95,10 @@ public class BlogController {
 	// <---------------------Create Edit Blog--------------------------->
 	@RequestMapping(value = "/blog/createEditBlog", method = RequestMethod.POST, consumes = { "multipart/form-data" })
 	public ResponseEntity<Void> createEditBlog(@RequestPart("blog") Blog blog,
-			@RequestPart("file") MultipartFile file) {
+			@RequestPart(value = "file", required = false) MultipartFile file) {
 		if (blog.getBlogId() == 0) {
-			boolean flag = blogDAO.addBlog(blog);
-			if (flag != false) {
+			blogDAO.addBlog(blog);
+			if (file != null) {
 				String fileName = "BLOG_" + blog.getBlogId() + ".png";
 				if (uploadFile(imageBasePath, fileName, file)) {
 					blog.setImageUrl(fileName);
@@ -107,12 +107,13 @@ public class BlogController {
 			}
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {
-
-			String fileName = "BLOG_" + blog.getBlogId() + ".png";
-			if (uploadFile(imageBasePath, fileName, file)) {
-				blog.setImageUrl(fileName);
-				blogDAO.updateBlog(blog);
+			if (file != null) {
+				String fileName = "BLOG_" + blog.getBlogId() + ".png";
+				if (uploadFile(imageBasePath, fileName, file)) {
+					blog.setImageUrl(fileName);
+				}
 			}
+			blogDAO.updateBlog(blog);
 
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}

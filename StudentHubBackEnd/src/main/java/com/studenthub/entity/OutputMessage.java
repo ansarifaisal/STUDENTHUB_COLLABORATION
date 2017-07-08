@@ -13,8 +13,15 @@ public class OutputMessage extends Message {
 	/**
 	 * Creating Constructor
 	 */
-	public OutputMessage(Message original, Date time) {
-		super(original.getMessage(), original.getId());
+	
+
+	public OutputMessage() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public OutputMessage(String message, int id, String senderUserName, String receiverUserName, Date time) {
+		super(message, id, senderUserName, receiverUserName);
 		this.time = time;
 	}
 

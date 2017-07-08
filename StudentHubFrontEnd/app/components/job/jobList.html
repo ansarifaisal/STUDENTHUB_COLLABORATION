@@ -1,4 +1,4 @@
-<div class="row" ng-init="jobCtrl.fetchAllJobs()">
+<div class="row" ng-init="jobCtrl.fetchAllJobs()" ng-cloak>
     <div class="col m10 offset-l1 l10 s12">
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
@@ -12,6 +12,22 @@
                     </div>
                 </div>
             </nav>
+        </div>
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card-panel nopadding">
@@ -54,7 +70,7 @@
                     </div>
                 </div>
                 <div ng-show="!pagedItems[currentPage]">
-                    <h4 class="center red-text">No Jobs Or No Search Match Available</h4>
+                    <h5 class="center red-text"><strong>No Jobs Or No Search Match Available</strong></h5>
                 </div>
                 <div ng-hide="!pagedItems[currentPage]">
                     <div class="center">
@@ -183,7 +199,7 @@
                 </div>
             </div>
             <div ng-show="!pagedItems_ONE[currentPage_ONE]">
-                <h4 class="center red-text">You Have Not Applied For Any Job(s) Yet Or No Search Match Available</h4>
+                <h5 class="center red-text"><strong>You Have Not Applied For Any Job(s) Yet Or No Search Match Available</strong></h5>
             </div>
             <div ng-hide="!pagedItems_ONE[currentPage_ONE]">
                 <div class="center">
@@ -211,10 +227,10 @@
 
                                 <div class="row nomargin">
                                     <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='myJobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
+                          <a class='dropdown-button' href='#' data-activates='testOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
-                            <ul id='myJobOption_{{job.id}}' class='dropdown-content'>
+                            <ul id='testOption_{{job.id}}' class='dropdown-content'>
                                             <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
                                             <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
                                             <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
@@ -311,7 +327,7 @@
             </div>
         </div>
         <div ng-show="!pagedItems_TWO[currentPage_TWO]">
-            <h4 class="center red-text">You Haven't Created Any Job(s) Yet Or No Search Match Available</h4>
+            <h5 class="center red-text"><strong>You Haven't Created Any Job(s) Yet Or No Search Match Available</strong></h5>
         </div>
         <div ng-hide="!pagedItems_TWO[currentPage_TWO]">
             <div class="center">
@@ -329,7 +345,7 @@
             </div>
         </div>
         <div class="row nomargin" ng-repeat="job in pagedItems_TWO[currentPage_TWO] | orderBy:sortingOrder_TWO:reverse_TWO">
-            <div ng-hide="job.status != 'APPROVED' || job.report != 'NO'">
+            <div>
                 <div class="card horizontal">
                     <!--<div class="card-image">
                         <img src="http://lorempixel.com/580/250/nature/1/" style="width: 320px; height: 228px;">
@@ -339,10 +355,10 @@
 
                             <div class="row nomargin">
                                 <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='myJobOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
+                                  <a class='dropdown-button' href='#' data-activates='testingOption_{{job.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
-                            <ul id='myJobOption_{{job.id}}' class='dropdown-content'>
+                            <ul id='testingOption_{{job.id}}' class='dropdown-content'>
                                             <div ng-hide="job.report == 'YES' || job.status != 'APPROVED'">
                                             <li><a href="#!/user/job/report/{{job.id}}">Report</a></li>
                                             <span ng-show="job.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">

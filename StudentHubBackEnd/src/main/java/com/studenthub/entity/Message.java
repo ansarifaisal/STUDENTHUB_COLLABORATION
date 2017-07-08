@@ -10,6 +10,10 @@ public class Message {
 
 	private int id;
 
+	private String senderUserName;
+
+	private String receiverUserName;
+
 	/**
 	 * Creating Constructor
 	 */
@@ -17,11 +21,15 @@ public class Message {
 
 	}
 
-	public Message(String message, int id) {
+	public Message(String message, int id, String senderUserName, String receiverUserName) {
 		super();
 		this.message = message;
 		this.id = id;
+		this.senderUserName = senderUserName;
+		this.receiverUserName = receiverUserName;
 	}
+
+
 
 	/**
 	 * Accessors and Mutators
@@ -43,13 +51,30 @@ public class Message {
 		this.id = id;
 	}
 
+	public String getSenderUserName() {
+		return senderUserName;
+	}
+
+	public void setSenderUserName(String senderUserName) {
+		this.senderUserName = senderUserName;
+	}
+
+	public String getReceiverUserName() {
+		return receiverUserName;
+	}
+
+	public void setReceiverUserName(String receiverUserName) {
+		this.receiverUserName = receiverUserName;
+	}
+
 	/**
 	 * Overriding toString Method For Debugging
 	 */
 
 	@Override
 	public String toString() {
-		return "Message [message=" + message + ", id=" + id + "]";
+		return "Message [message=" + message + ", id=" + id + ", senderuserName=" + senderUserName
+				+ ", ReceiverUserName=" + receiverUserName + "]";
 	}
 
 }

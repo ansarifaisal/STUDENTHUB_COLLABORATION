@@ -64,7 +64,7 @@ EventModule.controller('EventController', [
         }, 100);
 
         me.fetchAllEvents = function () {
-
+            $scope.$emit('LOAD');
             EventFactory.fetchAllEvents().then(function (events) {
                 var sortingOrder = 'id'; //default sort
 
@@ -154,6 +154,7 @@ EventModule.controller('EventController', [
 
                 me.fetchJointEvents(events);
                 me.createdEvents(events);
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Events', 6000);
@@ -167,7 +168,7 @@ EventModule.controller('EventController', [
 
             me.createEvent.userId = user.id;
             me.createEvent.userName = user.userName;
-            me.createEvent.imageURL = 'noPic.jpg'
+
             var now = new Date();
             me.createEvent.postDate = dateTimeFormat(now);
             me.createEvent.noOfApplied = 0;
@@ -179,8 +180,16 @@ EventModule.controller('EventController', [
                 me.createEvent.status = 'PENDING';
             }
 
-            EventFactory.createEvent(me.createEvent).then(function () {
+            if (!me.createEvent.imageURL) {
+                me.createEvent.imageURL = 'NoCover.png';
+            }
+
+
+            $scope.$emit('LOAD');
+
+            EventFactory.createEvent(me.createEvent, me.tempPicture).then(function () {
                 $location.path('/user/events');
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Created Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -191,6 +200,7 @@ EventModule.controller('EventController', [
         }
 
         me.eventJoin = function (id) {
+            $scope.$emit('LOAD');
             EventFactory.getEvent(id).then(function (event) {
                 me.joinEvent.event = event;
                 me.joinEvent.userId = user.id;
@@ -198,15 +208,11 @@ EventModule.controller('EventController', [
                 me.joinEvent.status = "APPLIED";
                 EventFactory.applyEvent(me.joinEvent).then(function () {
                     $route.reload();
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('Event Joined Successfully!', 6000);
                 },
                     function (errorResponse) {
-                        console.log(errorResponse);
-                        if (errorResponse.status == 302) {
-                            Materialize.toast('You Already Applied For This Event', 6000);
-                        } else {
-                            Materialize.toast('Error Joining Event', 6000);
-                        }
+                        Materialize.toast('Error Joining Event', 6000);
                     }
                 );
             },
@@ -218,8 +224,10 @@ EventModule.controller('EventController', [
         }
 
         me.getEvent = function () {
+            $scope.$emit('LOAD');
             var eventId = $routeParams.id;
             EventFactory.getEvent(eventId).then(function (event) {
+                $scope.$emit('UNLOAD');
                 me.event = event;
             },
                 function (errorResponse) {
@@ -229,8 +237,10 @@ EventModule.controller('EventController', [
         }
 
         me.editEvent = function () {
-            EventFactory.editEvent(me.event).then(function () {
+            $scope.$emit('LOAD');
+            EventFactory.editEvent(me.event, me.tempPicture).then(function () {
                 $location.path('/user/event/view/' + me.event.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Edited Sucessfully!', 6000);
             },
                 function (errorResponse) {
@@ -240,8 +250,10 @@ EventModule.controller('EventController', [
         }
 
         me.leaveEvent = function (id) {
+            $scope.$emit('LOAD');
             EventFactory.leaveEvent(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Left Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -252,7 +264,7 @@ EventModule.controller('EventController', [
 
         //function event report
         me.eventReport = function () {
-
+            $scope.$emit('LOAD');
             me.reportEvent.typeOfReport = 'EVENT';
             me.reportEvent.userName = user.userName;
             me.reportEvent.userId = user.id;
@@ -261,10 +273,10 @@ EventModule.controller('EventController', [
             me.reportEvent.reportId = me.event.id;
             me.reportEvent.title = me.event.eventTitle;
 
-            console.log(me.reportEvent);
 
             EventFactory.reportEvent(me.reportEvent).then(function () {
                 $location.path('/user/event/view/' + me.reportEvent.reportId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Reported Sucessfully!', 6000);
             },
                 function (errorResponse) {
@@ -469,8 +481,10 @@ EventModule.controller('EventController', [
         }
 
         me.deleteEvent = function (action, id) {
+            $scope.$emit('LOAD');
             EventFactory.deleteEvent(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Event Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -480,3 +494,14 @@ EventModule.controller('EventController', [
         }
 
     }]);
+
+EventModule.run(function ($rootScope) {
+
+    $rootScope.$on('LOAD', function () {
+        $rootScope.loading = true;
+    });
+
+    $rootScope.$on('UNLOAD', function () {
+        $rootScope.loading = false;
+    });
+});

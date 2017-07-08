@@ -66,10 +66,10 @@
                         <div class="file-field input-field">
                             <div class="btn light-blue waves-effect waves-light">
                                 <span>File</span>
-                                <input type="file">
+                                <input type="file" file-model="eventCtrl.tempPicture">
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
+                                <input class="file-path validate" ng-model="eventCtrl.createEvent.imageURL" type="text">
                             </div>
                         </div>
                         <!--Image Field Ends Here-->

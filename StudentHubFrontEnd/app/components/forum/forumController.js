@@ -67,6 +67,7 @@ ForumModule.controller('ForumController', [
             forum: '',
             userId: null,
             userName: '',
+            imageURL: '',
             comment: '',
             commentDate: '',
             report: ''
@@ -150,7 +151,7 @@ ForumModule.controller('ForumController', [
         //function to fetch all forums
 
         me.fetchAllForums = function () {
-
+            $scope.$emit('LOAD');
             ForumFactory.fetchAllForums().then(function (forums) {
 
                 var sortingOrder = 'id'; //default sort
@@ -241,7 +242,7 @@ ForumModule.controller('ForumController', [
 
                 me.fetchJoinedForums(forums);
                 me.fetchCreatedForums(forums);
-
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('<strong>Error Fetching Forums</strong>', 6000);
@@ -450,13 +451,12 @@ ForumModule.controller('ForumController', [
 
         //function to create forum
         me.createForum = function () {
-
+            $scope.$emit('LOAD');
             me.newForum.userId = user.id;
             me.newForum.userName = user.userName;
             var now = new Date();
             me.newForum.createdDate = dateTimeFormat(now);
             me.newForum.noOfRequest = 0;
-            me.newForum.imageURL = 'noPic.jpg';
             me.newForum.noOfMembers = 1;
             me.newForum.noOfTopics = 0;
             me.newForum.report = 'NO';
@@ -465,19 +465,23 @@ ForumModule.controller('ForumController', [
             } else {
                 me.newForum.status = 'PENDING';
             }
+            if (!me.newForum.imageURL) {
+                me.newForum.imageURL = 'NoCover.png';
+            }
 
 
-            ForumFactory.createForum(me.newForum).then(function (forum) {
+            ForumFactory.createForum(me.newForum, me.tempPicture).then(function (forum) {
                 me.forumMember.userId = user.id;
                 me.forumMember.userName = user.userName;
                 me.forumMember.forum = forum;
-                me.forumMember.imageURL = 'noPic.jpg';
+                me.forumMember.imageURL = user.profilePicture;
                 var now = new Date();
                 me.forumMember.requestDate = dateTimeFormat(now);
                 me.forumMember.role = 'ADMIN';
                 me.forumMember.status = 'APPROVED';
                 ForumFactory.joinForum(me.forumMember).then(function () {
                     $location.path('/user/forums');
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('<strong>Forum Created Successfully!</strong>', 6000);
                 },
                     function (errorResponse) {
@@ -494,12 +498,13 @@ ForumModule.controller('ForumController', [
         //function to get forum
         me.getForum = function () {
             var forumID = $routeParams.id;
-
+            $scope.$emit('LOAD');
             ForumFactory.getForum(forumID).then(function (forum) {
                 me.forum = forum;
                 me.get12Members(forumID);
                 me.getComments();
                 me.fetchForumTopic(forumID);
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Forum', 6000);
@@ -509,9 +514,10 @@ ForumModule.controller('ForumController', [
 
         //function to editForum
         me.editForum = function () {
-            console.log(me.forum);
-            ForumFactory.editForum(me.forum).then(function () {
+            $scope.$emit('LOAD');
+            ForumFactory.editForum(me.forum, me.tempPicture).then(function () {
                 $location.path('/user/forum/view/' + me.forum.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Forum Edited Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -521,6 +527,7 @@ ForumModule.controller('ForumController', [
 
         //function to report forum
         me.forumReport = function () {
+            $scope.$emit('LOAD');
             me.reportForum.typeOfReport = 'FORUM';
             me.reportForum.userName = user.userName;
             me.reportForum.userId = user.id;
@@ -531,6 +538,7 @@ ForumModule.controller('ForumController', [
 
             ForumFactory.reportForum(me.reportForum).then(function () {
                 $location.path('/user/forum/view/' + me.reportForum.reportId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Forum Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -542,8 +550,10 @@ ForumModule.controller('ForumController', [
 
         //function to delete forum
         me.deleteForum = function (action, id) {
+            $scope.$emit('LOAD');
             ForumFactory.deleteForum(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Forum Deleted Successfully!</strong>', 6000);
             },
                 function (errorResponse) {
@@ -553,6 +563,7 @@ ForumModule.controller('ForumController', [
 
         //function to join forum
         me.joinForum = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.getForum(id).then(function (forum) {
                 me.forumMember.userId = user.id;
                 me.forumMember.userName = user.userName;
@@ -564,9 +575,9 @@ ForumModule.controller('ForumController', [
                 me.forumMember.requestDate = dateTimeFormat(now);
                 me.forumMember.role = 'USER';
                 me.forumMember.status = 'PENDING';
-                console.log(me.forumMember);
                 ForumFactory.joinForum(me.forumMember).then(function () {
                     $route.reload();
+                    $scope.$emit('UNLOAD');
                     Materialize.toast('<strong>Forum Join Request Sent Successfully!</strong>', 6000);
                 },
                     function (errorResponse) {
@@ -584,8 +595,10 @@ ForumModule.controller('ForumController', [
 
         //function to perform various action on Request
         me.performActionOnRequest = function (action, id) {
+            $scope.$emit('LOAD');
             ForumFactory.performActionOnRequest(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Forum Request ' + action + ' Successfully!</strong>', 6000)
             },
                 function (errorResponse) {
@@ -595,8 +608,10 @@ ForumModule.controller('ForumController', [
 
         //function to get 12 members;
         me.get12Members = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.get12Members(id).then(function (members) {
                 me.twelveMembers = members;
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Members', 6000);
@@ -607,7 +622,7 @@ ForumModule.controller('ForumController', [
         //function to get membets
         me.getMembers = function () {
             var forumID = $routeParams.id;
-
+            $scope.$emit('LOAD');
             ForumFactory.getForum(forumID).then(function (forum) {
 
                 me.forum = forum;
@@ -698,6 +713,8 @@ ForumModule.controller('ForumController', [
                     $scope.sortingOrder = newSortingOrder;
                 };
 
+                $scope.$emit('UNLOAD');
+
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Forum', 6000);
@@ -707,9 +724,10 @@ ForumModule.controller('ForumController', [
 
         //function to approve all request
         me.approveAllRequest = function (id) {
-
+            $scope.$emit('LOAD');
             ForumFactory.approveAllRequest(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('All Request Accepted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -720,9 +738,10 @@ ForumModule.controller('ForumController', [
 
         //function to perform action on forum
         me.performActionOnForum = function (action, id) {
-
+            $scope.$emit('LOAD');
             ForumFactory.performActionOnForum(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('<strong>Forum ' + action + ' Successfully!</strong>', 6000)
             },
                 function (errorResponse) {
@@ -735,17 +754,19 @@ ForumModule.controller('ForumController', [
         //function to create forum comment
 
         me.createForumComment = function () {
+            $scope.$emit('LOAD');
             me.newForumComment.forum = me.forum;
             me.newForumComment.userId = user.id;
             me.newForumComment.userName = user.userName;
             var now = new Date();
             me.newForumComment.commentDate = dateTimeFormat(now);
             me.newForumComment.report = 'NO';
-
+            me.newForumComment.imageURL = user.profilePicture;
 
             ForumFactory.createForumComment(me.newForumComment).then(function () {
                 //  $location.path('/user/forum/view/' + me.forum.id + '#discussion');
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Posted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -758,6 +779,7 @@ ForumModule.controller('ForumController', [
 
         me.getComments = function () {
             var forumID = $routeParams.id;
+            $scope.$emit('LOAD');
             ForumFactory.getForumComments(forumID).then(function (comments) {
 
                 var sortingOrder = 'id'; //default sort
@@ -845,6 +867,7 @@ ForumModule.controller('ForumController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Comments', 6000);
@@ -857,9 +880,10 @@ ForumModule.controller('ForumController', [
         //function to get comment
         me.getComment = function () {
             var commentId = $routeParams.id;
-
+            $scope.$emit('LOAD');
             ForumFactory.getForumComment(commentId).then(function (comment) {
                 me.forumComment = comment;
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Comments', 6000);
@@ -869,8 +893,10 @@ ForumModule.controller('ForumController', [
 
         //function to edit comment
         me.editComment = function () {
+            $scope.$emit('LOAD');
             ForumFactory.createForumComment(me.forumComment).then(function (comment) {
                 $location.path('/user/forum/view/' + me.forumComment.forum.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Edited Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -881,7 +907,7 @@ ForumModule.controller('ForumController', [
 
         //function to report comment
         me.reportComment = function () {
-
+            $scope.$emit('LOAD');
             me.reportForumComment.typeOfReport = 'FORUM COMMENT';
             var now = new Date();
             me.reportForumComment.dateTime = dateTimeFormat(now);
@@ -893,6 +919,7 @@ ForumModule.controller('ForumController', [
 
             ForumFactory.reportForumComment(me.reportForumComment).then(function () {
                 $location.path('/user/forum/view/' + me.forumComment.forum.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -903,21 +930,25 @@ ForumModule.controller('ForumController', [
 
         //function to delete forumComment
         me.deleteForumComment = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.deleteForumComment(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
                     Materialize.toast("Error Deleting Comment", 6000)
-                });
+                }
+            );
         }
 
         //function to create topic
         me.createTopic = function () {
+            $scope.$emit('LOAD');
             me.newTopic.userId = user.id;
             me.newTopic.userName = user.userName;
             me.newTopic.forum = me.forum;
-            //console.log(me.forum);
+
             var now = new Date();
             me.newTopic.createdDate = dateTimeFormat(now);
             me.newTopic.noOfComments = 0;
@@ -930,11 +961,9 @@ ForumModule.controller('ForumController', [
                 me.newTopic.status = "PENDING"
             }
 
-
-            console.log(me.newTopic);
-
             ForumFactory.createEditTopic(me.newTopic).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Topic Created Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -945,6 +974,7 @@ ForumModule.controller('ForumController', [
 
         //function to fetch forum topic
         me.fetchForumTopic = function (forumId) {
+            $scope.$emit('LOAD');
             ForumFactory.fetchTopics(forumId).then(function (topics) {
 
                 var sortingOrder_FOUR = 'id'; //default sort
@@ -1038,7 +1068,7 @@ ForumModule.controller('ForumController', [
                 me.fetchCreatedTopics(topics);
                 me.fetchPendingTopics(topics);
                 me.fetchRejectedTopics(topics);
-
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Topic', 6000);
@@ -1253,8 +1283,6 @@ ForumModule.controller('ForumController', [
                 }
             }
 
-            //console.log(me.rejectedTopics.length);
-
             var sortingOrder_THREE = 'id'; //default sort
 
             $scope.sortingOrder_THREE = sortingOrder_THREE;
@@ -1345,8 +1373,10 @@ ForumModule.controller('ForumController', [
 
         //function to perform action on topic
         me.performActionOnTopic = function (action, id) {
+            $scope.$emit('LOAD');
             ForumFactory.performActionOnTopic(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast("Topic " + action + " Successfully!", 6000);
             },
                 function (errorResponse) {
@@ -1357,8 +1387,10 @@ ForumModule.controller('ForumController', [
 
         //function to approve all topics
         me.approveAllTopics = function () {
+            $scope.$emit('LOAD');
             ForumFactory.approveAllTopics().then(function () {
                 $route.reload();
+                $scope.$emit('UnLOAD');
                 Materialize.toast("Topics Opened Successfully!", 6000);
             },
                 function (errorResponse) {
@@ -1370,9 +1402,11 @@ ForumModule.controller('ForumController', [
         //function to get topic
         me.getTopic = function () {
             var topicId = $routeParams.id;
+            $scope.$emit('LOAD');
             ForumFactory.getTopic(topicId).then(function (topic) {
                 me.topic = topic;
                 me.getTopicComments();
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Topic', 6000);
@@ -1382,6 +1416,7 @@ ForumModule.controller('ForumController', [
 
         //function to report the topic
         me.topicReport = function () {
+            $scope.$emit('LOAD');
             me.reportTopic.typeOfReport = 'TOPIC';
             me.reportTopic.userName = user.userName;
             me.reportTopic.userId = user.id;
@@ -1390,10 +1425,9 @@ ForumModule.controller('ForumController', [
             me.reportTopic.reportId = me.topic.id;
             me.reportTopic.title = me.topic.title;
 
-            console.log(me.topic.forum.id);
-
             ForumFactory.topicReport(me.reportTopic).then(function () {
                 $location.path('/user/forum/topic/view/' + me.reportTopic.reportId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Topic Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -1404,10 +1438,11 @@ ForumModule.controller('ForumController', [
 
         //function to edit the topic
         me.editTopic = function () {
-
+            $scope.$emit('LOAD');
             ForumFactory.createEditTopic(me.topic).then(function () {
 
                 $location.path("/user/forum/view/" + me.topic.forum.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Topic Edited Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -1418,6 +1453,7 @@ ForumModule.controller('ForumController', [
 
         //function to like the topic
         me.likeTopic = function () {
+            $scope.$emit('LOAD');
             me.topicLikes.topic = me.topic;
             me.topicLikes.userId = user.id;
             me.topicLikes.userName = user.userName;
@@ -1426,6 +1462,7 @@ ForumModule.controller('ForumController', [
 
             ForumFactory.topicLike(me.topicLikes).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast("Topic Liked Successfully!", 6000);
             },
                 function (errorResponse) {
@@ -1436,8 +1473,10 @@ ForumModule.controller('ForumController', [
 
         // function to dislike the topic
         me.disLikeTopic = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.disLikeTopic(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast("Topic Disliked Successfully!", 6000);
             },
                 function (errorResponse) {
@@ -1448,7 +1487,7 @@ ForumModule.controller('ForumController', [
 
         //function to create topic comment
         me.createTopicComment = function () {
-
+            $scope.$emit('LOAD');
             me.newTopicComment.topic = me.topic;
             me.newTopicComment.userId = user.id;
             me.newTopicComment.userName = user.userName;
@@ -1457,10 +1496,9 @@ ForumModule.controller('ForumController', [
             me.newTopicComment.noOfLikes = 0;
             me.newTopicComment.report = "NO";
 
-            console.log(me.newTopicComment);
-
             ForumFactory.createTopicComment(me.newTopicComment).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Posted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -1472,6 +1510,7 @@ ForumModule.controller('ForumController', [
         //function to get topic comments
         me.getTopicComments = function () {
             var topicId = $routeParams.id;
+            $scope.$emit('LOAD');
             ForumFactory.fetchTopicComments(topicId).then(function (topicComments) {
 
                 var sortingOrder = 'id'; //default sort
@@ -1559,7 +1598,7 @@ ForumModule.controller('ForumController', [
 
                     $scope.sortingOrder = newSortingOrder;
                 };
-
+                $scope.$emit('UNLOAD');
 
             },
                 function (errorResponse) {
@@ -1571,8 +1610,10 @@ ForumModule.controller('ForumController', [
         //function to get topic comment
         me.getTopicComment = function () {
             var commentID = $routeParams.id;
+            $scope.$emit('LOAD');
             ForumFactory.getTopicComment(commentID).then(function (topicComment) {
                 me.topicComment = topicComment;
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Comment', 6000);
@@ -1582,6 +1623,7 @@ ForumModule.controller('ForumController', [
 
         //funtion to report topic comment
         me.topicCommentReport = function () {
+            $scope.$emit('LOAD');
             me.reportTopicComment.userName = user.userName;
             me.reportTopicComment.userId = user.id;
             me.reportTopicComment.title = me.topicComment.topicComment;
@@ -1595,6 +1637,7 @@ ForumModule.controller('ForumController', [
 
             ForumFactory.reportTopicComment(me.reportTopicComment).then(function () {
                 $location.path('/user/forum/topic/view/' + me.reportTopicComment.reportId);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Topic Reported Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -1606,9 +1649,11 @@ ForumModule.controller('ForumController', [
 
         //funtion to edit topic comment
         me.editTopicComment = function () {
+            $scope.$emit('LOAD');
             ForumFactory.editTopicComment(me.topicComment).then(function () {
                 $location.path('/user/forum/topic/view/' + me.topicComment.topic.id);
                 Materialize.toast('Comment Editing Successfully!', 6000);
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Editing Comment', 6000);
@@ -1618,8 +1663,10 @@ ForumModule.controller('ForumController', [
 
         //function to delete topic comment
         me.deleteTopicComment = function (id) {
+            $scope.$emit('LOAD');
             ForumFactory.deleteTopicComment(id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Comment Deleted Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -1628,3 +1675,15 @@ ForumModule.controller('ForumController', [
         }
     }
 ]);
+
+
+ForumModule.run(function ($rootScope) {
+
+    $rootScope.$on('LOAD', function () {
+        $rootScope.loading = true;
+    });
+
+    $rootScope.$on('UNLOAD', function () {
+        $rootScope.loading = false;
+    });
+});

@@ -41,6 +41,9 @@ public class ForumComment implements Serializable {
 
 	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
+	
+	@Column(name = "IMAGE_URL", nullable = false)
+	private String imageURL;
 
 	@Column(name = "FORUM_COMMENT", nullable = false)
 	private String comment;
@@ -80,6 +83,14 @@ public class ForumComment implements Serializable {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 	public void setUserName(String userName) {

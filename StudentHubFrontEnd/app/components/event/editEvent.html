@@ -13,6 +13,22 @@
             </nav>
         </div>
 
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card-panel">
             <strong style="font-size:20px;" class="grey-text">Edit Event</strong>
             <hr/>
@@ -68,6 +84,18 @@
 
                             </div>
                             <!--description field ends here-->
+
+                            <!--Image Field Starts Here-->
+                            <div class="file-field input-field">
+                                <div class="btn light-blue waves-effect waves-light">
+                                    <span>File</span>
+                                    <input type="file" file-model="eventCtrl.tempPicture">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" ng-model="eventCtrl.event.imageURL" type="text">
+                                </div>
+                            </div>
+                            <!--Image Field Ends Here-->
 
                             <!--startDate field starts here-->
                             <div class="input-field nomargin">

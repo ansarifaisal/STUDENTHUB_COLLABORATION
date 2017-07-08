@@ -1,5 +1,5 @@
 <div class="row" ng-init="jobCtrl.getJob()">
-    <div class="col m10 offset-l1 l10 s12">
+    <div class="col m10 offset-l1 l10 s12" ng-cloak>
         <div style="padding-top: 10px;">
             <nav class="navbar-color">
                 <div class="nav-wrapper">
@@ -14,6 +14,22 @@
                     </div>
                 </div>
             </nav>
+        </div>
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card-panel">

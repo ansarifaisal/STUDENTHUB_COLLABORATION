@@ -88,11 +88,22 @@ HomePageModule.controller('HomePageController', [
             );
         }
 
+
+        //this code has bugs
+        $rootScope.sendChatNotification = function (chat) {
+            console.log(chat);
+
+            me.showNotification(chat.senderUserName + " Wants To Chat With You", "../assets/images/icon_graduate.png", "Friend Requests", "#!/user/friends/" + user.id);
+
+        }
+
+
         //function to get notification
         me.pushNotification = function () {
             HomePageFactory.notification(user.id).then(function (notification) {
                 me.notification = notification;
                 $rootScope.rootNotification = notification;
+
 
                 if (user.role == 'Super_Admin' || user.role == 'ADMIN') {
                     if (me.notification.noOfPendingForums != 0) {
@@ -147,10 +158,12 @@ HomePageModule.controller('HomePageController', [
                 }
 
                 if (user.role == 'Super_Admin' || user.role == 'ADMIN' || user.role == 'USER' || user.role == 'EMPLOYER') {
-
                     if (me.notification.noOfFriendRequest != 0) {
                         me.showNotification("There Are " + me.notification.noOfFriendRequest + " Friend Requests", "../assets/images/icon_graduate.png", "Friend Requests", "#!/user/friends/" + user.id);
                     }
+                }
+
+                function chatNotification(chatter, sender) {
 
                 }
 

@@ -1,5 +1,21 @@
 var ForumModule = angular.module('ForumModule', []);
 
+// change EventModule with your module name used within the application
+ForumModule.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function () {
+                scope.$apply(function () {
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);
+
 ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
 
     var REST_API_URI = "http://localhost:9005/webapp/";
@@ -59,18 +75,25 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     }
 
     //function to create forum
-    function createForum(forum) {
+    function createForum(forum, file) {
 
         var deferred = $q.defer();
 
-        $http.post(REST_API_URI + 'createEditForum', forum).then(function (response) {
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('forum', new Blob([JSON.stringify(forum)], { type: "application/json" }));
+
+        $http.post(REST_API_URI + 'createEditForum', fd, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        }).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
                 console.log('Error Fetching Forums');
                 deferred.reject(errorResponse);
             }
-        );
+            );
         return deferred.promise;
 
     }
@@ -93,17 +116,24 @@ ForumModule.factory('ForumFactory', ['$http', '$q', function ($http, $q) {
     }
 
     //function to edit forum
-    function editForum(forum) {
+    function editForum(forum, file) {
         var deferred = $q.defer();
 
-        $http.post(REST_API_URI + 'createEditForum', forum).then(function (response) {
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('forum', new Blob([JSON.stringify(forum)], { type: "application/json" }));
+
+        $http.post(REST_API_URI + 'createEditForum', fd, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        }).then(function (response) {
             deferred.resolve(response.data);
         },
             function (errorResponse) {
                 console.log('Error Fetching Forums');
                 deferred.reject(errorResponse);
             }
-        );
+            );
         return deferred.promise;
     }
 

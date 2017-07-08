@@ -14,6 +14,22 @@
             </nav>
         </div>
 
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="card-panel nopadding">
             <div class="row">
@@ -89,10 +105,10 @@
                                 <div class="card-content">
                                     <div class="row nomargin">
                                         <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='forumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' href='#' data-activates='forumsOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
-                            <ul id='forumOption_{{forum.id}}' class='dropdown-content'>
+                            <ul id='forumsOption_{{forum.id}}' class='dropdown-content'>
                                 <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
                                     <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
                                     <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
@@ -222,10 +238,10 @@
                                 <div class="card-content">
                                     <div class="row nomargin">
                                         <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='joinedForumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
+                                 <a class='dropdown-button' href='#' data-activates='test_{{forum.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
-                            <ul id='joinedForumOption_{{forum.id}}' class='dropdown-content'>
+                            <ul id='test_{{forum.id}}' class='dropdown-content'>
                                 <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
                                     <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
                                     <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">
@@ -354,10 +370,10 @@
                         <div class="card-content">
                             <div class="row nomargin">
                                 <span class="right">
-                                <a class='dropdown-button' href='#' data-activates='forumOption_{{forum.id}}'><i class="material-icons">more_vert</i></a>
+                                <a class='dropdown-button' href='#' data-activates='option_{{forum.id}}'><i class="material-icons">more_vert</i></a>
 
                             <!-- Dropdown Structure -->
-                            <ul id='forumOption_{{forum.id}}' class='dropdown-content'>
+                            <ul id='option_{{forum.id}}' class='dropdown-content'>
                                 <div ng-hide="forum.report != 'NO' || forum.status != 'APPROVED'">
                                     <li><a href="#!/user/forum/report/{{forum.id}}">Report</a></li>
                                     <span ng-show="forum.userId == user.id || user.role == 'Super_Admin' || user.role == 'ADMIN'">

@@ -17,6 +17,22 @@
                 </div>
             </nav>
         </div>
+
+        <div class="preloader" ng-show="loading">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="reportJobForm">
             <div class="card-panel">
                 <h5><strong class="grey-text">Report Job</strong></h5>
@@ -42,8 +58,7 @@
 
                             <div class="input-field">
                                 <div class="hoverable">
-                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="reportForm.$invalid"
-                                        value="Report Job">
+                                    <input type="submit" class="btn light-blue waves-effect waves-light full-width" ng-disabled="reportForm.$invalid" value="Report Job">
                                 </div>
                             </div>
                         </form>

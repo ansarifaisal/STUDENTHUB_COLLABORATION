@@ -78,7 +78,7 @@ public class EventDAOImpl implements EventDAO {
 	@Override
 	@Transactional
 	public List<Event> getCreatedEvents(int userID) {
-		String hql = "FROM EVENTS WHERE USER_ID = :userID AND STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
+		String hql = "FROM EVENTS WHERE USER_ID = :userID AND STATUS = 'APPROVED' ORDER BY EVENT_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setParameter("userID", userID);
 		return query.list();
@@ -87,7 +87,7 @@ public class EventDAOImpl implements EventDAO {
 	@Override
 	@Transactional
 	public List<Event> getLatestEvents() {
-		String hql = "FROM EVENTS WHERE STATUS = 'APPROVED' ORDER BY POST_DATE DESC";
+		String hql = "FROM EVENTS WHERE STATUS = 'APPROVED' ORDER BY EVENT_ID DESC";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setMaxResults(5);
 		return query.list();

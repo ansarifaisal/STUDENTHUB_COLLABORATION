@@ -1,15 +1,21 @@
 package com.studenthub.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.studenthub.dao.ForumCommentDAO;
 import com.studenthub.dao.ForumDAO;
@@ -55,6 +61,9 @@ public class ForumController {
 
 	@Autowired
 	ReportDAO reportDAO;
+
+	@Value("${forumImageBasePath}")
+	private String imageBasePath;
 
 	// <!------------------------Get all the forums----------------------!>
 	@RequestMapping(value = "/forums", method = RequestMethod.GET)
@@ -114,24 +123,38 @@ public class ForumController {
 
 	// <!---------------------------Create OR Edit Forum------------------!>
 	@RequestMapping(value = "/createEditForum", method = RequestMethod.POST)
-	public ResponseEntity<Forum> createEditForum(@RequestBody Forum forum) {
+	public ResponseEntity<Forum> createEditForum(@RequestPart("forum") Forum forum,
+			@RequestPart(value = "file", required = false) MultipartFile file) {
 
 		if (forum.getId() == 0) {
 
 			forumDAO.addForum(forum);
-			return new ResponseEntity<Forum>(forum, HttpStatus.OK);
-
+			
+			if (file != null) {
+				String fileName = "FORUM_" + forum.getId() + ".png";
+				if (uploadFile(imageBasePath, fileName, file)) {
+					forum.setImageURL(fileName);
+					forumDAO.updateForum(forum);
+				}
+			}
+				return new ResponseEntity<Forum>(forum, HttpStatus.OK);
 		} else {
 			boolean flag = forumDAO.updateForum(forum);
 
+			if (file != null) {
+				String fileName = "FORUM_" + forum.getId() + ".png";
+				if (uploadFile(imageBasePath, fileName, file)) {
+					forum.setImageURL(fileName);
+					forumDAO.updateForum(forum);
+				}
+			}
+			
 			if (flag != false) {
 				return new ResponseEntity<Forum>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Forum>(HttpStatus.NOT_FOUND);
 			}
-
 		}
-
 	}
 
 	// <!-------------------Approve all the forum-----------------!>
@@ -352,6 +375,39 @@ public class ForumController {
 			return new ResponseEntity<ForumComment>(HttpStatus.NO_CONTENT);
 		}
 
+	}
+
+	/**
+	 * 
+	 * uploadFile method has three parameters directory - where to upload
+	 * fileName - that will be used for naming the uploaded file file - the file
+	 * to upload
+	 * 
+	 */
+
+	private boolean uploadFile(String directory, String fileName, MultipartFile file) {
+
+		// Create the directory if does not exists
+		if (!new File(directory).exists()) {
+			new File(directory).mkdirs();
+		}
+
+		try {
+			// transfer the file
+			file.transferTo(new File(directory + fileName));
+			// file uploaded successfully
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
+	}
+
+	// To resolve ${} in @Value
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
 
 }

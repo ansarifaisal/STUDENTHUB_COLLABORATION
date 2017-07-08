@@ -76,6 +76,7 @@ JobModule.controller('JobController', [
         }, 100);
 
         me.fetchAllJobs = function () {
+            $scope.$emit('LOAD');
             JobFactory.fetchAllJobs().then(function (jobs) {
 
                 var sortingOrder = 'id'; //default sort
@@ -167,6 +168,8 @@ JobModule.controller('JobController', [
                 me.appliedJob(jobs);
 
                 me.createdJobList(jobs);
+
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Jobs', 6000);
@@ -276,9 +279,11 @@ JobModule.controller('JobController', [
 
         //function to get job
         me.getJob = function () {
+            $scope.$emit('LOAD');
             var jobId = $routeParams.id;
             JobFactory.getJob(jobId).then(function (job) {
                 me.job = job;
+                $scope.$emit('UNLOAD');
             },
                 function (errorResponse) {
                     Materialize.toast('Error Fetching Job', 6000);
@@ -434,7 +439,7 @@ JobModule.controller('JobController', [
             }
 
             JobFactory.createJob(me.createJob).then(function () {
-                $route.reload();
+                $location.path('/user/jobs');
                 Materialize.toast('Job Created Sucessfully', 6000);
             },
                 function (errorResponse) {
@@ -445,8 +450,10 @@ JobModule.controller('JobController', [
 
         //function to delete or disable job
         me.deleteJob = function (action, id) {
+            $scope.$emit('LOAD');
             JobFactory.deleteJob(action, id).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Job Delete Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -456,8 +463,10 @@ JobModule.controller('JobController', [
 
         //function to edit job
         me.editJob = function () {
+            $scope.$emit('LOAD');
             JobFactory.editJob(me.job).then(function () {
                 $location.path('/user/job/view/' + me.job.id);
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Job Edited Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -489,8 +498,10 @@ JobModule.controller('JobController', [
         }
 
         me.approveJob = function (id, action) {
+            $scope.$emit('LOAD');
             ManageJobFactory.validateJob(id, action).then(function () {
                 $route.reload();
+                $scope.$emit('UNLOAD');
                 Materialize.toast('Job Approved Successfully!', 6000);
             },
                 function (errorResponse) {
@@ -500,3 +511,15 @@ JobModule.controller('JobController', [
 
 
     }]);
+
+
+JobModule.run(function ($rootScope) {
+
+    $rootScope.$on('LOAD', function () {
+        $rootScope.loading = true;
+    });
+
+    $rootScope.$on('UNLOAD', function () {
+        $rootScope.loading = false;
+    });
+});

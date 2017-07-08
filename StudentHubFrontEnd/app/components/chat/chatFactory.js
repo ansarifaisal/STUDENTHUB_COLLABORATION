@@ -35,9 +35,12 @@ ChatModule.factory('ChatFactory', [
             socket.stomp.send(service.CHAT_BROKER, {
                 priority: 9
             }, JSON.stringify({
-                message: message,
-                id: id
+                message: message.message,
+                id: id,
+                senderUserName: message.senderUserName,
+                receiverUserName: message.receiverUserName
             }));
+            console.log(id);
             messageIds.push(id);
         };
 
@@ -50,8 +53,11 @@ ChatModule.factory('ChatFactory', [
 
         //this function translate the websocket body to the model required by the controller
         var getMessage = function (data) {
+            console.log(data);
             var message = JSON.parse(data), out = {};
             out.message = message.message;
+            out.senderUserName = message.senderUserName;
+            out.receiverUserName = message.receiverUserName;
             out.time = new Date(message.time);
             // if (_.contains(messageIds, message.id)) {
             //     out.self = true;
@@ -80,10 +86,55 @@ ChatModule.factory('ChatFactory', [
         //this function will set up the SockJS Websocket Client And Use It For The Stomp.js Websocket Client. 
         initialize();
 
-    service.checkFriendByUser = function (initiater, friend) {
+        service.checkFriendByUser = function (initiater, friend) {
             var deferred = $q.defer();
 
             $http.get(REST_API_URI + 'user/checkFrndByUser/' + initiater + '/' + friend).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Checking Friend');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        service.isChatting = function (senderUserName, receiverUserName) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'isChatting/' + senderUserName + '/' + receiverUserName).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Checking Friend');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        service.updateChatting = function (senderUserName, receiverUserName) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/chat/updateChat/' + senderUserName + '/' + receiverUserName).then(function (response) {
+                deferred.resolve(response.data);
+            },
+                function (errorResponse) {
+                    console.log('Error Checking Friend');
+                    deferred.reject(errorResponse);
+                }
+            );
+            return deferred.promise;
+        }
+
+        service.deleteChatting = function (senderUserName, receiverUserName) {
+
+            var deferred = $q.defer();
+
+            $http.get(REST_API_URI + 'user/chat/deleteChat/' + senderUserName + '/' + receiverUserName).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {

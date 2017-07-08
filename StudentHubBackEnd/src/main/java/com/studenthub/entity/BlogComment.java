@@ -42,6 +42,9 @@ public class BlogComment implements Serializable {
 	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
 
+	@Column(name = "IMAGE_URL", nullable = false)
+	private String imageURL;
+
 	@Column(name = "BLOG_COMMENT", nullable = false)
 	private String blogComment;
 
@@ -121,7 +124,15 @@ public class BlogComment implements Serializable {
 	public void setReport(String report) {
 		this.report = report;
 	}
-	
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
 	/*
 	 * Overriding toString Method For Debugging
 	 */
@@ -129,10 +140,8 @@ public class BlogComment implements Serializable {
 	@Override
 	public String toString() {
 		return "BlogComment [id=" + id + ", blog=" + blog + ", userId=" + userId + ", userName=" + userName
-				+ ", blogComment=" + blogComment + ", commentDate=" + commentDate + ", noOfLikes=" + noOfLikes
-				+ ", report=" + report + "]";
+				+ ", imageURL=" + imageURL + ", blogComment=" + blogComment + ", commentDate=" + commentDate
+				+ ", noOfLikes=" + noOfLikes + ", report=" + report + "]";
 	}
-	
-	
 
 }

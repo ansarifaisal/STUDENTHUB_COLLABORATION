@@ -1,5 +1,21 @@
 var EventModule = angular.module('EventModule', []);
 
+// change EventModule with your module name used within the application
+EventModule.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            element.bind('change', function () {
+                scope.$apply(function () {
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);
+
 EventModule.factory('EventFactory', [
     '$http',
     '$q',
@@ -83,31 +99,47 @@ EventModule.factory('EventFactory', [
         }
 
         //function to create event
-        function createEvent(event) {
+        function createEvent(event, file) {
             var deferred = $q.defer();
-            $http.post(REST_API_URI + 'event/createEditEvent', event).then(function (response) {
+            
+            var fd = new FormData();
+            fd.append('file', file);
+            fd.append('event', new Blob([JSON.stringify(event)], { type: "application/json" }));
+
+            $http.post(REST_API_URI + 'event/createEditEvent', fd, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
                     console.log('Error Creating Events');
                     deferred.reject(errorResponse);
                 }
-            );
+                );
             return deferred.promise;
         }
 
         //function to edit event
-        function editEvent(event) {
+        function editEvent(event, file) {
 
             var deferred = $q.defer();
-            $http.post(REST_API_URI + 'event/createEditEvent', event).then(function (response) {
+
+            var fd = new FormData();
+            fd.append('file', file);
+            fd.append('event', new Blob([JSON.stringify(event)], { type: "application/json" }));
+
+            $http.post(REST_API_URI + 'event/createEditEvent', fd, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }).then(function (response) {
                 deferred.resolve(response.data);
             },
                 function (errorResponse) {
                     console.log('Error Editing Events');
                     deferred.reject(errorResponse);
                 }
-            );
+                );
 
             return deferred.promise;
 
